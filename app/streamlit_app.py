@@ -221,7 +221,7 @@ import requests
 import plotly.express as px
 import json
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "https://axonix-copilot.onrender.com"
 
 st.set_page_config(
 page_title="AI Job Search Copilot",

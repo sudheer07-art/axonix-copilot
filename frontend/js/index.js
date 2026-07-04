@@ -42,7 +42,7 @@ async function loadResumeAnalysis() {
         console.log("Sending request...");
 
         const response = await fetch(
-            "http://127.0.0.1:8000/dashboard/",
+            "https://axonix-copilot.onrender.com/dashboard/",
             {
                 headers: {
                     Authorization: `Bearer ${token}`

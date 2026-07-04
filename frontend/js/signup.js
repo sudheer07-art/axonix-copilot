@@ -2,7 +2,7 @@
 // AXONIX SIGNUP
 // ==========================================
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL ="https://axonix-copilot.onrender.com";
 
 const signupForm = document.getElementById("signupForm");
 
