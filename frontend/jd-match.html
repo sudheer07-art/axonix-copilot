@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXONIX | JD Match</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#0b1120;color:white;padding:40px;}
+.container{max-width:1100px;margin:auto;}
+.card{
+background:#111827;
+border:1px solid #1f2937;
+padding:30px;
+border-radius:20px;
+}
+input[type=file],textarea{
+width:100%;
+padding:15px;
+background:#1f2937;
+border:1px solid #374151;
+border-radius:10px;
+color:white;
+margin-top:15px;
+}
+textarea{
+height:200px;
+}
+button{
+margin-top:20px;
+padding:14px 24px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
+.result{
+margin-top:25px;
+background:#111827;
+padding:25px;
+border-radius:20px;
+}
+a{color:#60a5fa;text-decoration:none;}
+.loading-container{
+    display:none;
+    text-align:center;
+    margin-top:30px;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid #1f2937;
+    border-top:6px solid #3b82f6;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:auto;
+}
+
+.loading-text{
+    margin-top:15px;
+    color:#60a5fa;
+    font-size:18px;
+}
+
+@keyframes spin{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="index.html">← Back</a>
+
+<div class="card">
+
+<h1>🎯 Resume vs JD Match</h1>
+
+<br>
+
+<input type="file" id="resumeFile">
+
+<textarea
+id="jobDescription"
+placeholder="Paste Job Description Here">
+</textarea>
+
+<button onclick="matchJD()">
+Match Resume
+</button>
+
+</div>
+<div id="loading" class="loading-container">
+
+    <div class="spinner"></div>
+
+    <p class="loading-text">
+        🤖 AI is analyzing...
+    </p>
+
+</div>
+<div id="result"></div>
+
+</div>
+
+<script>
+function showLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "block";
+}
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "none";
+}
+const API_URL="http://127.0.0.1:8000";
+
+async function matchJD() {
+
+    const file = document.getElementById("resumeFile").files[0];
+    const jd = document.getElementById("jobDescription").value;
+
+    if (!file || !jd) {
+
+        alert("Upload resume and paste JD");
+        return;
+
+    }
+
+    // ✅ Show loading
+    showLoading();
+
+    // Clear previous result
+    document.getElementById("result").innerHTML = "";
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("job_description", jd);
+
+    try {
+
+        const response = await fetch(`${API_URL}/jd-match`, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        // ✅ Hide loading
+        hideLoading();
+
+        document.getElementById("result").innerHTML = `
+        <div class="result">
+
+        <h2>🎯 Match Score: ${data.match_score}%</h2>
+
+        <br>
+
+        <h3>✅ Matched Skills</h3>
+        <ul>
+        ${data.matched_skills.map(skill => `<li>${skill}</li>`).join("")}
+        </ul>
+
+        <br>
+
+        <h3>❌ Missing Skills</h3>
+        <ul>
+        ${data.missing_skills.map(skill => `<li>${skill}</li>`).join("")}
+        </ul>
+
+        <br>
+
+        <h3>💪 Strengths</h3>
+        <ul>
+        ${data.strengths.map(item => `<li>${item}</li>`).join("")}
+        </ul>
+
+        <br>
+
+        <h3>💡 AI Suggestions</h3>
+        <ul>
+        ${data.suggestions.map(item => `<li>${item}</li>`).join("")}
+        </ul>
+
+        <br>
+
+        <h3>📄 Summary</h3>
+
+        <p>${data.summary}</p>
+
+        </div>
+        `;
+
+    }
+    catch (error) {
+
+        hideLoading();
+
+        console.error(error);
+
+        alert("Something went wrong.");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

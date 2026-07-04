@@ -1,0 +1,533 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AXONIX | AI Resume Review</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:white;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.header{
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#60a5fa;
+    font-size:42px;
+}
+
+.header p{
+    color:#9ca3af;
+    margin-top:10px;
+}
+
+.card{
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:30px;
+}
+
+input[type=file]{
+    width:100%;
+    padding:15px;
+    background:#1f2937;
+    border:1px solid #374151;
+    border-radius:10px;
+    color:white;
+}
+
+button{
+    margin-top:20px;
+    padding:14px 24px;
+    background:#2563eb;
+    border:none;
+    border-radius:10px;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.result{
+    margin-top:25px;
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:25px;
+    line-height:1.8;
+    white-space:pre-wrap;
+}
+
+.loading{
+    color:#60a5fa;
+    margin-top:20px;
+}
+
+.back{
+    display:inline-block;
+    margin-bottom:20px;
+    color:#60a5fa;
+    text-decoration:none;
+}
+.loading-container{
+    display:none;
+    text-align:center;
+    margin-top:30px;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid #1f2937;
+    border-top:6px solid #3b82f6;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:auto;
+}
+
+.loading-text{
+    margin-top:15px;
+    color:#60a5fa;
+    font-size:18px;
+}
+
+@keyframes spin{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="index.html" class="back">
+← Back to Home
+</a>
+
+<div class="header">
+    <h1>🤖 AI Resume Review</h1>
+    <p>
+        Get AI-powered feedback on your resume
+        and discover how to improve it.
+    </p>
+</div>
+
+<div class="card">
+
+    <input
+    type="file"
+    id="resumeFile">
+
+    <button onclick="reviewResume()">
+        Generate Review
+    </button>
+
+</div>
+
+<div id="loading"></div>
+<div id="loading" class="loading-container">
+
+    <div class="spinner"></div>
+
+    <p class="loading-text">
+        🤖 AI is analyzing...
+    </p>
+
+</div>
+<div id="reviewResult"></div>
+
+</div>
+
+<script>
+function showLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "block";
+}
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "none";
+}
+const API_URL =
+"http://127.0.0.1:8000";
+
+async function reviewResume(){
+
+    const file =
+    document.getElementById(
+        "resumeFile"
+    ).files[0];
+
+    if(!file){
+
+        alert(
+            "Please upload a resume"
+        );
+
+        return;
+    }
+
+    document.getElementById(
+        "loading"
+    ).innerHTML =
+    "<p class='loading'>⏳ Generating AI Review...</p>";
+
+    const formData =
+    new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+    try{
+
+        const response =
+        await fetch(
+            `${API_URL}/ai-review`,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+        const data =
+        await response.json();
+
+        document.getElementById(
+            "loading"
+        ).innerHTML = "";
+
+        document.getElementById(
+            "reviewResult"
+        ).innerHTML = `
+        <div class="result">
+
+            <h2>
+                Resume Feedback
+            </h2>
+
+            <br>
+
+            ${data.review}
+
+        </div>
+        `;
+
+    }
+
+    catch(error){
+
+        document.getElementById(
+            "loading"
+        ).innerHTML = "";
+
+        document.getElementById(
+            "reviewResult"
+        ).innerHTML = `
+        <div class="result">
+
+            Error:
+            ${error}
+
+        </div>
+        `;
+    }
+}
+
+</script>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AXONIX | AI Resume Review</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:white;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.header{
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#60a5fa;
+    font-size:42px;
+}
+
+.header p{
+    color:#9ca3af;
+    margin-top:10px;
+}
+
+.card{
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:30px;
+}
+
+input[type=file]{
+    width:100%;
+    padding:15px;
+    background:#1f2937;
+    border:1px solid #374151;
+    border-radius:10px;
+    color:white;
+}
+
+button{
+    margin-top:20px;
+    padding:14px 24px;
+    background:#2563eb;
+    border:none;
+    border-radius:10px;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.result{
+    margin-top:25px;
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:20px;
+    padding:25px;
+    line-height:1.8;
+    white-space:pre-wrap;
+}
+
+.loading{
+    color:#60a5fa;
+    margin-top:20px;
+}
+
+.back{
+    display:inline-block;
+    margin-bottom:20px;
+    color:#60a5fa;
+    text-decoration:none;
+}
+.loading-container{
+    display:none;
+    text-align:center;
+    margin-top:30px;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid #1f2937;
+    border-top:6px solid #3b82f6;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:auto;
+}
+
+.loading-text{
+    margin-top:15px;
+    color:#60a5fa;
+    font-size:18px;
+}
+
+@keyframes spin{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="index.html" class="back">
+← Back to Home
+</a>
+
+<div class="header">
+    <h1>🤖 AI Resume Review</h1>
+    <p>
+        Get AI-powered feedback on your resume
+        and discover how to improve it.
+    </p>
+</div>
+
+<div class="card">
+
+    <input
+    type="file"
+    id="resumeFile">
+
+    <button onclick="reviewResume()">
+        Generate Review
+    </button>
+
+</div>
+
+<div id="loading" class="loading-container">
+
+    <div class="spinner"></div>
+
+    <p class="loading-text">
+        🤖 AI is reviewing your resume...
+    </p>
+
+</div>
+<div id="reviewResult"></div>
+
+</div>
+
+<script>
+
+const API_URL = "http://127.0.0.1:8000";
+
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+
+function hideLoading() {
+    document.getElementById("loading").style.display = "none";
+}
+
+async function reviewResume() {
+
+    const file =
+        document.getElementById("resumeFile").files[0];
+
+    if (!file) {
+        alert("Please upload a resume");
+        return;
+    }
+
+    showLoading();
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/ai-review`,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Backend Error: " + response.status
+            );
+        }
+
+        const data = await response.json();
+
+        document.getElementById(
+            "reviewResult"
+        ).innerHTML = `
+        <div class="result">
+
+            <h2>🤖 Resume Feedback</h2>
+
+            <br>
+
+            ${data.review}
+
+        </div>
+        `;
+
+    }
+    catch(error){
+
+        document.getElementById(
+            "reviewResult"
+        ).innerHTML = `
+        <div class="result">
+
+            <h2>❌ Error</h2>
+
+            <br>
+
+            ${error.message}
+
+        </div>
+        `;
+    }
+    finally{
+
+        hideLoading();
+
+    }
+}
+
+</script>
+
+</body>
+</html>

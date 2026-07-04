@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AXONIX | AI Career Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    
+
+<div class="dashboard">
+
+<!-- ==========================================
+SIDEBAR
+========================================== -->
+
+<aside class="dashboard-sidebar" id="sidebar">
+
+    <button class="close-sidebar" id="closeSidebar">
+
+        <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+    <div class="dashboard-sidebar-top">
+
+        <div class="dashboard-logo">
+
+            <i class="fa-solid fa-rocket"></i>
+
+            <span>AXONIX</span>
+
+        </div>
+
+        <ul class="dashboard-menu">
+
+            <li class="active">
+
+                <a href="dashboard.html">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="analyze.html">
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    Analyze Resume
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="livejobs.html">
+
+                    <i class="fa-solid fa-briefcase"></i>
+
+                    Live Jobs
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="jdmatch.html">
+
+                    <i class="fa-solid fa-bullseye"></i>
+
+                    JD Match
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="analytics.html">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Analytics
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="profile.html">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    Profile
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="dashboard-sidebar-bottom">
+
+        <a href="index.html"
+           class="dashboard-link">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Home
+
+        </a>
+
+        <a href="#"
+           id="logoutBtn"
+           class="dashboard-link logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- ==========================================
+OVERLAY
+========================================== -->
+
+<div id="sidebarOverlay"></div>
+
+<!-- ==========================================
+MAIN CONTENT
+========================================== -->
+
+<div class="main-content">
+
+<!-- ==========================================
+TOP BAR
+========================================== -->
+
+<header class="topbar">
+
+    <div class="top-left">
+
+        <button
+            id="menuToggle"
+            class="menu-toggle">
+
+            <i class="fa-solid fa-bars"></i>
+
+        </button>
+
+        <div class="dashboard-title">
+
+            <h1>
+
+                AI Career Dashboard
+
+            </h1>
+
+            <p>
+
+                Welcome back! Your AI Career Assistant is ready.
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="top-right">
+
+        <div class="search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                placeholder="Search jobs...">
+
+        </div>
+
+        <div class="notification">
+
+            <i class="fa-regular fa-bell"></i>
+
+            <span>3</span>
+
+        </div>
+
+        <div class="profile">
+
+            <img
+                id="userAvatar"
+                src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff">
+
+            <div>
+
+                <h4 id="userName">
+
+                    Loading...
+
+                </h4>
+
+                <p id="userEmail">
+
+                    Loading...
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+<!-- ==========================================
+WELCOME SECTION
+========================================== -->
+
+<section class="welcome">
+
+    <div class="welcome-left">
+
+        <span class="badge">
+
+            🚀 AI Career Assistant
+
+        </span>
+
+        <h1>
+
+            Welcome Back,
+
+            <span id="welcomeName">
+
+                User
+
+            </span>
+
+            👋
+
+        </h1>
+
+        <p>
+
+            Upload your resume, improve your ATS score,
+            discover matching jobs, receive AI suggestions,
+            and accelerate your career with AXONIX.
+
+        </p>
+
+        <div class="hero-buttons">
+
+            <button
+                id="openAnalyzePage"
+                class="primary-btn">
+
+                <i class="fa-solid fa-file-arrow-up"></i>
+
+                Analyze Resume
+
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="window.location.href='livejobs.html'">
+
+                <i class="fa-solid fa-briefcase"></i>
+
+                Live Jobs
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+
+    <div class="welcome-right">
+
+        <div class="resume-card">
+
+            <div class="resume-header">
+
+                <i class="fa-solid fa-file-lines"></i>
+
+                <h3>
+
+                    Latest Resume
+
+                </h3>
+
+            </div>
+
+            <h2 id="resumeName">
+
+                No Resume Uploaded
+
+            </h2>
+
+            <p>
+
+                Your latest analyzed resume.
+
+            </p>
+
+            <div class="resume-progress">
+
+                <div
+                    id="resumeProgress"
+                    class="progress-fill">
+
+                </div>
+
+            </div>
+
+            <small id="resumeHealth">
+
+                Resume Health 0%
+
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+QUICK STATS
+========================================== -->
+
+<section class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-file-circle-check"></i>
+
+        </div>
+
+        <div>
+
+            <h2 id="atsScore">
+
+                0%
+
+            </h2>
+
+            <p>
+
+                ATS Score
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-brain"></i>
+
+        </div>
+
+        <div>
+
+            <h2 id="skillsCount">
+
+                0
+
+            </h2>
+
+            <p>
+
+                Skills Found
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-briefcase"></i>
+
+        </div>
+
+        <div>
+
+            <h2 id="jobMatches">
+
+                0
+
+            </h2>
+
+            <p>
+
+                Job Matches
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+        </div>
+
+        <div>
+
+            <h2 id="profileStrength">
+
+                0%
+
+            </h2>
+
+            <p>
+
+                Profile Strength
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ==========================================
+ATS ANALYTICS
+========================================== -->
+
+<section class="dashboard-grid">
+
+    <!-- ===================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <h2>
+
+                    ATS Analytics
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas id="atsChart"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- ===================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                <h2>
+
+                    Skills Overview
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas id="skillsChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+AI SUGGESTIONS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-robot"></i>
+
+            <h2>
+
+                AI Suggestions
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div
+        id="suggestions"
+        class="suggestions">
+
+        <div class="suggestion-card">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            <span>
+
+                Analyze your resume to receive AI suggestions.
+
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+RECOMMENDED JOBS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-briefcase"></i>
+
+            <h2>
+
+                Recommended Jobs
+
+            </h2>
+
+        </div>
+
+        <a
+            href="livejobs.html"
+            class="view-all">
+
+            View All
+
+        </a>
+
+    </div>
+
+    <div id="recommendedJobs">
+
+        <div class="job-card">
+
+            <div class="job-left">
+
+                <h3>
+
+                    No Jobs Available
+
+                </h3>
+
+                <p>
+
+                    Analyze your resume to receive AI job recommendations.
+
+                </p>
+
+            </div>
+
+            <div class="job-right">
+
+                <span class="match-score">
+
+                    0% Match
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ==========================================
+PROFILE & ACTIVITY
+========================================== -->
+
+<section class="dashboard-grid">
+
+    <!-- ======================================
+         RECENT ACTIVITY
+    ======================================= -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                <h2>
+
+                    Recent Activity
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div id="recentActivity">
+
+            <div class="activity-item">
+
+                <i class="fa-solid fa-clock"></i>
+
+                <span>
+
+                    No recent activity available.
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ======================================
+         PROFILE COMPLETION
+    ======================================= -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+
+                <i class="fa-solid fa-user-check"></i>
+
+                <h2>
+
+                    Profile Completion
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="profile-progress">
+
+            <div class="progress">
+
+                <div
+                    id="profileCompletion"
+                    class="progress-fill">
+
+                </div>
+
+            </div>
+
+            <h3 id="profileCompletionText">
+
+                0% Completed
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+ACHIEVEMENTS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-trophy"></i>
+
+            <h2>
+
+                Achievements
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div
+        id="achievements"
+        class="achievements-grid">
+
+        <div class="achievement-card">
+
+            <i class="fa-solid fa-medal"></i>
+
+            <h3>
+
+                Start Your Journey
+
+            </h3>
+
+            <p>
+
+                Upload your first resume to unlock achievements.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+CAREER INSIGHTS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-lightbulb"></i>
+
+            <h2>
+
+                AI Career Insights
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div
+        id="careerInsights"
+        class="insights-grid">
+
+        <div class="insight-card">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <p>
+
+                Analyze your resume to receive personalized career insights.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+WEEKLY GOALS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-bullseye"></i>
+
+            <h2>
+
+                Weekly Goals
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div
+        id="weeklyGoals"
+        class="weekly-goals">
+
+        <div class="goal-item">
+
+            <input type="checkbox">
+
+            <span>
+
+                Upload Resume
+
+            </span>
+
+        </div>
+
+        <div class="goal-item">
+
+            <input type="checkbox">
+
+            <span>
+
+                Improve ATS Score
+
+            </span>
+
+        </div>
+
+        <div class="goal-item">
+
+            <input type="checkbox">
+
+            <span>
+
+                Apply to 5 Jobs
+
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ==========================================
+LEARNING ROADMAP
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-graduation-cap"></i>
+
+            <h2>
+
+                Learning Roadmap
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="learning-grid">
+
+        <div class="learning-card">
+
+            <i class="fa-brands fa-python"></i>
+
+            <h3>Python</h3>
+
+            <p>
+
+                Master Python fundamentals, OOP,
+                APIs and backend development.
+
+            </p>
+
+        </div>
+
+        <div class="learning-card">
+
+            <i class="fa-solid fa-database"></i>
+
+            <h3>SQL</h3>
+
+            <p>
+
+                Practice joins, indexing,
+                optimization and database design.
+
+            </p>
+
+        </div>
+
+        <div class="learning-card">
+
+            <i class="fa-solid fa-code"></i>
+
+            <h3>DSA</h3>
+
+            <p>
+
+                Solve arrays, strings,
+                trees, graphs and dynamic programming.
+
+            </p>
+
+        </div>
+
+        <div class="learning-card">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <h3>AI Engineering</h3>
+
+            <p>
+
+                Build AI applications using
+                FastAPI, Gemini, OpenAI and RAG.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+CAREER PROGRESS
+========================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <h2>
+
+                Career Progress
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="timeline">
+
+        <div class="timeline-item">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>
+
+                    Resume Uploaded
+
+                </h4>
+
+                <p>
+
+                    Upload your resume and begin
+                    your AI career journey.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>
+
+                    Improve ATS Score
+
+                </h4>
+
+                <p>
+
+                    Follow AI suggestions to
+                    increase your resume quality.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>
+
+                    Apply to Jobs
+
+                </h4>
+
+                <p>
+
+                    Find matching jobs and
+                    apply directly from AXONIX.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-content">
+
+                <h4>
+
+                    Get Interview Ready
+
+                </h4>
+
+                <p>
+
+                    Prepare with AI guidance
+                    and land your dream job.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+FOOTER
+========================================== -->
+
+<footer class="footer">
+
+    <p>
+
+        © 2026 AXONIX • AI Career Copilot
+
+    </p>
+
+    <p>
+
+        Built with ❤️ using
+        FastAPI • Gemini AI • Chart.js
+
+    </p>
+
+</footer>
+
+</div>
+
+</div>
+
+<!-- ==========================================
+JAVASCRIPT
+========================================== -->
+
+<script src="js/dashboard.js"></script>
+
+<!-- AXONIX Loading Popup -->
+
+<div id="loadingPopup" class="loading-popup">
+
+    <div class="loading-popup-box">
+
+        <div class="loading-spinner"></div>
+
+        <div class="loading-content">
+
+            <h4>🤖 AXONIX AI</h4>
+
+            <p id="loadingMessage">
+                Updating your dashboard...
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

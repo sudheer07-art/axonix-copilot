@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXONIX | ATS Keywords</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#0b1120;color:white;padding:40px;}
+.container{max-width:1000px;margin:auto;}
+.card{
+background:#111827;
+border:1px solid #1f2937;
+padding:30px;
+border-radius:20px;
+margin-top:20px;
+}
+input[type=file]{
+width:100%;
+padding:15px;
+background:#1f2937;
+border:1px solid #374151;
+border-radius:10px;
+color:white;
+}
+button{
+margin-top:20px;
+padding:14px 24px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
+.result{
+margin-top:20px;
+background:#111827;
+padding:25px;
+border-radius:20px;
+white-space:pre-wrap;
+}
+a{color:#60a5fa;text-decoration:none;}
+.loading-container{
+    display:none;
+    text-align:center;
+    margin-top:30px;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid #1f2937;
+    border-top:6px solid #3b82f6;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:auto;
+}
+
+.loading-text{
+    margin-top:15px;
+    color:#60a5fa;
+    font-size:18px;
+}
+
+@keyframes spin{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<a href="index.html">← Back</a>
+
+<div class="card">
+
+<h1>🔑 ATS Keyword Optimizer</h1>
+
+<br>
+
+<input type="file" id="resumeFile">
+
+<button onclick="optimizeKeywords()">
+Optimize Keywords
+</button>
+
+</div>
+<div id="loading" class="loading-container">
+
+    <div class="spinner"></div>
+
+    <p class="loading-text">
+        🤖 AI is analyzing...
+    </p>
+
+</div>
+<div id="result"></div>
+
+</div>
+
+<script>
+function showLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "block";
+}
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).style.display = "none";
+}
+const API_URL="http://127.0.0.1:8000";
+
+async function optimizeKeywords(){
+
+const file=document.getElementById(
+"resumeFile"
+).files[0];
+
+if(!file){
+alert("Upload Resume");
+return;
+}
+
+const formData=new FormData();
+
+formData.append(
+"file",
+file
+);
+
+const response=await fetch(
+`${API_URL}/optimize-keywords`,
+{
+method:"POST",
+body:formData
+}
+);
+
+const data=await response.json();
+
+document.getElementById(
+"result"
+).innerHTML=`
+<div class="result">
+<h2>Suggested Keywords</h2>
+<br>
+${data.keywords}
+</div>
+`;
+
+}
+
+</script>
+
+</body>
+</html>

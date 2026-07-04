@@ -1,0 +1,843 @@
+/* ==========================================
+   AXONIX SIGNUP
+   PART 1
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    background:transparent;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:100%;
+
+    height:80vh;
+
+    overflow:hidden;
+
+}
+
+/* ===================================== */
+
+.signup-container{
+
+    width:100%;
+
+    height:100%;
+
+    background:#ffffff;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    position:relative;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35);
+
+    animation:popup .45s ease;
+
+}
+
+/* ===================================== */
+
+.left-side{
+
+    width:52%;
+
+  
+
+    padding:18px 14px;
+
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+/* ===================================== */
+
+.logo{
+
+    font-size:22px;
+
+    font-weight:800;
+
+    color:#2563eb;
+
+    margin-bottom:8px;
+
+}
+
+/* ===================================== */
+
+.left-side h1{
+
+    font-size:24px;
+
+    margin-bottom:7px;
+
+    color:#111827;
+
+    
+
+}
+
+.left-side p{
+
+    color:#64748b;
+
+    line-height:1.6;
+
+    font-size:13px;
+
+    margin-bottom:4px;
+
+}
+
+/* ===================================== */
+
+.input-box{
+
+    position:relative;
+
+    margin-bottom:15px;
+
+}
+
+.input-box i{
+
+    position:absolute;
+
+    left:16px;
+
+    top:14px;
+
+    color:#64748b;
+
+    transition:.3s;
+
+}
+
+.input-box input{
+
+    width:100%;
+
+    height:38px;
+
+    padding-left:45px;
+
+    border-radius:10px;
+
+    border:1px solid #d6d6d6;
+
+    outline:none;
+
+    font-size:14px;
+
+    transition:.35s;
+
+}
+
+.input-box input:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+.input-box input:focus+i{
+
+    color:#2563eb;
+
+}
+
+/* ===================================== */
+
+.signup-btn{
+
+    width:100%;
+
+    height:45px;
+
+    border:none;
+margin-bottom:0px;
+    border-radius:17px;
+
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #60a5fa
+    );
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+}
+
+.signup-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 12px 30px rgba(37,99,235,.35);
+
+}
+
+.signup-btn:active{
+
+    transform:scale(.98);
+
+}
+
+#signupMessage{
+
+    margin-top:12px;
+
+    text-align:center;
+
+    font-weight:600;
+
+}
+/* ==========================================
+   RIGHT SIDE
+========================================== */
+
+.right-side{
+
+    width:45%;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6,
+        #60a5fa
+    );
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:25px;
+
+    color:white;
+
+    overflow:hidden;
+
+}
+
+/* Floating Circle 1 */
+
+.right-side::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    top:-80px;
+
+    right:-60px;
+
+    animation:floatCircle1 7s ease-in-out infinite;
+
+}
+
+/* Floating Circle 2 */
+
+.right-side::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:150px;
+
+    height:150px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.06);
+
+    bottom:-40px;
+
+    left:-40px;
+
+    animation:floatCircle2 8s ease-in-out infinite;
+
+}
+
+/* ========================================== */
+
+.content{
+
+    position:relative;
+
+    z-index:2;
+
+    text-align:center;
+
+}
+
+/* ========================================== */
+
+.content h2{
+
+    font-size:26px;
+
+    margin-bottom:15px;
+
+    font-weight:700;
+
+}
+
+/* ========================================== */
+
+.content p{
+
+    font-size:14px;
+
+    line-height:1.7;
+
+    margin-bottom:12px;
+
+    opacity:.95;
+
+}
+
+/* ========================================== */
+
+.feature{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:12px 0;
+
+    font-size:14px;
+
+}
+
+/* ========================================== */
+
+.feature i{
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+/* ========================================== */
+
+.login-btn{
+
+    margin-top:0px;
+    margin-bottom: 30px;
+
+    width:100%;
+
+    height:42px;
+
+    border:2px solid white;
+
+    border-radius:10px;
+
+    background:transparent;
+
+    color:rgb(0, 0, 0);
+
+    font-size:20px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-btn:hover{
+
+    background:white;
+
+    color:#2563eb;
+
+    transform:translateY(-2px);
+
+}
+
+/* ========================================== */
+
+.social-login{
+
+    margin-top:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+}
+
+.social-login a{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+.social-login a:hover{
+
+    background:white;
+
+    color:#2563eb;
+
+    transform:translateY(-4px);
+
+}
+
+/* ========================================== */
+
+.divider{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:18px 0;
+
+    color:#dbeafe;
+
+    font-size:13px;
+
+}
+
+.divider::before,
+
+.divider::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:rgba(255,255,255,.35);
+
+}
+
+/* ==========================================
+   AXONIX SIGNUP
+   PART 3
+   Animations + Responsive
+========================================== */
+
+/* ===========================
+POPUP ANIMATION
+=========================== */
+
+@keyframes popup{
+
+    0%{
+        opacity:0;
+        transform:scale(.82) translateY(40px);
+    }
+
+    100%{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+
+}
+
+/* ===========================
+FLOATING CIRCLES
+=========================== */
+
+@keyframes floatCircle1{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(20px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+@keyframes floatCircle2{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-18px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+/* ===========================
+INPUT ANIMATION
+=========================== */
+
+.input-box{
+
+    opacity:0;
+
+    animation:slideUp .5s forwards;
+
+}
+
+.input-box:nth-child(1){
+
+    animation-delay:.10s;
+
+}
+
+.input-box:nth-child(2){
+
+    animation-delay:.20s;
+
+}
+
+.input-box:nth-child(3){
+
+    animation-delay:.30s;
+
+}
+
+.input-box:nth-child(4){
+
+    animation-delay:.40s;
+
+}
+
+.signup-btn{
+
+    opacity:0;
+
+    animation:slideUp .6s forwards;
+
+    animation-delay:.5s;
+
+}
+
+@keyframes slideUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ===========================
+HOVER EFFECTS
+=========================== */
+
+.signup-container{
+
+    transition:.35s;
+
+}
+
+.signup-container:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:
+
+        0 35px 90px rgba(0,0,0,.4);
+
+}
+
+.logo{
+
+    transition:.3s;
+
+}
+
+.logo:hover{
+
+    transform:scale(1.05);
+
+}
+
+.input-box input:hover{
+
+    border-color:#60a5fa;
+
+}
+
+/* ===========================
+GLASS SHINE EFFECT
+=========================== */
+
+.signup-container::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:45%;
+
+    height:100%;
+
+    background:linear-gradient(
+
+        90deg,
+
+        transparent,
+
+        rgba(255,255,255,.4),
+
+        transparent
+
+    );
+
+    transform:skewX(-25deg);
+
+    animation:shine 6s infinite;
+
+}
+
+@keyframes shine{
+
+    from{
+
+        left:-120%;
+
+    }
+
+    to{
+
+        left:150%;
+
+    }
+
+}
+
+/* ===========================
+SUCCESS / ERROR
+=========================== */
+
+.success{
+
+    color:#16a34a;
+
+    font-weight:600;
+
+}
+
+.error{
+
+    color:#ef4444;
+
+    font-weight:600;
+
+}
+
+/* ===========================
+RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+.signup-container{
+
+    width:95%;
+
+    height:auto;
+
+    flex-direction:column;
+
+}
+
+.left-side{
+
+    width:100%;
+
+    padding:30px;
+
+}
+
+.right-side{
+
+    width:100%;
+
+    min-height:220px;
+
+    padding:30px;
+
+}
+
+.content{
+
+    text-align:center;
+
+}
+
+.feature{
+
+    justify-content:center;
+
+}
+
+}
+
+/* ===========================
+MOBILE
+=========================== */
+
+@media(max-width:500px){
+
+.logo{
+
+    font-size:20px;
+
+}
+
+.left-side h1{
+
+    font-size:24px;
+
+}
+
+.left-side p{
+
+    font-size:13px;
+
+}
+
+.input-box input{
+
+    height:40px;
+
+    font-size:13px;
+
+}
+
+.signup-btn{
+
+    height:42px;
+
+    font-size:14px;
+
+}
+
+.login-btn{
+
+    height:42px;
+
+    font-size:14px;
+
+}
+
+.social-login{
+
+    flex-wrap:wrap;
+
+}
+
+}

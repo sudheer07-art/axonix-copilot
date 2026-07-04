@@ -1,0 +1,152 @@
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AXONIX | AI Resume Analysis</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="css/analyze.css">
+
+</head>
+
+<body>
+
+<div class="background-blur"></div>
+
+<div class="container">
+
+    <!-- <header class="top-bar">
+
+        <a href="dashboard.html" class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Dashboard
+
+        </a> -->
+        <div style="margin-bottom:20px;">
+    <button id="backBtn" class="back-btn">
+        ← Back
+    </button>
+</div>
+
+        <div class="logo">
+
+            <i class="fa-solid fa-robot"></i>
+
+            <span>AXONIX AI Resume Analyzer</span>
+
+        </div>
+
+    </header>
+
+    <section class="hero">
+
+        <h1>
+
+            Analyze Your Resume with AI
+
+        </h1>
+
+        <p>
+
+            Upload your resume to receive an ATS Score, Skill Analysis,
+            Resume Health Report, AI Suggestions and Job Match Results.
+
+        </p>
+
+    </section>
+
+    <section class="upload-section">
+
+        <div class="upload-card">
+
+            <div class="upload-icon">
+
+                <i class="fa-solid fa-file-arrow-up"></i>
+
+            </div>
+
+            <h2>
+
+                Upload Resume
+
+            </h2>
+
+            <p>
+
+                Only PDF files are supported.
+
+            </p>
+
+            <input
+                type="file"
+                id="resumeFile"
+                accept=".pdf">
+
+            <button
+                id="analyzeBtn">
+
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                Analyze Resume
+
+            </button>
+
+            <p
+                id="analysisStatus"
+                class="status">
+
+                Waiting for upload...
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <div
+        id="loading"
+        class="loading-container">
+
+        <div class="spinner"></div>
+
+        <h3>
+
+            AI is analyzing your resume...
+
+        </h3>
+
+        <p>
+
+            Extracting Skills • Calculating ATS • Finding Jobs
+
+        </p>
+
+    </div>
+
+    <div
+        id="results">
+
+    </div>
+
+</div>
+
+<script src="js/analyze.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,515 @@
+/* ==========================================
+   GLOBAL
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    background:#0b1120;
+    color:white;
+    overflow-x:hidden;
+
+}
+
+section{
+
+    padding:90px 8%;
+
+}
+
+.section-title{
+
+    text-align:center;
+    margin-bottom:60px;
+
+}
+
+.section-title h2{
+
+    font-size:40px;
+    font-weight:700;
+
+   background: linear-gradient(90deg, #60a5fa, #3b82f6);
+background-clip: text;
+-webkit-background-clip: text;
+color: transparent;
+-webkit-text-fill-color: transparent;
+
+}
+
+/* ==========================================
+   HERO
+========================================== */
+
+.hero{
+
+    min-height:70vh;
+
+    background:
+    radial-gradient(circle at top,#1d4ed8 0%,#0b1120 70%);
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+nav{
+
+    padding:30px 8%;
+
+}
+
+.back-btn{
+
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+
+    color:white;
+    text-decoration:none;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    transition:.3s;
+
+}
+
+.back-btn:hover{
+
+    background:#2563eb;
+
+}
+
+.hero-content{
+
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+}
+
+.hero-content h1{
+
+    font-size:60px;
+    font-weight:800;
+
+    margin-bottom:20px;
+
+}
+
+.hero-content p{
+
+    max-width:700px;
+
+    font-size:20px;
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================
+   CONTACT INFO
+========================================== */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:30px;
+
+}
+
+.info-card{
+
+    background:#111827;
+
+    padding:35px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    text-align:center;
+
+    transition:.4s;
+
+}
+
+.info-card:hover{
+
+    transform:translateY(-10px);
+
+    border-color:#3b82f6;
+
+    box-shadow:0 20px 35px rgba(59,130,246,.25);
+
+}
+
+.info-card i{
+
+    font-size:42px;
+
+    color:#60a5fa;
+
+    margin-bottom:20px;
+
+}
+
+.info-card h3{
+
+    margin-bottom:15px;
+
+    font-size:24px;
+
+}
+
+.info-card p{
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================
+   FORM
+========================================== */
+
+.contact-form-section{
+
+    background:#111827;
+
+}
+
+#contactForm{
+
+    max-width:850px;
+
+    margin:auto;
+
+}
+
+.input-group{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+}
+
+#contactForm input,
+#contactForm textarea{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:16px;
+
+    background:#1f2937;
+
+    border:1px solid #374151;
+
+    border-radius:12px;
+
+    color:white;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+#contactForm input:focus,
+#contactForm textarea:focus{
+
+    border-color:#3b82f6;
+
+    box-shadow:0 0 15px rgba(59,130,246,.3);
+
+}
+
+#contactForm textarea{
+
+    resize:none;
+
+}
+
+#contactForm button{
+
+    margin-top:25px;
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#contactForm button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================================
+   SOCIAL
+========================================== */
+
+.social-icons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:30px;
+
+}
+
+.social-icons a{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    background:#111827;
+
+    color:#60a5fa;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    text-decoration:none;
+
+    font-size:28px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    transition:.3s;
+
+}
+
+.social-icons a:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+    transform:translateY(-8px);
+
+}
+
+/* ==========================================
+   FAQ
+========================================== */
+
+.faq{
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+.faq-item{
+
+    background:#111827;
+
+    padding:30px;
+
+    margin-bottom:25px;
+
+    border-radius:15px;
+
+    border-left:5px solid #3b82f6;
+
+}
+
+.faq-item h3{
+
+    margin-bottom:15px;
+
+}
+
+.faq-item p{
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================
+   TOAST
+========================================== */
+
+#toast{
+
+    position:fixed;
+
+    bottom:35px;
+    right:35px;
+
+    background:#22c55e;
+
+    color:white;
+
+    padding:18px 28px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    display:none;
+
+    z-index:9999;
+
+    animation:slideIn .4s ease;
+
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer{
+
+    padding:30px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+/* ==========================================
+   SCROLL ANIMATION
+========================================== */
+
+.hidden{
+
+    opacity:0;
+
+    transform:translateY(50px);
+
+    transition:all .8s ease;
+
+}
+
+.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/* ==========================================
+   KEYFRAMES
+========================================== */
+
+@keyframes slideIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(100px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:900px){
+
+    .hero-content h1{
+
+        font-size:42px;
+
+    }
+
+    .hero-content p{
+
+        font-size:17px;
+
+    }
+
+    .input-group{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .section-title h2{
+
+        font-size:32px;
+
+    }
+
+    .social-icons{
+
+        flex-wrap:wrap;
+
+    }
+
+}

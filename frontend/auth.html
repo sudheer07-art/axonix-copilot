@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>AXONIX Authentication</title>
+
+    <link
+        rel="stylesheet"
+        href="css/auth.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Dark Background -->
+
+    <div class="overlay-bg">
+
+        <!-- Popup -->
+
+        <div class="auth-popup">
+
+            <!-- Close Button -->
+
+            <button
+                class="close-btn"
+                onclick="window.location='index.html'">
+
+                &times;
+
+            </button>
+
+            <!-- Left Side -->
+
+            <div class="left-panel">
+
+                <div class="brand">
+
+                    🚀 AXONIX
+
+                </div>
+
+                <h1>
+
+                    Welcome Back
+
+                </h1>
+
+                <p>
+
+                    Login to continue your AI career journey.
+
+                </p>
+
+                <form id="loginForm">
+
+                    <div class="input-box">
+
+                        <i class="fa fa-user"></i>
+
+                        <input
+                            id="loginUsername"
+                            type="text"
+                            placeholder="Username"
+                            required>
+
+                    </div>
+
+                    <div class="input-box">
+
+                        <i class="fa fa-lock"></i>
+
+                        <input
+                            id="loginPassword"
+                            type="password"
+                            placeholder="Password"
+                            required>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="login-btn">
+
+                        Login
+
+                    </button>
+
+                    <p
+                        id="loginMessage"
+                        class="message">
+
+                    </p>
+
+                </form>
+
+            </div>
+
+            <!-- Right Side -->
+
+            <div class="right-panel">
+
+                <div class="overlay-content">
+
+                    <h1>
+
+                        New Here?
+
+                    </h1>
+
+                    <p>
+
+                        Create your free AXONIX account
+                        and unlock AI Resume Analysis,
+                        ATS Score,
+                        Job Matching,
+                        Live Jobs
+                        and much more.
+
+                    </p>
+
+                    <button
+                        id="openSignup"
+                        class="outline-btn">
+
+                        Create Account
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Signup Popup -->
+
+    <div
+        id="signupModal"
+        class="signup-modal">
+
+        <div class="signup-box">
+
+            <button
+                class="close-signup"
+                id="closeSignup">
+
+                &times;
+
+            </button>
+
+            <h2>
+
+                Create Account
+
+            </h2>
+
+            <form id="signupForm">
+
+                <div class="input-box">
+
+                    <i class="fa fa-user"></i>
+
+                    <input
+                        id="signupUsername"
+                        type="text"
+                        placeholder="Username"
+                        required>
+
+                </div>
+
+                <div class="input-box">
+
+                    <i class="fa fa-envelope"></i>
+
+                    <input
+                        id="signupEmail"
+                        type="email"
+                        placeholder="Email"
+                        required>
+
+                </div>
+
+                <div class="input-box">
+
+                    <i class="fa fa-lock"></i>
+
+                    <input
+                        id="signupPassword"
+                        type="password"
+                        placeholder="Password"
+                        required>
+
+                </div>
+
+                <button
+                    class="signup-btn"
+                    type="submit">
+
+                    Create Account
+
+                </button>
+
+                <p
+                    id="signupMessage"
+                    class="message">
+
+                </p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>
