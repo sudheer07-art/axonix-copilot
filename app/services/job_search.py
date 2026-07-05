@@ -9,6 +9,15 @@ load_dotenv()
 
 APP_ID = os.getenv("ADZUNA_APP_ID")
 APP_KEY = os.getenv("ADZUNA_APP_KEY")
+print("=" * 60)
+print("ADZUNA APP ID:", APP_ID)
+
+if APP_KEY:
+    print("ADZUNA APP KEY:", APP_KEY[:6] + "******")
+else:
+    print("ADZUNA APP KEY: None")
+
+print("=" * 60)
 
 def fetch_jobs(query):
 
@@ -16,7 +25,7 @@ def fetch_jobs(query):
     print("Searching Adzuna for:", query)
     print("=" * 60)
 
-    url = "https://api.adzuna.com/v1/api/jobs/in/search/1"
+    url = "https://api.adzuna.com/v1/api/jobs/gb/search/1"
 
     params = {
         "app_id": APP_ID,
@@ -25,11 +34,16 @@ def fetch_jobs(query):
         "what": query
     }
 
-    response = requests.get(url,params=params, timeout=10)
+    response = requests.get(url,
+                            params=params,
+                            timeout=15)
 
     print("=" * 60)
     print("Status:", response.status_code)
-    print("URL:", response.url)
+    print("=" * 60)
+    print("FINAL URL")
+    print(response.request.url)
+    print("=" * 60)
     print("Response:")
     print(response.text[:1000])
     print("=" * 60)

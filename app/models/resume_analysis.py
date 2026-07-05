@@ -23,6 +23,8 @@ class ResumeAnalysis(Base):
     suggestions = Column(Text)
 
     summary = Column(Text)
+    # NEW COLUMN
+    analysis_json = Column(Text)
 
     created_at = Column(Text)
 
