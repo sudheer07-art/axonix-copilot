@@ -232,6 +232,7 @@ async def analyze_resume_endpoint(
 
     db.add(analysis_record)
     db.commit()
+    db.refresh(analysis_record)
 
     job_queries = (
         analysis.get("priority_job_roles")
@@ -364,6 +365,7 @@ async def analyze_resume_endpoint(
     return {
         "success": True,
         "message": "Resume analyzed successfully.",
+         "analysis_id": analysis_record.id,
         "analysis": analysis,
         "jobs_found": len(jobs),
         "matched_jobs": len(matches),
