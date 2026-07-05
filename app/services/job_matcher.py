@@ -247,7 +247,7 @@ Only JSON.
 def analyze_job(
     analysis,
     job,
-    retries=3
+    retries=1
 ):
 
     prompt = build_prompt(
@@ -295,7 +295,7 @@ def analyze_job(
             print(e)
             print("=" * 60)
 
-        time.sleep(2)
+        
 
     return None
 # ==========================================
