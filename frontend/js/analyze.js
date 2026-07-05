@@ -79,7 +79,7 @@ async function analyzeResume(){
 
         const data = await response.json();
 
-        console.log(data);
+        console.log("Analyze Resume Response:", data);
 
         if(!response.ok){
 
