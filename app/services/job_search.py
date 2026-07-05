@@ -9,24 +9,40 @@ load_dotenv()
 
 APP_ID = os.getenv("ADZUNA_APP_ID")
 APP_KEY = os.getenv("ADZUNA_APP_KEY")
+
 def fetch_jobs(query):
 
-    print(f"\nSearching Jobs For: {query}")
+    print("=" * 60)
+    print("Searching Adzuna for:", query)
+    print("=" * 60)
 
-    url = (
-        f"https://api.adzuna.com/v1/api/jobs/in/search/1"
-        f"?app_id={APP_ID}"
-        f"&app_key={APP_KEY}"
-        f"&results_per_page=10"
-        f"&what={query}"
-    )
+    url = "https://api.adzuna.com/v1/api/jobs/in/search/1"
 
-    response = requests.get(url, timeout=10)
+    params = {
+        "app_id": APP_ID,
+        "app_key": APP_KEY,
+        "results_per_page": 10,
+        "what": query
+    }
+
+    response = requests.get(url,params=params, timeout=10)
+
+    print("=" * 60)
+    print("Status:", response.status_code)
+    print("URL:", response.url)
+    print("Response:")
+    print(response.text[:1000])
+    print("=" * 60)
+
+    print("Status Code:", response.status_code)
 
     if response.status_code != 200:
+        print(response.text)
         return []
 
     data = response.json()
+
+    print("Jobs Returned:", len(data.get("results", [])))
 
     jobs = []
 
@@ -34,16 +50,22 @@ def fetch_jobs(query):
 
         jobs.append({
 
-            "title": item.get("title", "N/A"),
+            "title": item.get("title"),
 
-            "company": item.get("company", {}).get(
+            "company": item.get(
+                "company",
+                {}
+            ).get(
                 "display_name",
-                "Unknown Company"
+                ""
             ),
 
-            "location": item.get("location", {}).get(
+            "location": item.get(
+                "location",
+                {}
+            ).get(
                 "display_name",
-                "Unknown Location"
+                ""
             ),
 
             "salary_min": item.get("salary_min"),
