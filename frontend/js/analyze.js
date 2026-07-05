@@ -96,34 +96,11 @@ async function analyzeResume(){
         const analysis = data.analysis;
         console.log("STEP 1");
         const analysisId = data.analysis_id;
-        console.log("Analysis ID:", analysisId);
+console.log("Analysis ID:", analysisId);
 
-        status.innerHTML = "✅ Analysis Completed Successfully";
-        // Generate Job Matches
-const jobResponse = await fetch(
-
-    API_URL + "/generate-job-matches/" + analysisId,
-
-    {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-
-);
-
-
-console.log("Job Match Status:", jobResponse.status);
-
-const jobData = await jobResponse.json();
-console.log(jobData);
-
-console.log("Job Match Response:", jobData);
-
-if (!jobResponse.ok) {
-    throw new Error(jobData.detail || "Job matching failed.");
-}
+console.log("Jobs Found:", data.jobs_found);
+console.log("Matched Jobs:", data.matched_jobs);
+console.log("Jobs:", data.jobs);
 
 console.log("Job matching completed.");
 
