@@ -2582,9 +2582,9 @@ AXONIX LOADING OVERLAY
 
     position:fixed;
 
-    top:25px;
+    top:100px;
 
-    right:470px;
+    right:500px;
 
     display:none;
 
@@ -2606,7 +2606,7 @@ AXONIX LOADING OVERLAY
 
     padding:18px 22px;
 
-    border-radius:20px;
+    border-radius:30px;
 
     background:rgba(15,23,42,.72);
 
@@ -2614,7 +2614,7 @@ AXONIX LOADING OVERLAY
 
     -webkit-backdrop-filter:blur(22px);
 
-    border:1px solid rgba(255,255,255,.12);
+    border:1.5px solid rgba(255,255,255,.12);
 
     box-shadow:
         0 10px 30px rgba(0,0,0,.35),
