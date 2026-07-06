@@ -418,3 +418,25 @@ font-size:20px;
     background:#1d4ed8;
 
 }
+.nav-links{
+
+    display:flex;
+    gap:35px;
+    margin-left:950px;
+
+}
+
+.nav-links a{
+
+    color:#d1d5db;
+    text-decoration:none;
+    font-size:16px;
+    transition:.3s;
+
+}
+
+.nav-links a:hover{
+
+    color:#60a5fa;
+
+}
