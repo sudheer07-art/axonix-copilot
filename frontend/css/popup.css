@@ -58,12 +58,12 @@
 .auth-popup iframe{
     width:100%;
     height:100%;
-    /* display: block; */
+    display: block;
     border:none;
 }
 .auth-popup1{
     width:650px;
-    height:600px;
+    height:380px;
     background:#fff;
     border-radius:18px;
     overflow:hidden;
