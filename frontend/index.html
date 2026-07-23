@@ -8,13 +8,14 @@
     <title>AXONIX | AI Job Search Copilot</title>
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-        <link rel="stylesheet" href="css/popup.css">
+        
 </head>
 
 <body>
@@ -50,12 +51,21 @@
             <div class="nav-buttons">
 
 
-        <button id="loginBtn" class="login-btn">
-        Login
-        </button>
-        <button id="signupBtn" class="signup-btn"> 
-            Get Started
-        </button>
+        <button
+    id="loginBtn"
+    class="login-btn">
+
+    Login
+
+</button>
+
+<button
+    id="signupBtn"
+    class="signup-btn">
+
+    Get Started
+
+</button>
         <button id="menuBtn" class="menu-btn">
 
         <i class="fa-solid fa-bars"></i>
@@ -544,19 +554,6 @@
      AUTH OVERLAY
 =========================== -->
 
-<div id="authOverlay" class="auth-overlay">
-
-    <button id="closePopup" class="close-popup">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div id="authContainer">
-
-        <!-- login/signup loads here -->
-
-    </div>
-
-</div>
 
 
 
@@ -620,9 +617,10 @@
 
     </button>
  </div>
- 
-<script src="js/index.js"></script>
-<script src="js/popup.js"></script>
+ <script src="js/index.js"></script>
+ <script src="js/auth.js"></script>
+
+
 
 <!-- AXONIX Loading Popup -->
 

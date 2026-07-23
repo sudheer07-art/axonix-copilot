@@ -4,23 +4,13 @@
 
 console.log("AXONIX Popup Loaded");
 
-// ==========================================================
-// DOM READY
-// ==========================================================
-
 document.addEventListener("DOMContentLoaded", () => {
-
     initializeAuth();
-
     initializePopup();
-
     initializeSidebar();
-
 });
 
-// ==========================================================
-// AUTH STATE
-// ==========================================================
+// ================= AUTH =================
 
 function initializeAuth() {
 
@@ -36,51 +26,42 @@ function initializeAuth() {
 
     if (token) {
 
-        loginBtn.style.display = "none";
-        signupBtn.style.display = "none";
-        menuBtn.style.display = "flex";
+        if(loginBtn) loginBtn.style.display="none";
+        if(signupBtn) signupBtn.style.display="none";
+        if(menuBtn) menuBtn.style.display="flex";
 
         const username = localStorage.getItem("username") || "User";
         const email = localStorage.getItem("email") || "";
 
-        if (userName) userName.textContent = username;
-        if (userEmail) userEmail.textContent = email;
-        if (avatar) avatar.textContent = username.charAt(0).toUpperCase();
+        if(userName) userName.textContent=username;
+        if(userEmail) userEmail.textContent=email;
+        if(avatar) avatar.textContent=username.charAt(0).toUpperCase();
 
-    }
+    } else {
 
-    else {
-
-        loginBtn.style.display = "inline-flex";
-        signupBtn.style.display = "inline-flex";
-        menuBtn.style.display = "none";
-
-        if (userName) userName.textContent = "Welcome";
-        if (userEmail) userEmail.textContent = "Please Login";
-        if (avatar) avatar.textContent = "U";
+        if(loginBtn) loginBtn.style.display="inline-flex";
+        if(signupBtn) signupBtn.style.display="inline-flex";
+        if(menuBtn) menuBtn.style.display="none";
 
     }
 
 }
 
-// ==========================================================
-// POPUP
-// ==========================================================
+// ================= POPUP =================
 
-function initializePopup() {
+function initializePopup(){
 
-    const overlay = document.getElementById("authOverlay");
-    const closeBtn = document.getElementById("closePopup");
+    const overlay=document.getElementById("authOverlay");
+    const closeBtn=document.getElementById("closePopup");
 
-    if (closeBtn) {
+    document.getElementById("loginBtn")?.addEventListener("click",openLogin);
+    document.getElementById("signupBtn")?.addEventListener("click",openSignup);
 
-        closeBtn.onclick = closePopup;
+    closeBtn?.addEventListener("click",closePopup);
 
-    }
+    overlay?.addEventListener("click",(e)=>{
 
-    overlay.addEventListener("click", e => {
-
-        if (e.target === overlay) {
+        if(e.target===overlay){
 
             closePopup();
 
@@ -88,9 +69,9 @@ function initializePopup() {
 
     });
 
-    document.addEventListener("keydown", e => {
+    document.addEventListener("keydown",(e)=>{
 
-        if (e.key === "Escape") {
+        if(e.key==="Escape"){
 
             closePopup();
 
@@ -100,171 +81,139 @@ function initializePopup() {
 
 }
 
-// ==========================================================
-// LOAD HTML
-// ==========================================================
+// ================= LOAD PAGE =================
 
-async function loadPopup(page) {
+async function loadPopup(page){
 
-    const container = document.getElementById("authContainer");
+    const container=document.getElementById("authContainer");
 
-    container.innerHTML = `
-
+    container.innerHTML=`
         <div class="popup-loader">
-
             <div class="loader"></div>
-
             <p>Loading...</p>
-
         </div>
-
     `;
 
-    try {
+    try{
 
-        const response = await fetch(page);
+        const res=await fetch(page);
 
-        const html = await response.text();
+        const html=await res.text();
 
-        container.innerHTML = html;
+        container.innerHTML=html;
 
-    }
+        // IMPORTANT
+        // Execute JS manually because innerHTML ignores <script>
 
-    catch (err) {
+        if(page==="login.html"){
 
-        console.error(err);
+            loadScript("js/login.js");
 
-        container.innerHTML = `
+        }
 
-            <div class="popup-error">
+        if(page==="signup.html"){
 
-                <h3>Unable to load page</h3>
+            loadScript("js/signup.js");
 
-                <p>Please try again.</p>
+        }
 
-            </div>
+    }catch(err){
 
-        `;
+        container.innerHTML="<h3>Unable to load page</h3>";
 
     }
 
 }
 
-// ==========================================================
-// LOGIN
-// ==========================================================
+function loadScript(src){
 
-async function openLogin() {
+    document.getElementById("dynamicScript")?.remove();
 
-    document
-        .getElementById("authOverlay")
-        .classList
-        .add("show");
+    const script=document.createElement("script");
+
+    script.src=src;
+
+    script.id="dynamicScript";
+
+    document.body.appendChild(script);
+
+}
+
+// ================= OPEN =================
+
+async function openLogin(){
+
+    document.getElementById("authOverlay").classList.add("show");
 
     await loadPopup("login.html");
 
 }
 
-// ==========================================================
-// SIGNUP
-// ==========================================================
+async function openSignup(){
 
-async function openSignup() {
-
-    document
-        .getElementById("authOverlay")
-        .classList
-        .add("show");
+    document.getElementById("authOverlay").classList.add("show");
 
     await loadPopup("signup.html");
 
 }
 
-// ==========================================================
-// CLOSE
-// ==========================================================
+// ================= CLOSE =================
 
-function closePopup() {
+function closePopup(){
 
-    document
-        .getElementById("authOverlay")
-        .classList
-        .remove("show");
+    document.getElementById("authOverlay").classList.remove("show");
 
-    setTimeout(() => {
+    setTimeout(()=>{
 
-        document
-            .getElementById("authContainer")
-            .innerHTML = "";
+        document.getElementById("authContainer").innerHTML="";
+
+        document.getElementById("dynamicScript")?.remove();
 
     },300);
 
 }
 
-// ==========================================================
-// SIDEBAR
-// ==========================================================
+// ================= SIDEBAR =================
 
-function initializeSidebar() {
+function initializeSidebar(){
 
-    const menuBtn = document.getElementById("menuBtn");
-    const sideMenu = document.getElementById("sideMenu");
-    const closeMenu = document.getElementById("closeMenuBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
+    const menu=document.getElementById("menuBtn");
+    const side=document.getElementById("sideMenu");
+    const close=document.getElementById("closeMenuBtn");
 
-    if(menuBtn){
+    menu?.addEventListener("click",()=>{
 
-        menuBtn.onclick=()=>{
+        side.classList.add("show");
 
-            sideMenu.classList.add("show");
+    });
 
-        };
+    close?.addEventListener("click",()=>{
 
-    }
+        side.classList.remove("show");
 
-    if(closeMenu){
+    });
 
-        closeMenu.onclick=()=>{
-
-            sideMenu.classList.remove("show");
-
-        };
-
-    }
-
-    if(logoutBtn){
-
-        logoutBtn.onclick=logout;
-
-    }
+    document.getElementById("logoutBtn")?.addEventListener("click",logout);
 
 }
 
-// ==========================================================
-// LOGOUT
-// ==========================================================
+// ================= LOGOUT =================
 
 function logout(){
 
     localStorage.clear();
 
-    window.location.href="index.html";
+    location.reload();
 
 }
 
-// ==========================================================
-// LOGIN SUCCESS
-// ==========================================================
+// ================= LOGIN SUCCESS =================
 
-function loginSuccess(username,email=""){
+function loginSuccess(username,email){
 
     localStorage.setItem("username",username);
 
-    if(email){
-
-        localStorage.setItem("email",email);
-
-    }
+    localStorage.setItem("email",email);
 
     closePopup();
 
@@ -272,32 +221,26 @@ function loginSuccess(username,email=""){
 
 }
 
-// ==========================================================
-// PROTECTED PAGE
-// ==========================================================
+// ================= PROTECTED =================
 
 function checkLogin(page){
 
-    const token=localStorage.getItem("token");
-
-    if(token){
+    if(localStorage.getItem("token")){
 
         window.location.href=page;
 
-        return;
+    }else{
+
+        openLogin();
 
     }
 
-    openLogin();
-
 }
 
-// ==========================================================
-// EXPORTS
-// ==========================================================
+// ================= EXPORTS =================
 
 window.openLogin=openLogin;
 window.openSignup=openSignup;
 window.closePopup=closePopup;
-window.checkLogin=checkLogin;
 window.loginSuccess=loginSuccess;
+window.checkLogin=checkLogin;
