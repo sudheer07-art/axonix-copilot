@@ -1,42 +1,26 @@
-// =============================================
+// ==========================================================
 // AXONIX POPUP.JS
-// Part 3A-1
-// =============================================
+// ==========================================================
 
-console.log("AXONIX popup.js loaded");
+console.log("AXONIX Popup Loaded");
 
-// =============================================
-// CONFIG
-// =============================================
-
-const POPUP_SIZES = {
-    login: {
-        width: "680px",
-        height: "460px"
-    },
-    signup: {
-        width: "760px",
-        height: "560px"
-    }
-};
-
-// =============================================
+// ==========================================================
 // DOM READY
-// =============================================
+// ==========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
     initializeAuth();
 
-    initializeSidebar();
-
     initializePopup();
+
+    initializeSidebar();
 
 });
 
-// =============================================
-// AUTH INITIALIZATION
-// =============================================
+// ==========================================================
+// AUTH STATE
+// ==========================================================
 
 function initializeAuth() {
 
@@ -46,200 +30,65 @@ function initializeAuth() {
     const signupBtn = document.getElementById("signupBtn");
     const menuBtn = document.getElementById("menuBtn");
 
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const avatar = document.getElementById("avatarLetter");
+
     if (token) {
 
-        if (loginBtn) loginBtn.style.display = "none";
+        loginBtn.style.display = "none";
+        signupBtn.style.display = "none";
+        menuBtn.style.display = "flex";
 
-        if (signupBtn) signupBtn.style.display = "none";
+        const username = localStorage.getItem("username") || "User";
+        const email = localStorage.getItem("email") || "";
 
-        if (menuBtn) menuBtn.style.display = "flex";
-
-        loadUserInfo();
+        if (userName) userName.textContent = username;
+        if (userEmail) userEmail.textContent = email;
+        if (avatar) avatar.textContent = username.charAt(0).toUpperCase();
 
     }
 
     else {
 
-        if (loginBtn) loginBtn.style.display = "inline-flex";
+        loginBtn.style.display = "inline-flex";
+        signupBtn.style.display = "inline-flex";
+        menuBtn.style.display = "none";
 
-        if (signupBtn) signupBtn.style.display = "inline-flex";
-
-        if (menuBtn) menuBtn.style.display = "none";
-
-    }
-
-}
-
-// =============================================
-// LOAD USER INFO
-// =============================================
-
-function loadUserInfo() {
-
-    const username =
-        localStorage.getItem("username") || "User";
-
-    const email =
-        localStorage.getItem("email") || "";
-
-    const avatar =
-        document.getElementById("avatarLetter");
-
-    const userName =
-        document.getElementById("userName");
-
-    const userEmail =
-        document.getElementById("userEmail");
-
-    if (avatar) {
-
-        avatar.innerHTML =
-            username.charAt(0).toUpperCase();
-
-    }
-
-    if (userName) {
-
-        userName.innerHTML = username;
-
-    }
-
-    if (userEmail) {
-
-        userEmail.innerHTML = email;
+        if (userName) userName.textContent = "Welcome";
+        if (userEmail) userEmail.textContent = "Please Login";
+        if (avatar) avatar.textContent = "U";
 
     }
 
 }
 
-// =============================================
-// SIDEBAR
-// =============================================
+// ==========================================================
+// POPUP
+// ==========================================================
 
-function initializeSidebar() {
+function initializePopup() {
 
-    const menuBtn =
-        document.getElementById("menuBtn");
+    const overlay = document.getElementById("authOverlay");
+    const closeBtn = document.getElementById("closePopup");
 
-    const sideMenu =
-        document.getElementById("sideMenu");
+    if (closeBtn) {
 
-    const closeMenuBtn =
-        document.getElementById("closeMenuBtn");
-
-    const logoutBtn =
-        document.getElementById("logoutBtn");
-
-    if (menuBtn && sideMenu) {
-
-        menuBtn.onclick = () => {
-
-            sideMenu.classList.add("show");
-
-        };
+        closeBtn.onclick = closePopup;
 
     }
 
-    if (closeMenuBtn && sideMenu) {
+    overlay.addEventListener("click", e => {
 
-        closeMenuBtn.onclick = () => {
+        if (e.target === overlay) {
 
-            sideMenu.classList.remove("show");
-
-        };
-
-    }
-
-    document.addEventListener("click", (e) => {
-
-        if (
-            sideMenu &&
-            sideMenu.classList.contains("show") &&
-            !sideMenu.contains(e.target) &&
-            menuBtn &&
-            !menuBtn.contains(e.target)
-        ) {
-
-            sideMenu.classList.remove("show");
+            closePopup();
 
         }
 
     });
 
-    if (logoutBtn) {
-
-        logoutBtn.onclick = logout;
-
-    }
-
-}
-
-// =============================================
-// LOGOUT
-// =============================================
-
-function logout() {
-
-    localStorage.removeItem("token");
-
-    localStorage.removeItem("username");
-
-    localStorage.removeItem("email");
-
-    window.location.href = "index.html";
-
-}
-
-// =============================================
-// POPUP INITIALIZATION
-// =============================================
-
-function initializePopup() {
-
-    const overlay =
-        document.getElementById("authOverlay");
-
-    const loginBtn =
-        document.getElementById("loginBtn");
-
-    const signupBtn =
-        document.getElementById("signupBtn");
-
-    if (loginBtn) {
-
-        loginBtn.onclick = () => {
-
-            openLogin();
-
-        };
-
-    }
-
-    if (signupBtn) {
-
-        signupBtn.onclick = () => {
-
-            openSignup();
-
-        };
-
-    }
-
-    if (overlay) {
-
-        overlay.addEventListener("click", (e) => {
-
-            if (e.target === overlay) {
-
-                closePopup();
-
-            }
-
-        });
-
-    }
-
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
 
         if (e.key === "Escape") {
 
@@ -250,18 +99,16 @@ function initializePopup() {
     });
 
 }
-// =============================================
-// LOAD POPUP HTML
-// =============================================
+
+// ==========================================================
+// LOAD HTML
+// ==========================================================
 
 async function loadPopup(page) {
 
-    const authContent =
-        document.getElementById("authContent");
+    const container = document.getElementById("authContainer");
 
-    if (!authContent) return;
-
-    authContent.innerHTML = `
+    container.innerHTML = `
 
         <div class="popup-loader">
 
@@ -279,13 +126,15 @@ async function loadPopup(page) {
 
         const html = await response.text();
 
-        authContent.innerHTML = html;
+        container.innerHTML = html;
 
     }
 
     catch (err) {
 
-        authContent.innerHTML = `
+        console.error(err);
+
+        container.innerHTML = `
 
             <div class="popup-error">
 
@@ -297,124 +146,123 @@ async function loadPopup(page) {
 
         `;
 
-        console.error(err);
-
     }
 
 }
 
-// =============================================
-// OPEN LOGIN
-// =============================================
+// ==========================================================
+// LOGIN
+// ==========================================================
 
 async function openLogin() {
 
-    const overlay =
-        document.getElementById("authOverlay");
-
-    const popup =
-        document.querySelector(".auth-popup");
-
-    if (!overlay || !popup) return;
-
-    popup.style.width =
-        POPUP_SIZES.login.width;
-
-    popup.style.height =
-        POPUP_SIZES.login.height;
-
-    overlay.classList.add("show");
+    document
+        .getElementById("authOverlay")
+        .classList
+        .add("show");
 
     await loadPopup("login.html");
 
 }
 
-// =============================================
-// OPEN SIGNUP
-// =============================================
+// ==========================================================
+// SIGNUP
+// ==========================================================
 
 async function openSignup() {
 
-    const overlay =
-        document.getElementById("authOverlay");
-
-    const popup =
-        document.querySelector(".auth-popup");
-
-    if (!overlay || !popup) return;
-
-    popup.style.width =
-        POPUP_SIZES.signup.width;
-
-    popup.style.height =
-        POPUP_SIZES.signup.height;
-
-    overlay.classList.add("show");
+    document
+        .getElementById("authOverlay")
+        .classList
+        .add("show");
 
     await loadPopup("signup.html");
 
 }
 
-// =============================================
-// CLOSE POPUP
-// =============================================
+// ==========================================================
+// CLOSE
+// ==========================================================
 
 function closePopup() {
 
-    const overlay =
-        document.getElementById("authOverlay");
-
-    const authContent =
-        document.getElementById("authContent");
-
-    if (!overlay) return;
-
-    overlay.classList.remove("show");
+    document
+        .getElementById("authOverlay")
+        .classList
+        .remove("show");
 
     setTimeout(() => {
 
-        if (authContent) {
+        document
+            .getElementById("authContainer")
+            .innerHTML = "";
 
-            authContent.innerHTML = "";
-
-        }
-
-    }, 250);
+    },300);
 
 }
 
-// =============================================
-// CHECK LOGIN
-// =============================================
+// ==========================================================
+// SIDEBAR
+// ==========================================================
 
-function checkLogin(page) {
+function initializeSidebar() {
 
-    const token =
-        localStorage.getItem("token");
+    const menuBtn = document.getElementById("menuBtn");
+    const sideMenu = document.getElementById("sideMenu");
+    const closeMenu = document.getElementById("closeMenuBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    if (!token) {
+    if(menuBtn){
 
-        openLogin();
+        menuBtn.onclick=()=>{
 
-        return;
+            sideMenu.classList.add("show");
+
+        };
 
     }
 
-    window.location.href = page;
+    if(closeMenu){
+
+        closeMenu.onclick=()=>{
+
+            sideMenu.classList.remove("show");
+
+        };
+
+    }
+
+    if(logoutBtn){
+
+        logoutBtn.onclick=logout;
+
+    }
 
 }
 
-// =============================================
+// ==========================================================
+// LOGOUT
+// ==========================================================
+
+function logout(){
+
+    localStorage.clear();
+
+    window.location.href="index.html";
+
+}
+
+// ==========================================================
 // LOGIN SUCCESS
-// =============================================
+// ==========================================================
 
-function loginSuccess(username, email = "") {
+function loginSuccess(username,email=""){
 
-    localStorage.setItem("username", username);
+    localStorage.setItem("username",username);
 
-    if (email) {
+    if(email){
 
-        localStorage.setItem("email", email);
+        localStorage.setItem("email",email);
 
     }
 
@@ -424,20 +272,32 @@ function loginSuccess(username, email = "") {
 
 }
 
-// =============================================
-// GLOBAL EXPORTS
-// =============================================
+// ==========================================================
+// PROTECTED PAGE
+// ==========================================================
 
-window.openLogin = openLogin;
+function checkLogin(page){
 
-window.openSignup = openSignup;
+    const token=localStorage.getItem("token");
 
-window.closePopup = closePopup;
+    if(token){
 
-window.checkLogin = checkLogin;
+        window.location.href=page;
 
-window.loginSuccess = loginSuccess;
+        return;
 
-// =============================================
-// END OF popup.js
-// =============================================
+    }
+
+    openLogin();
+
+}
+
+// ==========================================================
+// EXPORTS
+// ==========================================================
+
+window.openLogin=openLogin;
+window.openSignup=openSignup;
+window.closePopup=closePopup;
+window.checkLogin=checkLogin;
+window.loginSuccess=loginSuccess;

@@ -1,115 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>AXONIX | Login</title>
-
-    <link rel="stylesheet" href="css/login.css">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-</head>
-
-<body>
-
-<div class="login-container">
-
-  
-
-    <div class="left-side">
-
-        <div class="logo">
-
-            🚀 AXONIX
-
-        </div>
-
-        <h1>
-
-            Welcome Back
-
-        </h1>
-
-        <p>
-
-            Login to continue your AI Career Journey.
-
-        </p>
-
-        <form id="loginForm">
-
-            <div class="input-box">
-
-                <i class="fa-solid fa-user"></i>
-
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Username"
-                    required>
-
-            </div>
-
-            <div class="input-box">
-
-                <i class="fa-solid fa-lock"></i>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    required>
-
-            </div>
-
-            <button
-                type="submit"
-                class="login-btn">
-
-                Login
-
-            </button>
-        
-
-            <p id="loginMessage"></p>
-
-            <div class="auth-switch">
-
-    <span>Don't have an account?</span>
-
-    <a href="signup.html">
-
-        Create Account
-
-    </a>
-
-</div>
-        </form>
-       
-
-    </div>  
-
-
-</div>
-
-<script src="js/login.js"></script>
-
-
-</body>
-
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -117,13 +5,16 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Login | AXONIX</title>
+    <title>AXONIX Login</title>
 
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet"
+        href="css/login.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -132,126 +23,202 @@
 
 <body>
 
-<div class="login-page">
+<div class="login-wrapper">
 
-<div class="glass-card">
+    <div class="login-card">
 
-<div class="left-side">
+        <!-- Logo -->
 
-<div class="logo">
+        <div class="logo">
 
-<i class="fa-solid fa-rocket"></i>
+            <div class="logo-icon">
 
-<span>AXONIX</span>
+                <i class="fa-solid fa-rocket"></i>
 
-</div>
+            </div>
 
-<h1>
+            <span>AXONIX</span>
 
-Welcome Back 👋
+        </div>
 
-</h1>
+        <!-- Heading -->
 
-<p>
+        <div class="heading">
 
-Login to continue your AI-powered career journey.
+            <h1>
 
-</p>
+                Welcome Back 👋
 
-<div class="feature">
+            </h1>
 
-<i class="fa-solid fa-file-lines"></i>
+            <p>
 
-<span>Resume Analysis</span>
+                Sign in to continue your AI career journey.
 
-</div>
+            </p>
 
-<div class="feature">
+        </div>
 
-<i class="fa-solid fa-briefcase"></i>
+        <!-- Login Form -->
 
-<span>Live Jobs</span>
+        <form id="loginForm">
 
-</div>
+            <!-- Email -->
 
-<div class="feature">
+            <div class="input-group">
 
-<i class="fa-solid fa-chart-line"></i>
+                <label>
 
-<span>Career Dashboard</span>
+                    Email
 
-</div>
+                </label>
 
-</div>
+                <div class="input-box">
 
-<div class="right-side">
+                    <i class="fa-solid fa-envelope"></i>
 
-<h2>
+                    <input
 
-Login
+                        id="email"
 
-</h2>
+                        type="email"
 
-<form id="loginForm">
+                        placeholder="Enter your email"
 
-<div class="input-box">
+                        required
 
-<i class="fa-solid fa-envelope"></i>
+                    >
 
-<input
-type="email"
-id="email"
-placeholder="Email Address"
-required>
+                </div>
 
-</div>
+            </div>
 
-<div class="input-box">
+            <!-- Password -->
 
-<i class="fa-solid fa-lock"></i>
+            <div class="input-group">
 
-<input
-type="password"
-id="password"
-placeholder="Password"
-required>
+                <label>
 
-<button
-type="button"
-class="eye-btn"
-id="togglePassword">
+                    Password
 
-<i class="fa-solid fa-eye"></i>
+                </label>
 
-</button>
+                <div class="input-box">
 
-</div>
+                    <i class="fa-solid fa-lock"></i>
 
-<button
-type="submit"
-class="login-btn">
+                    <input
 
-Login
+                        id="password"
 
-</button>
+                        type="password"
 
-</form>
+                        placeholder="Enter password"
 
-<p class="bottom-text">
+                        required
 
-Don't have an account?
+                    >
 
-<a href="#" onclick="window.parent.openSignup();return false;">
+                    <button
 
-Create Account
+                        type="button"
 
-</a>
+                        id="togglePassword"
 
-</p>
+                        class="eye-btn">
 
-</div>
+                        <i class="fa-solid fa-eye"></i>
 
-</div>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Remember -->
+
+            <div class="remember-row">
+
+                <label>
+
+                    <input
+                        type="checkbox">
+
+                    Remember me
+
+                </label>
+
+                <a href="#">
+
+                    Forgot Password?
+
+                </a>
+
+            </div>
+
+            <!-- Message -->
+
+            <div
+                id="loginMessage"
+                class="message">
+
+            </div>
+
+            <!-- Login Button -->
+
+            <button
+                class="login-btn"
+                type="submit">
+
+                <span>
+
+                    Login
+
+                </span>
+
+            </button>
+
+        </form>
+
+        <!-- Divider -->
+
+        <div class="divider">
+
+            <span>
+
+                OR
+
+            </span>
+
+        </div>
+
+        <!-- Social -->
+
+        <button class="google-btn">
+
+            <i class="fa-brands fa-google"></i>
+
+            Continue with Google
+
+        </button>
+
+        <!-- Bottom -->
+
+        <div class="bottom-text">
+
+            Don't have an account?
+
+            <a href="#"
+
+               onclick="window.parent.openSignup();return false;">
+
+                Create Account
+
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 

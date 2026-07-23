@@ -1,164 +1,109 @@
-// ==========================================
-// AXONIX LOGIN.JS
-// ==========================================
-
 const API_URL = "https://axonix-copilot.onrender.com";
 
-const loginForm = document.getElementById("loginForm");
+document.addEventListener("DOMContentLoaded", () => {
 
-const message = document.getElementById("loginMessage");
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("loginMessage");
 
+    const password = document.getElementById("password");
+    const toggle = document.getElementById("togglePassword");
 
-//==========================================
-// PASSWORD SHOW / HIDE
-//==========================================
+    if (toggle) {
 
-const togglePassword =
-    document.getElementById("togglePassword");
+        toggle.addEventListener("click", () => {
 
-const passwordInput =
-    document.getElementById("password");
+            if (password.type === "password") {
 
-if (togglePassword && passwordInput) {
+                password.type = "text";
+                toggle.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
 
-    togglePassword.onclick = () => {
+            } else {
 
-        if (passwordInput.type === "password") {
-
-            passwordInput.type = "text";
-
-            togglePassword.innerHTML =
-                '<i class="fa-solid fa-eye-slash"></i>';
-
-        }
-
-        else {
-
-            passwordInput.type = "password";
-
-            togglePassword.innerHTML =
-                '<i class="fa-solid fa-eye"></i>';
-
-        }
-
-    };
-
-}
-
-
-//==========================================
-// LOGIN
-//==========================================
-
-loginForm.addEventListener("submit", async (e) => {
-
-    e.preventDefault();
-
-    const username =
-        document.getElementById("email").value.trim();
-
-    const password =
-        document.getElementById("password").value.trim();
-
-    message.style.color = "#ef4444";
-    message.innerHTML = "Logging in...";
-
-    try {
-
-        const formData = new URLSearchParams();
-
-        formData.append("username", username);
-        formData.append("password", password);
-
-        const response = await fetch(
-
-            `${API_URL}/auth/login`,
-
-            {
-
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/x-www-form-urlencoded"
-
-                },
-
-                body: formData
+                password.type = "password";
+                toggle.innerHTML = '<i class="fa-solid fa-eye"></i>';
 
             }
 
-        );
+        });
+
+    }
+
+    form.addEventListener("submit", loginUser);
+
+});
+
+async function loginUser(e) {
+
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const message = document.getElementById("loginMessage");
+    const button = document.querySelector(".login-btn");
+
+    button.disabled = true;
+    button.innerHTML = "Signing In...";
+
+    message.innerHTML = "";
+
+    try {
+
+        const response = await fetch(`${API_URL}/auth/login`, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email,
+                password
+            })
+
+        });
 
         const data = await response.json();
 
         if (!response.ok) {
 
-            message.innerHTML =
-                data.detail || "Invalid Credentials";
-
-            return;
+            throw new Error(data.detail || "Login failed");
 
         }
 
-        //--------------------------------
-        // SAVE TOKEN
-        //--------------------------------
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("email", email);
 
-        localStorage.setItem(
-            "token",
-            data.access_token
-        );
+        if (data.username) {
 
-        localStorage.setItem(
-            "username",
-            username
-        );
+            localStorage.setItem("username", data.username);
 
-        //--------------------------------
-        // SUCCESS
-        //--------------------------------
+        }
 
-        message.style.color = "#22c55e";
+        if (window.parent && window.parent.loginSuccess) {
 
-        message.innerHTML =
-            "Login Successful ✓";
+            window.parent.loginSuccess(
+                data.username || "User",
+                email
+            );
 
-        //--------------------------------
-        // CLOSE POPUP
-        //--------------------------------
-
-        setTimeout(() => {
-
-            if (
-                window.parent &&
-                window.parent.loginSuccess
-            ) {
-
-                window.parent.loginSuccess(username);
-
-            }
-
-            setTimeout(() => {
-
-                window.parent.location.reload();
-
-            }, 300);
-
-        }, 900);
+        }
 
     }
 
     catch (err) {
 
-        console.error(err);
-
         message.style.color = "#ef4444";
-
-        message.innerHTML =
-            "Unable to connect to server.";
+        message.innerHTML = err.message;
 
     }
 
-});
+    finally {
+
+        button.disabled = false;
+        button.innerHTML = "<span>Login</span>";
+
+    }
+
+}

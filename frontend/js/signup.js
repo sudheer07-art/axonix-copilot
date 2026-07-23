@@ -1,79 +1,48 @@
-// ==========================================
-// AXONIX SIGNUP.JS
-// ==========================================
-
 const API_URL = "https://axonix-copilot.onrender.com";
 
-const signupForm = document.getElementById("signupForm");
-const message = document.getElementById("signupMessage");
+document.addEventListener("DOMContentLoaded", () => {
 
-// ==========================================
-// PASSWORD TOGGLE
-// ==========================================
+    const form = document.getElementById("signupForm");
 
-const password = document.getElementById("password");
-const confirmPassword = document.getElementById("confirmPassword");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirmPassword");
 
-const togglePassword = document.getElementById("togglePassword");
-const toggleConfirm = document.getElementById("toggleConfirmPassword");
+    const toggle1 = document.getElementById("togglePassword");
+    const toggle2 = document.getElementById("toggleConfirmPassword");
 
-if (togglePassword) {
+    toggle1.onclick = () => {
 
-    togglePassword.onclick = () => {
+        password.type =
+            password.type === "password"
+                ? "text"
+                : "password";
 
-        if (password.type === "password") {
-
-            password.type = "text";
-
-            togglePassword.innerHTML =
-                '<i class="fa-solid fa-eye-slash"></i>';
-
-        }
-
-        else {
-
-            password.type = "password";
-
-            togglePassword.innerHTML =
-                '<i class="fa-solid fa-eye"></i>';
-
-        }
+        toggle1.innerHTML =
+            password.type === "password"
+                ? '<i class="fa-solid fa-eye"></i>'
+                : '<i class="fa-solid fa-eye-slash"></i>';
 
     };
 
-}
+    toggle2.onclick = () => {
 
-if (toggleConfirm) {
+        confirm.type =
+            confirm.type === "password"
+                ? "text"
+                : "password";
 
-    toggleConfirm.onclick = () => {
-
-        if (confirmPassword.type === "password") {
-
-            confirmPassword.type = "text";
-
-            toggleConfirm.innerHTML =
-                '<i class="fa-solid fa-eye-slash"></i>';
-
-        }
-
-        else {
-
-            confirmPassword.type = "password";
-
-            toggleConfirm.innerHTML =
-                '<i class="fa-solid fa-eye"></i>';
-
-        }
+        toggle2.innerHTML =
+            confirm.type === "password"
+                ? '<i class="fa-solid fa-eye"></i>'
+                : '<i class="fa-solid fa-eye-slash"></i>';
 
     };
 
-}
+    form.addEventListener("submit", signupUser);
 
-// ==========================================
-// SIGNUP
-// ==========================================
+});
 
-signupForm.addEventListener("submit", async (e) => {
+async function signupUser(e) {
 
     e.preventDefault();
 
@@ -83,139 +52,89 @@ signupForm.addEventListener("submit", async (e) => {
     const email =
         document.getElementById("email").value.trim();
 
-    const pass =
-        password.value.trim();
+    const password =
+        document.getElementById("password").value;
 
     const confirm =
-        confirmPassword.value.trim();
+        document.getElementById("confirmPassword").value;
 
-    message.style.color = "#ef4444";
+    const message =
+        document.getElementById("signupMessage");
 
-    //---------------------------------------
-    // VALIDATION
-    //---------------------------------------
+    const button =
+        document.querySelector(".signup-btn");
 
-    if (!username || !email || !pass || !confirm) {
+    message.innerHTML = "";
 
-        message.innerHTML =
-            "Please fill all fields.";
+    if (password !== confirm) {
 
-        return;
-
-    }
-
-    if (pass !== confirm) {
-
-        message.innerHTML =
-            "Passwords do not match.";
+        message.style.color = "#ef4444";
+        message.innerHTML = "Passwords do not match.";
 
         return;
 
     }
 
-    if (pass.length < 6) {
-
-        message.innerHTML =
-            "Password must contain at least 6 characters.";
-
-        return;
-
-    }
-
-    message.style.color = "#60a5fa";
-    message.innerHTML = "Creating account...";
+    button.disabled = true;
+    button.innerHTML = "Creating Account...";
 
     try {
 
-        const response = await fetch(
+        const response = await fetch(`${API_URL}/auth/register`, {
 
-            `${API_URL}/auth/signup`,
+            method: "POST",
 
-            {
+            headers: {
 
-                method: "POST",
+                "Content-Type": "application/json"
 
-                headers: {
+            },
 
-                    "Content-Type":
-                        "application/json"
+            body: JSON.stringify({
 
-                },
+                username,
+                email,
+                password
 
-                body: JSON.stringify({
+            })
 
-                    username: username,
-
-                    email: email,
-
-                    password: pass
-
-                })
-
-            }
-
-        );
+        });
 
         const data = await response.json();
 
-        //---------------------------------------
-        // ERROR
-        //---------------------------------------
-
         if (!response.ok) {
 
-            message.style.color = "#ef4444";
-
-            message.innerHTML =
-                data.detail || "Signup Failed";
-
-            return;
+            throw new Error(data.detail || "Registration failed");
 
         }
 
-        //---------------------------------------
-        // SUCCESS
-        //---------------------------------------
-
         message.style.color = "#22c55e";
-
-        message.innerHTML =
-            "Account Created Successfully ✓";
-
-        //---------------------------------------
-        // SAVE EMAIL
-        //---------------------------------------
-
-        localStorage.setItem("email", email);
-
-        //---------------------------------------
-        // OPEN LOGIN POPUP
-        //---------------------------------------
+        message.innerHTML = "Account created successfully.";
 
         setTimeout(() => {
 
-            if (
-                window.parent &&
-                window.parent.openLogin
-            ) {
+            if (window.parent && window.parent.openLogin) {
 
                 window.parent.openLogin();
 
             }
 
-        }, 1000);
+        }, 1200);
 
     }
 
     catch (err) {
 
-        console.error(err);
-
         message.style.color = "#ef4444";
-
-        message.innerHTML =
-            "Unable to connect to server.";
+        message.innerHTML = err.message;
 
     }
 
-});
+    finally {
+
+        button.disabled = false;
+        button.innerHTML = "<span>Create Account</span>";
+
+    }
+
+}

@@ -3,185 +3,218 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>Signup | AXONIX</title>
+    <title>AXONIX Signup</title>
 
-<link rel="stylesheet" href="css/signup.css">
+    <link rel="stylesheet"
+        href="css/signup.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="signup-page">
+<div class="signup-wrapper">
 
-<div class="glass-card">
+    <div class="signup-card">
 
-<div class="left-side">
+        <!-- Logo -->
 
-<div class="logo">
+        <div class="logo">
 
-<i class="fa-solid fa-rocket"></i>
+            <div class="logo-icon">
 
-<span>AXONIX</span>
+                <i class="fa-solid fa-rocket"></i>
 
-</div>
+            </div>
 
-<h1>
+            <span>AXONIX</span>
 
-Start Your Career Journey 🚀
+        </div>
 
-</h1>
+        <!-- Heading -->
 
-<p>
+        <div class="heading">
 
-Create your account and unlock AI-powered resume analysis, ATS optimization, live job search and career insights.
+            <h1>
 
-</p>
+                Create Account 🚀
 
-<div class="feature">
+            </h1>
 
-<i class="fa-solid fa-file-arrow-up"></i>
+            <p>
 
-<span>Upload Resume</span>
+                Start your AI-powered career journey today.
 
-</div>
+            </p>
 
-<div class="feature">
+        </div>
 
-<i class="fa-solid fa-robot"></i>
+        <!-- Signup Form -->
 
-<span>Gemini AI Review</span>
+        <form id="signupForm">
 
-</div>
+            <!-- Username -->
 
-<div class="feature">
+            <div class="input-group">
 
-<i class="fa-solid fa-chart-column"></i>
+                <label>Full Name</label>
 
-<span>Career Analytics</span>
+                <div class="input-box">
 
-</div>
+                    <i class="fa-solid fa-user"></i>
 
-<div class="feature">
+                    <input
+                        id="username"
+                        type="text"
+                        placeholder="Enter your name"
+                        required>
 
-<i class="fa-solid fa-briefcase"></i>
+                </div>
 
-<span>Live Jobs</span>
+            </div>
 
-</div>
+            <!-- Email -->
 
-</div>
+            <div class="input-group">
 
-<div class="right-side">
+                <label>Email</label>
 
-<h2>
+                <div class="input-box">
 
-Create Account
+                    <i class="fa-solid fa-envelope"></i>
 
-</h2>
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        required>
 
-<form id="signupForm">
+                </div>
 
-<div class="input-box">
+            </div>
 
-<i class="fa-solid fa-user"></i>
+            <!-- Password -->
 
-<input
-type="text"
-id="username"
-placeholder="Full Name"
-required>
+            <div class="input-group">
 
-</div>
+                <label>Password</label>
 
-<div class="input-box">
+                <div class="input-box">
 
-<i class="fa-solid fa-envelope"></i>
+                    <i class="fa-solid fa-lock"></i>
 
-<input
-type="email"
-id="email"
-placeholder="Email Address"
-required>
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Create password"
+                        required>
 
-</div>
+                    <button
+                        type="button"
+                        class="eye-btn"
+                        id="togglePassword">
 
-<div class="input-box">
+                        <i class="fa-solid fa-eye"></i>
 
-<i class="fa-solid fa-lock"></i>
+                    </button>
 
-<input
-type="password"
-id="password"
-placeholder="Password"
-required>
+                </div>
 
-<button
-type="button"
-class="eye-btn"
-id="togglePassword">
+            </div>
 
-<i class="fa-solid fa-eye"></i>
+            <!-- Confirm Password -->
 
-</button>
+            <div class="input-group">
 
-</div>
+                <label>Confirm Password</label>
 
-<div class="input-box">
+                <div class="input-box">
 
-<i class="fa-solid fa-lock"></i>
+                    <i class="fa-solid fa-lock"></i>
 
-<input
-type="password"
-id="confirmPassword"
-placeholder="Confirm Password"
-required>
+                    <input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                        required>
 
-<button
-type="button"
-class="eye-btn"
-id="toggleConfirmPassword">
+                    <button
+                        type="button"
+                        class="eye-btn"
+                        id="toggleConfirmPassword">
 
-<i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-eye"></i>
 
-</button>
+                    </button>
 
-</div>
+                </div>
 
-<button
-type="submit"
-class="signup-btn">
+            </div>
 
-Create Account
+            <!-- Message -->
 
-</button>
+            <div
+                id="signupMessage"
+                class="message">
 
-</form>
+            </div>
 
-<p class="bottom-text">
+            <!-- Button -->
 
-Already have an account?
+            <button
+                class="signup-btn"
+                type="submit">
 
-<a href="#" onclick="window.parent.openLogin();return false;">
+                <span>Create Account</span>
 
-Login
+            </button>
 
-</a>
+        </form>
 
-</p>
+        <!-- Divider -->
 
-</div>
+        <div class="divider">
 
-</div>
+            <span>OR</span>
+
+        </div>
+
+        <!-- Google Button -->
+
+        <button class="google-btn">
+
+            <i class="fa-brands fa-google"></i>
+
+            Continue with Google
+
+        </button>
+
+        <!-- Bottom -->
+
+        <div class="bottom-text">
+
+            Already have an account?
+
+            <a href="#"
+               onclick="window.parent.openLogin();return false;">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
 

@@ -540,20 +540,19 @@
   <!-- ===========================
  AUTH OVERLAY
  =========================== -->
+<!-- ===========================
+     AUTH OVERLAY
+=========================== -->
 
 <div id="authOverlay" class="auth-overlay">
 
-    <div class="auth-popup">
+    <button id="closePopup" class="close-popup">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
 
-        <button
-            class="close-popup"
-            onclick="closePopup()">
+    <div id="authContainer">
 
-            ×
-
-        </button>
-
-        <div id="authContent"></div>
+        <!-- login/signup loads here -->
 
     </div>
 
