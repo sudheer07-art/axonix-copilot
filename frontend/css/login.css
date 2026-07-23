@@ -62,7 +62,7 @@ margin:0;
 
 .left-side{
 
-    width:50%;
+    width:100%;
 
     padding:20px 30px;
 
@@ -818,7 +818,7 @@ RESPONSIVE
 MOBILE
 =========================== */
 
-@media(max-width:600px){
+/* @media(max-width:600px){
 
 .login-container{
 
@@ -836,6 +836,15 @@ MOBILE
 
     animation:popup .35s ease;
 
+} */
+ @media (max-width:768px){
+
+.login-container{
+
+    width:100%;
+    height:100%;
+    border-radius:0;
+    box-shadow:none;
 }
 /* ===========================
 SUCCESS MESSAGE

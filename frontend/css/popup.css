@@ -40,7 +40,7 @@
 }
 .auth-popup{
     width:650px;
-    height:380px;
+    height:500px;
     background:#fff;
     border-radius:18px;
     overflow:hidden;
@@ -57,13 +57,13 @@
 
 .auth-popup iframe{
     width:100%;
-    height:130%;
-    display: block;
+    height:100%;
+    /* display: block; */
     border:none;
 }
 .auth-popup1{
     width:650px;
-    height:380px;
+    height:600px;
     background:#fff;
     border-radius:18px;
     overflow:hidden;
@@ -73,7 +73,7 @@
 .auth-popup1 iframe{
     width:100%;
     height:100%;
-    display: block;
+    /* display: block; */
     border:none;
 }
 
@@ -94,5 +94,67 @@
     transform:scale(1) translateY(0);
 
     opacity:1;
+
+}
+/* ======================================================
+   MOBILE AUTH POPUP
+====================================================== */
+
+@media (max-width:768px){
+
+    .auth-overlay{
+        padding:20px;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .auth-popup,
+    .auth-popup1{
+
+        width:100%;
+        max-width:420px;
+
+        height:85vh;
+        max-height:700px;
+
+        border-radius:28px;
+
+        overflow:hidden;
+
+        transform:scale(.95) translateY(25px);
+    }
+
+    .auth-overlay.show .auth-popup{
+
+        transform:scale(1) translateY(0);
+
+    }
+
+    .auth-popup iframe,
+    .auth-popup1 iframe{
+
+        width:100%;
+        height:100%;
+
+        border:none;
+
+    }
+
+    .close-popup{
+
+        width:48px;
+        height:48px;
+
+        top:14px;
+        right:14px;
+
+        font-size:28px;
+
+        border-radius:50%;
+
+        background:rgba(255,255,255,.9);
+
+        box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
 
 }

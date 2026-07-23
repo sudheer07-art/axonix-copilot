@@ -1634,3 +1634,41 @@ body.page-fade{
     }
 
 }
+/* ==============================
+   MOBILE NAVBAR
+================================ */
+
+@media (max-width:768px){
+
+    .nav-links,
+    .auth-buttons{
+        display:none !important;
+    }
+
+    .menu-toggle{
+        display:flex !important;
+        align-items:center;
+        justify-content:center;
+
+        width:58px;
+        height:58px;
+
+        border-radius:18px;
+    }
+
+    .navbar{
+
+        padding:16px 20px;
+
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+
+    .logo{
+
+        font-size:2rem;
+        gap:10px;
+    }
+
+}
