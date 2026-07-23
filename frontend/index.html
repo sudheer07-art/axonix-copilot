@@ -550,88 +550,181 @@
   <!-- ===========================
  AUTH OVERLAY
  =========================== -->
-<!-- ===========================
-     AUTH OVERLAY
-=========================== -->
+<!-- ================= AUTH MODAL ================= -->
 
+<div id="authModal" class="auth-overlay">
 
-<div id="authModal" class="auth-modal">
+    <div class="auth-card">
 
-    <div class="auth-container">
+        <!-- LEFT -->
 
-        <button id="closeAuth" class="close-auth">&times;</button>
+        <div class="auth-left">
 
-        <div class="auth-tabs">
+            <div class="brand">
 
-            <button id="loginTab" class="active">Login</button>
+                <i class="fa-solid fa-rocket"></i>
 
-            <button id="signupTab">Sign Up</button>
+                <span>AXONIX</span>
+
+            </div>
+
+            <h1>
+
+                Welcome to
+
+                <span>AXONIX</span>
+
+            </h1>
+
+            <p>
+
+                Your AI Career Copilot for Resume Analysis,
+                ATS Optimization and Live Job Matching.
+
+            </p>
+
+            <ul>
+
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    AI Resume Analysis
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    ATS Score Improvement
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Live Job Recommendations
+                </li>
+
+            </ul>
 
         </div>
 
-        <!-- LOGIN -->
+        <!-- RIGHT -->
 
-        <form id="loginForm" class="auth-form active">
+        <div class="auth-right">
 
-            <input
-                id="loginEmail"
-                type="email"
-                placeholder="Email"
-                required>
+            <button
+                id="closeAuth"
+                class="close-auth">
 
-            <input
-                id="loginPassword"
-                type="password"
-                placeholder="Password"
-                required>
+                <i class="fa-solid fa-xmark"></i>
 
-            <div id="loginMessage" class="auth-message"></div>
-
-            <button type="submit">
-                Login
             </button>
 
-        </form>
+            <div class="auth-tabs">
 
-        <!-- SIGNUP -->
+                <button
+                    id="loginTab"
+                    class="tab active">
 
-        <form id="signupForm" class="auth-form">
+                    Login
 
-            <input
-                id="signupUsername"
-                type="text"
-                placeholder="Username"
-                required>
+                </button>
 
-            <input
-                id="signupEmail"
-                type="email"
-                placeholder="Email"
-                required>
+                <button
+                    id="signupTab"
+                    class="tab">
 
-            <input
-                id="signupPassword"
-                type="password"
-                placeholder="Password"
-                required>
+                    Sign Up
 
-            <input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                required>
+                </button>
 
-            <div id="signupMessage" class="auth-message"></div>
+            </div>
 
-            <button type="submit">
-                Create Account
-            </button>
+            <!-- LOGIN -->
 
-        </form>
+            <form
+                id="loginForm"
+                class="auth-form active">
+
+                <input
+                    id="loginEmail"
+                    type="email"
+                    placeholder="Email Address"
+                    required>
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Password"
+                    required>
+
+                <p
+                    id="loginMessage"
+                    class="auth-message">
+
+                </p>
+
+                <button
+                    type="submit"
+                    class="auth-btn">
+
+                    Login
+
+                </button>
+
+            </form>
+
+            <!-- SIGNUP -->
+
+            <form
+                id="signupForm"
+                class="auth-form">
+
+                <input
+                    id="signupUsername"
+                    type="text"
+                    placeholder="Username"
+                    required>
+
+                <input
+                    id="signupEmail"
+                    type="email"
+                    placeholder="Email Address"
+                    required>
+
+                <input
+                    id="signupPassword"
+                    type="password"
+                    placeholder="Password"
+                    required>
+
+                <input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Confirm Password"
+                    required>
+
+                <p
+                    id="signupMessage"
+                    class="auth-message">
+
+                </p>
+
+                <button
+                    type="submit"
+                    class="auth-btn">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
 </div>
+  
 
  <div id="sideMenu" class="side-menu">
 
