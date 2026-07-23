@@ -40,9 +40,9 @@ margin:0;
 
     height:100%;
 
-    background:#ffffff;
+    background:transparent;
 
-    border-radius:20px;
+    border-radius:0;
 
     overflow:hidden;
 
@@ -50,9 +50,7 @@ margin:0;
 
     position:relative;
 
-    box-shadow:
-
-        0 20px 60px rgba(0,0,0,.35);
+    box-shadow:none;
 
     animation:popup .45s ease;
 
