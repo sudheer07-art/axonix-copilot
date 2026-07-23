@@ -1,122 +1,10 @@
 /* ==========================================================
-   AXONIX AI Career Dashboard
-   dashboard.js
-   Part 1A
+   AXONIX Dashboard
 ========================================================== */
 
 const API_BASE = "https://axonix-copilot.onrender.com";
 
 const token = localStorage.getItem("access_token");
-
-/* ==========================================================
-   DOM
-========================================================== */
-
-const menuToggle = document.getElementById("menuToggle");
-const closeSidebar = document.getElementById("closeSidebar");
-const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
-
-const loadingPopup = document.getElementById("loadingPopup");
-const loadingMessage = document.getElementById("loadingMessage");
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-/* ---------- User ---------- */
-
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const welcomeName = document.getElementById("welcomeName");
-
-const topUserName = document.getElementById("topUserName");
-
-const userAvatar = document.getElementById("userAvatar");
-const topAvatar = document.getElementById("topAvatar");
-
-/* ---------- Resume ---------- */
-
-const resumeName = document.getElementById("resumeName");
-const resumeProgress = document.getElementById("resumeProgress");
-const resumeHealth = document.getElementById("resumeHealth");
-
-/* ---------- Stats ---------- */
-
-const atsScore = document.getElementById("atsScore");
-const skillsCount = document.getElementById("skillsCount");
-const jobMatches = document.getElementById("jobMatches");
-const profileStrength = document.getElementById("profileStrength");
-
-/* ---------- Containers ---------- */
-
-const suggestionsContainer =
-    document.getElementById("suggestions");
-
-const recommendedJobs =
-    document.getElementById("recommendedJobs");
-
-/* ==========================================================
-   LOADING POPUP
-========================================================== */
-
-function showLoading(message = "Loading...") {
-
-    if (!loadingPopup) return;
-
-    loadingMessage.textContent = message;
-
-    loadingPopup.classList.add("show");
-
-}
-
-function hideLoading() {
-
-    if (!loadingPopup) return;
-
-    loadingPopup.classList.remove("show");
-
-}
-
-/* ==========================================================
-   SIDEBAR
-========================================================== */
-
-function openSidebar() {
-
-    sidebar.classList.add("active");
-
-    sidebarOverlay.classList.add("show");
-
-}
-
-function closeMenu() {
-
-    sidebar.classList.remove("active");
-
-    sidebarOverlay.classList.remove("show");
-
-}
-
-if (menuToggle) {
-
-    menuToggle.addEventListener("click", openSidebar);
-
-}
-
-if (closeSidebar) {
-
-    closeSidebar.addEventListener("click", closeMenu);
-
-}
-
-if (sidebarOverlay) {
-
-    sidebarOverlay.addEventListener("click", closeMenu);
-
-}
-
-/* ==========================================================
-   AUTH
-========================================================== */
 
 if (!token) {
 
@@ -125,30 +13,90 @@ if (!token) {
 }
 
 /* ==========================================================
-   FETCH WRAPPER
+   SIDEBAR
+========================================================== */
+
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const closeSidebar = document.getElementById("closeSidebar");
+const overlay = document.getElementById("sidebarOverlay");
+
+function openSidebar() {
+
+    sidebar.classList.add("active");
+
+    overlay.classList.add("show");
+
+}
+
+function hideSidebar() {
+
+    sidebar.classList.remove("active");
+
+    overlay.classList.remove("show");
+
+}
+
+menuToggle.addEventListener("click", openSidebar);
+
+closeSidebar.addEventListener("click", hideSidebar);
+
+overlay.addEventListener("click", hideSidebar);
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+const loadingPopup = document.getElementById("loadingPopup");
+const loadingMessage = document.getElementById("loadingMessage");
+
+function showLoading(text = "Loading...") {
+
+    loadingMessage.textContent = text;
+
+    loadingPopup.classList.add("show");
+
+}
+
+function hideLoading() {
+
+    loadingPopup.classList.remove("show");
+
+}
+
+/* ==========================================================
+   FETCH
 ========================================================== */
 
 async function api(url, options = {}) {
 
     const response = await fetch(
-        `${API_BASE}${url}`,
+
+        API_BASE + url,
+
         {
+
             ...options,
 
-            headers: {
-                Authorization: `Bearer ${token}`,
+            headers:{
+
+                Authorization:`Bearer ${token}`,
+
                 ...(options.headers || {})
+
             }
+
         }
+
     );
 
-    if (response.status === 401) {
+    if(response.status===401){
 
         localStorage.removeItem("access_token");
 
-        window.location.href = "index.html";
+        location.href="index.html";
 
-        return;
+        return null;
 
     }
 
@@ -157,122 +105,47 @@ async function api(url, options = {}) {
 }
 
 /* ==========================================================
-   COUNTER ANIMATION
+   USER
 ========================================================== */
 
-function animateNumber(element, endValue, suffix = "") {
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
 
-    if (!element) return;
+const topUserName = document.getElementById("topUserName");
 
-    let start = 0;
+const welcomeName = document.getElementById("welcomeName");
 
-    const duration = 800;
+const userAvatar = document.getElementById("userAvatar");
 
-    const increment = endValue / (duration / 16);
+const topAvatar = document.getElementById("topAvatar");
 
-    const timer = setInterval(() => {
+async function loadUser(){
 
-        start += increment;
+    const res = await api("/auth/me");
 
-        if (start >= endValue) {
+    if(!res) return;
 
-            start = endValue;
+    const user = await res.json();
 
-            clearInterval(timer);
+    const name = user.username || user.name || "User";
 
-        }
+    const email = user.email || "";
 
-        element.textContent =
-            Math.floor(start) + suffix;
+    userName.textContent = name;
 
-    }, 16);
+    userEmail.textContent = email;
 
-}
+    topUserName.textContent = name;
 
-/* ==========================================================
-   AVATAR
-========================================================== */
+    welcomeName.textContent = name;
 
-function updateAvatar(name) {
+    const avatar =
 
-    if (!name) return;
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`;
 
-    const avatarURL =
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`;
+    userAvatar.src = avatar;
 
-    if (userAvatar)
-        userAvatar.src = avatarURL;
-
-    if (topAvatar)
-        topAvatar.src = avatarURL;
-
-}
-
-/* ==========================================================
-   PAGE START
-========================================================== */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    showLoading("Preparing your dashboard...");
-
-});
-/* ==========================================================
-   LOAD CURRENT USER
-========================================================== */
-
-async function loadCurrentUser() {
-
-    try {
-
-        showLoading("Loading your profile...");
-
-        const response = await api("/auth/me");
-
-        if (!response) return;
-
-        const user = await response.json();
-
-        const username =
-            user.username ||
-            user.name ||
-            "User";
-
-        const email =
-            user.email ||
-            "No Email";
-
-        /* ---------- Sidebar ---------- */
-
-        if (userName)
-            userName.textContent = username;
-
-        if (userEmail)
-            userEmail.textContent = email;
-
-        /* ---------- Topbar ---------- */
-
-        if (topUserName)
-            topUserName.textContent = username;
-
-        /* ---------- Welcome ---------- */
-
-        if (welcomeName)
-            welcomeName.textContent = username;
-
-        /* ---------- Avatar ---------- */
-
-        updateAvatar(username);
-
-        console.log("✅ User Loaded");
-
-    }
-
-    catch (error) {
-
-        console.error("User Load Error:", error);
-
-    }
+    topAvatar.src = avatar;
 
 }
 
@@ -280,140 +153,89 @@ async function loadCurrentUser() {
    LOGOUT
 ========================================================== */
 
-function logout() {
+document
 
-    localStorage.removeItem("access_token");
+.getElementById("logoutBtn")
 
-    localStorage.removeItem("resume_data");
+.addEventListener("click",e=>{
 
-    localStorage.removeItem("resume_analysis");
+    e.preventDefault();
 
-    localStorage.removeItem("ats_score");
+    localStorage.clear();
 
-    localStorage.removeItem("job_matches");
+    location.href="index.html";
 
-    window.location.href = "index.html";
-
-}
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", e => {
-
-        e.preventDefault();
-
-        logout();
-
-    });
-
-}
-
+});
 /* ==========================================================
-   LOAD LOCAL DASHBOARD DATA
+   DASHBOARD DATA
 ========================================================== */
 
-function getDashboardData() {
+const resumeName = document.getElementById("resumeName");
+const resumeProgress = document.getElementById("resumeProgress");
 
-    return {
+const atsScore = document.getElementById("atsScore");
+const skillsCount = document.getElementById("skillsCount");
+const jobMatches = document.getElementById("jobMatches");
 
-        ats:
-            Number(localStorage.getItem("ats_score")) || 0,
+const suggestions = document.getElementById("suggestions");
+const recommendedJobs = document.getElementById("recommendedJobs");
 
-        skills:
-            JSON.parse(
-                localStorage.getItem("skills") || "[]"
-            ),
+/* ==========================================================
+   LOCAL DATA
+========================================================== */
 
-        suggestions:
-            JSON.parse(
-                localStorage.getItem("suggestions") || "[]"
-            ),
+function getData(){
 
-        jobs:
-            JSON.parse(
-                localStorage.getItem("job_matches") || "[]"
-            ),
+    return{
 
-        resume:
-            JSON.parse(
-                localStorage.getItem("resume_data") || "{}"
-            )
+        ats:Number(
+            localStorage.getItem("ats_score")
+        ) || 0,
+
+        skills:JSON.parse(
+            localStorage.getItem("skills") || "[]"
+        ),
+
+        jobs:JSON.parse(
+            localStorage.getItem("job_matches") || "[]"
+        ),
+
+        suggestions:JSON.parse(
+            localStorage.getItem("suggestions") || "[]"
+        ),
+
+        resume:JSON.parse(
+            localStorage.getItem("resume_data") || "{}"
+        )
 
     };
 
 }
 
 /* ==========================================================
-   INITIALIZE
+   RESUME CARD
 ========================================================== */
 
-async function initializeDashboard() {
+function renderResume(){
 
-    await loadCurrentUser();
+    const data = getData();
 
-    hideLoading();
+    resumeName.textContent =
+        data.resume.file_name ||
+        data.resume.filename ||
+        "No Resume Uploaded";
 
-}
+    atsScore.textContent =
+        data.ats + "%";
 
-document.addEventListener("DOMContentLoaded", () => {
+    skillsCount.textContent =
+        data.skills.length;
 
-    initializeDashboard();
+    jobMatches.textContent =
+        data.jobs.length;
 
-});
-/* ==========================================================
-   RENDER DASHBOARD DATA
-========================================================== */
-
-function renderDashboard() {
-
-    const data = getDashboardData();
-
-    /* ---------- Resume ---------- */
-
-    if (resumeName) {
-
-        resumeName.textContent =
-            data.resume.file_name ||
-            data.resume.filename ||
-            "No Resume Uploaded";
-
-    }
-
-    /* ---------- ATS ---------- */
-
-    animateNumber(atsScore, data.ats, "%");
-
-    animateNumber(profileStrength, data.ats, "%");
-
-    /* ---------- Progress ---------- */
-
-    if (resumeProgress) {
-
-        resumeProgress.style.width =
-            `${data.ats}%`;
-
-    }
-
-    if (resumeHealth) {
-
-        resumeHealth.textContent =
-            `Resume Health ${data.ats}%`;
-
-    }
-
-    /* ---------- Skills ---------- */
-
-    animateNumber(
-        skillsCount,
-        data.skills.length
-    );
-
-    /* ---------- Jobs ---------- */
-
-    animateNumber(
-        jobMatches,
-        data.jobs.length
-    );
+    resumeProgress.style.width =
+        data.ats + "%";
 
 }
 
@@ -421,17 +243,15 @@ function renderDashboard() {
    AI SUGGESTIONS
 ========================================================== */
 
-function renderSuggestions() {
+function renderSuggestions(){
 
-    const data = getDashboardData();
+    const data = getData();
 
-    if (!suggestionsContainer) return;
+    suggestions.innerHTML = "";
 
-    suggestionsContainer.innerHTML = "";
+    if(data.suggestions.length===0){
 
-    if (data.suggestions.length === 0) {
-
-        suggestionsContainer.innerHTML = `
+        suggestions.innerHTML = `
 
         <div class="suggestion-card">
 
@@ -439,16 +259,12 @@ function renderSuggestions() {
 
             <div>
 
-                <h4>
-
-                    No Suggestions
-
-                </h4>
+                <h3>No Suggestions</h3>
 
                 <p>
 
-                    Analyze your resume to receive
-                    AI powered suggestions.
+                    Analyze your resume to
+                    receive AI suggestions.
 
                 </p>
 
@@ -462,78 +278,62 @@ function renderSuggestions() {
 
     }
 
-    data.suggestions.forEach(item => {
+    data.suggestions.forEach(item=>{
 
-        const card = document.createElement("div");
+        suggestions.innerHTML += `
 
-        card.className = "suggestion-card";
+        <div class="suggestion-card">
 
-        card.innerHTML = `
+            <i class="fa-solid fa-check"></i>
 
-        <i class="fa-solid fa-check"></i>
+            <div>
 
-        <div>
+                <h3>Suggestion</h3>
 
-            <h4>
+                <p>${item}</p>
 
-                AI Recommendation
-
-            </h4>
-
-            <p>
-
-                ${item}
-
-            </p>
+            </div>
 
         </div>
 
         `;
-
-        suggestionsContainer.appendChild(card);
 
     });
 
 }
 
 /* ==========================================================
-   RECOMMENDED JOBS
+   JOBS
 ========================================================== */
 
-function renderJobs() {
+function renderJobs(){
 
-    const data = getDashboardData();
-
-    if (!recommendedJobs) return;
+    const data = getData();
 
     recommendedJobs.innerHTML = "";
 
-    if (data.jobs.length === 0) {
+    if(data.jobs.length===0){
 
         recommendedJobs.innerHTML = `
 
         <div class="job-card">
 
-            <div class="job-left">
+            <div class="job-info">
 
                 <div class="company-icon">
 
-                    <i class="fa-solid fa-briefcase"></i>
+                    <i class="fa-solid fa-building"></i>
 
                 </div>
 
                 <div>
 
-                    <h3>
-
-                        No Jobs Found
-
-                    </h3>
+                    <h3>No Jobs Found</h3>
 
                     <p>
 
-                        Analyze your resume to
-                        unlock job recommendations.
+                        Analyze your resume
+                        to get job recommendations.
 
                     </p>
 
@@ -541,16 +341,6 @@ function renderJobs() {
 
             </div>
 
-            <div class="job-right">
-
-                <span class="match-score">
-
-                    0% Match
-
-                </span>
-
-            </div>
-
         </div>
 
         `;
@@ -559,219 +349,93 @@ function renderJobs() {
 
     }
 
-    data.jobs.slice(0,5).forEach(job => {
+    data.jobs.forEach(job=>{
 
-        const card = document.createElement("div");
+        recommendedJobs.innerHTML += `
 
-        card.className = "job-card";
+        <div class="job-card">
 
-        card.innerHTML = `
+            <div class="job-info">
 
-        <div class="job-left">
+                <div class="company-icon">
 
-            <div class="company-icon">
+                    <i class="fa-solid fa-building"></i>
 
-                <i class="fa-solid fa-building"></i>
+                </div>
+
+                <div>
+
+                    <h3>
+
+                        ${job.title || "Software Engineer"}
+
+                    </h3>
+
+                    <p>
+
+                        ${job.company || "Company"}
+
+                    </p>
+
+                </div>
 
             </div>
 
-            <div>
+            <div class="job-action">
 
-                <h3>
+                <span class="match">
 
-                    ${job.title || "Software Engineer"}
+                    ${job.score || 90}% Match
 
-                </h3>
+                </span>
 
-                <p>
+                <button
+                    class="apply-btn"
+                    onclick="window.open('${job.url || "#"}','_blank')">
 
-                    ${job.company || "Company"}
+                    Apply
 
-                </p>
+                </button>
 
             </div>
-
-        </div>
-
-        <div class="job-right">
-
-            <span class="match-score">
-
-                ${job.score || 90}% Match
-
-            </span>
 
         </div>
 
         `;
 
-        recommendedJobs.appendChild(card);
-
-    });
-
-}
-/* ==========================================================
-   LOAD DASHBOARD FROM BACKEND
-========================================================== */
-
-async function loadDashboardData() {
-
-    try {
-
-        showLoading("Loading dashboard...");
-
-        const response = await api("/dashboard");
-
-        if (response && response.ok) {
-
-            const dashboard = await response.json();
-
-            if (dashboard.ats_score !== undefined) {
-
-                localStorage.setItem(
-                    "ats_score",
-                    dashboard.ats_score
-                );
-
-            }
-
-            if (dashboard.skills) {
-
-                localStorage.setItem(
-                    "skills",
-                    JSON.stringify(dashboard.skills)
-                );
-
-            }
-
-            if (dashboard.suggestions) {
-
-                localStorage.setItem(
-                    "suggestions",
-                    JSON.stringify(dashboard.suggestions)
-                );
-
-            }
-
-            if (dashboard.jobs) {
-
-                localStorage.setItem(
-                    "job_matches",
-                    JSON.stringify(dashboard.jobs)
-                );
-
-            }
-
-            if (dashboard.resume) {
-
-                localStorage.setItem(
-                    "resume_data",
-                    JSON.stringify(dashboard.resume)
-                );
-
-            }
-
-        }
-
-    }
-
-    catch (error) {
-
-        console.log("Dashboard API not available.");
-
-    }
-
-}
-
-/* ==========================================================
-   PAGE ANIMATION
-========================================================== */
-
-function animateCards() {
-
-    const cards = document.querySelectorAll(
-
-        ".card,.stat-card,.action-card,.mini-card"
-
-    );
-
-    cards.forEach((card, index) => {
-
-        card.style.opacity = "0";
-
-        card.style.transform = "translateY(25px)";
-
-        setTimeout(() => {
-
-            card.style.transition =
-
-                ".5s ease";
-
-            card.style.opacity = "1";
-
-            card.style.transform =
-
-                "translateY(0)";
-
-        }, index * 120);
-
     });
 
 }
 
 /* ==========================================================
-   AUTO REFRESH
+   BUTTONS
 ========================================================== */
 
-window.addEventListener(
+document
+.getElementById("openAnalyzePage")
+.addEventListener("click",()=>{
 
-    "focus",
+    location.href="analyze.html";
 
-    () => {
-
-        renderDashboard();
-
-        renderSuggestions();
-
-        renderJobs();
-
-    }
-
-);
+});
 
 /* ==========================================================
-   INITIALIZE
+   START
 ========================================================== */
 
-async function initializeDashboard() {
+async function init(){
 
-    try {
+    showLoading("Loading Dashboard...");
 
-        await loadCurrentUser();
+    await loadUser();
 
-        await loadDashboardData();
+    renderResume();
 
-        renderDashboard();
+    renderSuggestions();
 
-        renderSuggestions();
+    renderJobs();
 
-        renderJobs();
-
-        animateCards();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-    finally {
-
-        hideLoading();
-
-    }
+    hideLoading();
 
 }
 
@@ -779,116 +443,6 @@ document.addEventListener(
 
     "DOMContentLoaded",
 
-    initializeDashboard
-
-);
-
-/* ==========================================================
-   ANALYZE BUTTON
-========================================================== */
-
-const analyzeBtn =
-
-document.getElementById(
-
-"openAnalyzePage"
-
-);
-
-if(analyzeBtn){
-
-analyzeBtn.addEventListener(
-
-"click",
-
-()=>{
-
-showLoading(
-
-"Opening Resume Analyzer..."
-
-);
-
-setTimeout(()=>{
-
-window.location.href=
-
-"analyze.html";
-
-},500);
-
-}
-
-);
-
-}
-
-/* ==========================================================
-   LIVE JOB BUTTONS
-========================================================== */
-
-document
-
-.querySelectorAll(
-
-'.secondary-btn'
-
-)
-
-.forEach(btn=>{
-
-btn.addEventListener(
-
-'click',
-
-()=>{
-
-showLoading(
-
-'Loading Jobs...'
-
-);
-
-});
-
-});
-
-/* ==========================================================
-   FLOATING AI BUTTON
-========================================================== */
-
-const aiButton =
-
-document.querySelector(
-
-'.floating-ai'
-
-);
-
-if(aiButton){
-
-aiButton.addEventListener(
-
-'click',
-
-()=>{
-
-alert(
-
-"🤖 AXONIX AI Assistant\n\nComing Soon!"
-
-);
-
-});
-
-}
-
-/* ==========================================================
-   END
-========================================================== */
-
-console.log(
-
-"🚀 AXONIX Dashboard Loaded Successfully"
+    init
 
 );
