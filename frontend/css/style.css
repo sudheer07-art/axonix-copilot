@@ -1140,61 +1140,36 @@ width:100%;
 /* ==========================
    GLASSMORPHISM SIDEBAR
 ========================== */
+/* ===========================================
+   AXONIX Sidebar
+=========================================== */
 
 .side-menu{
 
     position:fixed;
-    top:15px;
-    right:15px;
+    top:0;
+    right:0;
 
-    width:320px;
-    height:calc(100vh - 30px);
-
-    transform:translateX(110%);
-    transition:.45s ease;
-
-    z-index:9999;
+    width:310px;
+    height:100vh;
 
     display:flex;
     flex-direction:column;
 
-    padding:28px;
+    padding:24px;
 
-    border-radius:28px;
+    background:#111827;
 
-    background:rgba(17,24,39,.55);
+    border-left:1px solid rgba(255,255,255,.08);
 
-    backdrop-filter:blur(25px);
-    -webkit-backdrop-filter:blur(25px);
+    box-shadow:-10px 0 35px rgba(0,0,0,.45);
 
-    border:1px solid rgba(255,255,255,.12);
+    transform:translateX(100%);
+    transition:.35s ease;
 
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.08);
+    z-index:9999;
 
-    overflow:hidden;
-}
-
-.side-menu::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-
-        radial-gradient(circle at top left,
-        rgba(96,165,250,.20),
-        transparent 45%),
-
-        radial-gradient(circle at bottom right,
-        rgba(59,130,246,.18),
-        transparent 45%);
-
-    pointer-events:none;
+    overflow-y:auto;
 
 }
 
@@ -1204,23 +1179,120 @@ width:100%;
 
 }
 
+/* Decorative glow */
+
+.side-menu::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-80px;
+    right:-80px;
+
+    width:220px;
+    height:220px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.18);
+
+    filter:blur(90px);
+
+    pointer-events:none;
+
+}
+
+/* ==========================
+   Header
+========================== */
+
+.menu-header{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.avatar{
+
+    width:72px;
+    height:72px;
+
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+    font-weight:700;
+
+    color:#fff;
+
+    margin-bottom:15px;
+
+}
+
+.menu-header h3{
+
+    color:#fff;
+
+    font-size:20px;
+
+    margin-bottom:6px;
+
+}
+
+.menu-header p{
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+/* ==========================
+   Divider
+========================== */
+
+.side-menu hr{
+
+    border:none;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    margin:20px 0;
+
+}
+
+/* ==========================
+   Menu Links
+========================== */
+
 .side-menu a{
 
     display:flex;
     align-items:center;
+
     gap:14px;
 
-    padding:15px 18px;
-    margin-top:10px;
+    padding:14px 18px;
 
-    text-decoration:none;
-    color:#fff;
+    margin-bottom:8px;
 
     border-radius:14px;
 
-    transition:.3s;
+    color:#cbd5e1;
 
-    background:transparent;
+    text-decoration:none;
+
+    transition:.25s ease;
 
     font-weight:500;
 
@@ -1228,15 +1300,29 @@ width:100%;
 
 .side-menu a:hover{
 
-    background:rgba(59,130,246,.18);
+    background:#1e293b;
 
-    transform:translateX(8px);
+    color:#fff;
 
-    border:1px solid rgba(96,165,250,.35);
-
-    box-shadow:0 8px 20px rgba(59,130,246,.15);
+    transform:translateX(6px);
 
 }
+
+/* Active Page */
+
+.side-menu a.active{
+
+    background:#2563eb;
+
+    color:#fff;
+
+    box-shadow:0 8px 20px rgba(37,99,235,.35);
+
+}
+
+/* ==========================
+   Logout
+========================== */
 
 #logoutBtn{
 
@@ -1244,15 +1330,15 @@ width:100%;
 
     width:100%;
 
-    padding:15px;
+    padding:14px;
 
     border:none;
 
-    border-radius:15px;
+    border-radius:14px;
 
-    background:linear-gradient(135deg,#ef4444,#dc2626);
+    background:#dc2626;
 
-    color:white;
+    color:#fff;
 
     font-size:15px;
 
@@ -1260,36 +1346,21 @@ width:100%;
 
     cursor:pointer;
 
-    transition:.3s;
+    transition:.25s ease;
 
 }
 
 #logoutBtn:hover{
 
-    transform:translateY(-3px);
+    background:#ef4444;
 
-    box-shadow:0 10px 25px rgba(239,68,68,.35);
-
-}
-.side-menu::after{
-
-    content:"";
-
-    position:absolute;
-
-    top:-120px;
-    right:-120px;
-
-    width:240px;
-    height:240px;
-
-    border-radius:50%;
-
-    background:rgba(59,130,246,.15);
-
-    filter:blur(90px);
+    transform:translateY(-2px);
 
 }
+
+/* ==========================
+   Close Button
+========================== */
 
 .close-menu{
 
@@ -1298,22 +1369,20 @@ width:100%;
     top:18px;
     right:18px;
 
-    width:42px;
-    height:42px;
+    width:40px;
+    height:40px;
 
     border:none;
 
-    border-radius:50%;
+    border-radius:10px;
 
-    background:rgba(255,255,255,.08);
+    background:#1f2937;
 
-    color:#ff0000;
+    color:#94a3b8;
 
     cursor:pointer;
 
-    backdrop-filter:blur(10px);
-
-    transition:.3s;
+    transition:.25s ease;
 
 }
 
@@ -1321,32 +1390,23 @@ width:100%;
 
     background:#2563eb;
 
-    transform:rotate(90deg);
+    color:#fff;
 
 }
 
-body{
-    transition:opacity .4s ease, transform .4s ease, filter .4s ease;
-}
+/* ==========================
+   Background Fade
+========================== */
 
 body.page-fade{
-
-    opacity:.45;
-
-    transform:scale(.985);
-
-    filter:blur(2px);
 
     overflow:hidden;
 
 }
-.side-menu::before,
-.side-menu::after{
-    pointer-events:none;
-}
+
 #pageContent{
 
-    transition:.4s ease;
+    transition:.35s ease;
 
 }
 
@@ -1354,13 +1414,11 @@ body.page-fade{
 
     opacity:.35;
 
-    transform:scale(.985);
-
     filter:blur(3px);
 
-    pointer-events:none;
+    transform:scale(.99);
 
-    user-select:none;
+    pointer-events:none;
 
 }
 /*====================================
