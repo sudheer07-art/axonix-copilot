@@ -102,11 +102,22 @@ async function signupUser(e) {
 
         const data = await response.json();
 
-        if (!response.ok) {
+        // if (!response.ok) {
 
-            throw new Error(data.detail || "Registration failed");
+        //     throw new Error(data.detail || "Registration failed");
 
-        }
+        // }
+        if (Array.isArray(data.detail)) {
+
+    throw new Error(
+        data.detail.map(e => e.msg).join(", ")
+    );
+
+}
+
+throw new Error(
+    data.detail || "Request failed"
+);
 
         message.style.color = "#22c55e";
         message.innerHTML = "Account created successfully.";

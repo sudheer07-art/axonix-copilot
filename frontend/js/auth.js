@@ -104,63 +104,80 @@ signupTab.addEventListener("click",()=>{
 // LOGIN
 // --------------------------------------
 
-loginForm.addEventListener("submit",async(e)=>{
+loginForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    loginMessage.textContent="Logging in...";
+    loginMessage.textContent = "Logging in...";
 
-    const email=document.getElementById("loginEmail").value.trim();
+    const username = document
+        .getElementById("loginUsername")
+        .value
+        .trim();
 
-    const password=document.getElementById("loginPassword").value;
+    const password = document
+        .getElementById("loginPassword")
+        .value;
 
-    try{
+    const formData = new URLSearchParams();
 
-        const response=await fetch(`${API}/auth/login`,{
+    formData.append("username", username);
+    formData.append("password", password);
 
-            method:"POST",
+    try {
 
-            headers:{
-                "Content-Type":"application/json"
+        const response = await fetch(`${API}/auth/login`, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
             },
 
-            body:JSON.stringify({
-                email,
-                password
-            })
+            body: formData
 
         });
 
-        const data=await response.json();
+        const data = await response.json();
 
-        if(!response.ok){
+        if (!response.ok) {
 
-            throw new Error(data.detail || "Login Failed");
+            if (Array.isArray(data.detail)) {
 
+                loginMessage.textContent = data.detail
+                    .map(e => e.msg)
+                    .join(", ");
+
+            } else {
+
+                loginMessage.textContent =
+                    data.detail || "Login failed";
+
+            }
+
+            return;
         }
 
-        localStorage.setItem("token",data.access_token);
-
-        localStorage.setItem("userEmail",email);
+        localStorage.setItem(
+            "token",
+            data.access_token
+        );
 
         loginMessage.classList.add("success");
-        loginMessage.textContent="Login Successful";
+        loginMessage.textContent = "Login Successful";
 
-        setTimeout(()=>{
+        setTimeout(() => {
 
-            closeModal();
+            location.href = "dashboard.html";
 
-            updateUI();
-
-        },700);
+        }, 800);
 
     }
 
-    catch(err){
+    catch (err) {
 
-        loginMessage.classList.remove("success");
-
-        loginMessage.textContent=err.message;
+        loginMessage.textContent =
+            "Server not reachable";
 
     }
 
@@ -194,7 +211,7 @@ signupForm.addEventListener("submit",async(e)=>{
 
     try{
 
-        const response=await fetch(`${API}/auth/register`,{
+        const response=await fetch(`${API}/auth/signup`, {
 
             method:"POST",
 
