@@ -233,6 +233,8 @@ signupForm.addEventListener("submit",async(e)=>{
 
         const data=await response.json();
 
+console.log("Login Response:", data);
+
         if(!response.ok){
 
             throw new Error(data.detail || "Registration Failed");
