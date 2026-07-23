@@ -267,7 +267,7 @@ signupForm.addEventListener("submit",async(e)=>{
 
 function updateUI(){
 
-    const token=localStorage.getItem("acess_token");
+    const token=localStorage.getItem("access_token");
 
     if(token){
 
