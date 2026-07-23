@@ -111,7 +111,7 @@ loginForm.addEventListener("submit", async (e) => {
     loginMessage.textContent = "Logging in...";
 
     const username = document
-        .getElementById("loginUsername")
+        .getElementById("loginUserName")
         .value
         .trim();
 
