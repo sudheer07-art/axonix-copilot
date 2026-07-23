@@ -39,8 +39,14 @@
 
 }
 .auth-popup{
-    width:650px;
-    height:500px;
+    width:min(650px,92vw);
+
+    max-height:90vh;
+
+    height:auto;
+
+    overflow-y:auto;
+
     background:#fff;
     border-radius:18px;
     overflow:hidden;

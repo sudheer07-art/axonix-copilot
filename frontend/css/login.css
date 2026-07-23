@@ -62,13 +62,11 @@ margin:0;
 
     width:100%;
 
-    padding:20px 30px;
+    padding:40px;
 
     display:flex;
-
     flex-direction:column;
-
-    justify-content:center;
+    justify-content:flex-start;
 
 }
 
@@ -296,7 +294,7 @@ margin:0;
    RIGHT SIDE
 ========================================== */
 
-.right-side{
+/* .right-side{
 
     width:50%;
 
@@ -321,7 +319,7 @@ margin:0;
 
     overflow:hidden;
 
-}
+} */
 
 /* Floating Circle 1 */
 
@@ -373,7 +371,7 @@ margin:0;
 
 /* ========================================== */
 
-.content{
+/* .content{
 
     position:relative;
 
@@ -381,7 +379,7 @@ margin:0;
 
     text-align:center;
 
-}
+} */
 
 /* ========================================== */
 
@@ -413,7 +411,7 @@ margin:0;
 
 /* ========================================== */
 
-.feature{
+/* .feature{
 
     display:flex;
 
@@ -427,7 +425,7 @@ margin:0;
 
     justify-content:flex-start;
 
-}
+} */
 
 /* ========================================== */
 
@@ -493,7 +491,7 @@ margin:0;
 
 /* ========================================== */
 
-.social-login{
+/* .social-login{
 
     margin-top:25px;
 
@@ -543,7 +541,7 @@ margin:0;
 
     color:#2563eb;
 
-}
+} 
 
 /* ========================================== */
 

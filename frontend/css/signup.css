@@ -60,22 +60,15 @@ body{
 
 .left-side{
 
-    width:52%;
+    width:100%;
 
-  
-
-    padding:18px 14px;
-
-
+    padding:40px;
 
     display:flex;
-
     flex-direction:column;
-
-    justify-content:center;
+    justify-content:flex-start;
 
 }
-
 /* ===================================== */
 
 .logo{
@@ -838,5 +831,38 @@ MOBILE
     flex-wrap:wrap;
 
 }
+
+}
+.auth-switch{
+
+    margin-top:25px;
+
+    text-align:center;
+
+    font-size:15px;
+
+}
+
+.auth-switch span{
+
+    color:#6b7280;
+
+}
+
+.auth-switch a{
+
+    color:#2563eb;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    margin-left:6px;
+
+}
+
+.auth-switch a:hover{
+
+    text-decoration:underline;
 
 }
