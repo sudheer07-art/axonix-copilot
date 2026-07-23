@@ -841,14 +841,14 @@ nav a.active{
     position:fixed;
 
     inset:0;
-
+    margin-top: 2px;
     display:none;
 
     justify-content:center;
 
     align-items:center;
 
-    background:rgba(0,0,0,.55);
+    background:transparent;
 
     z-index:2000;
 
@@ -862,11 +862,11 @@ nav a.active{
 
 .loading-box{
 
-    width:280px;
+    width:80px;
 
     padding:28px;
 
-    background:#111827;
+    background:transparent;
 
     border-radius:18px;
 
