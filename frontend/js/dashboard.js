@@ -425,7 +425,7 @@ document
 
 async function init() {
 
-    showLoading("Loading Dashboard...");
+    showLoading("");
 
     await loadUser();
 
