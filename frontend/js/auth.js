@@ -168,7 +168,7 @@ loginForm.addEventListener("submit", async (e) => {
 
         setTimeout(() => {
 
-            location.href = "dashboard.html";
+            location.href = "index.html";
 
         }, 800);
 
