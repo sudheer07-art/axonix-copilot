@@ -3,176 +3,189 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>AXONIX | Sign Up</title>
+<title>Signup | AXONIX</title>
 
-    <link rel="stylesheet" href="css/signup.css">
+<link rel="stylesheet" href="css/signup.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="signup-container">
+<div class="signup-page">
 
-    <!-- LEFT PANEL -->
+<div class="glass-card">
 
-    <div class="left-side">
+<div class="left-side">
 
-        <div class="logo">
+<div class="logo">
 
-            🚀 AXONIX
+<i class="fa-solid fa-rocket"></i>
 
-        </div>
+<span>AXONIX</span>
 
-        <h1>
+</div>
 
-            Create Account
+<h1>
 
-        </h1>
+Start Your Career Journey 🚀
 
-        <!-- <p>
+</h1>
 
-            Join AXONIX and unlock AI-powered career tools.
+<p>
 
-        </p> -->
+Create your account and unlock AI-powered resume analysis, ATS optimization, live job search and career insights.
 
-        <form id="signupForm">
+</p>
 
-            <div class="input-box">
+<div class="feature">
 
-                <i class="fa-solid fa-user"></i>
+<i class="fa-solid fa-file-arrow-up"></i>
 
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Username"
-                    required>
+<span>Upload Resume</span>
 
-            </div>
+</div>
 
-            <div class="input-box">
+<div class="feature">
 
-                <i class="fa-solid fa-envelope"></i>
+<i class="fa-solid fa-robot"></i>
 
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    required>
+<span>Gemini AI Review</span>
 
-            </div>
+</div>
 
-            <div class="input-box">
+<div class="feature">
 
-                <i class="fa-solid fa-lock"></i>
+<i class="fa-solid fa-chart-column"></i>
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    required>
+<span>Career Analytics</span>
 
-            </div>
+</div>
 
-            <div class="input-box">
+<div class="feature">
 
-                <i class="fa-solid fa-lock"></i>
+<i class="fa-solid fa-briefcase"></i>
 
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    placeholder="Confirm Password"
-                    required>
+<span>Live Jobs</span>
 
-            </div>
+</div>
 
-            <button
-                type="submit"
-                class="signup-btn">
+</div>
 
-                Create Account
+<div class="right-side">
 
-            </button>
+<h2>
 
-            <p id="signupMessage"></p>
+Create Account
 
-        </form>
+</h2>
 
-    </div>
+<form id="signupForm">
 
-    <!-- RIGHT PANEL -->
+<div class="input-box">
 
-    <!-- <div class="right-side">
+<i class="fa-solid fa-user"></i>
 
-        <div class="content">
+<input
+type="text"
+id="username"
+placeholder="Full Name"
+required>
 
-            <h2>
+</div>
 
-                Welcome to AXONIX
+<div class="input-box">
 
-            </h2>
+<i class="fa-solid fa-envelope"></i>
 
-            <p>
+<input
+type="email"
+id="email"
+placeholder="Email Address"
+required>
 
-                ✔ AI Resume Analyzer
+</div>
 
-            </p>
+<div class="input-box">
 
-            <p>
+<i class="fa-solid fa-lock"></i>
 
-                ✔ ATS Score Checker
+<input
+type="password"
+id="password"
+placeholder="Password"
+required>
 
-            </p>
+<button
+type="button"
+class="eye-btn"
+id="togglePassword">
 
-            <p>
+<i class="fa-solid fa-eye"></i>
 
-                ✔ Live Job Search
+</button>
 
-            </p>
+</div>
 
-            <p>
+<div class="input-box">
 
-                ✔ Gemini AI Review
+<i class="fa-solid fa-lock"></i>
 
-            </p>
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm Password"
+required>
 
-            <p>
+<button
+type="button"
+class="eye-btn"
+id="toggleConfirmPassword">
 
-                ✔ Resume vs JD Matching
+<i class="fa-solid fa-eye"></i>
 
-            </p> -->
+</button>
 
-            <div class="auth-switch">
+</div>
 
-<span>Already have an account?</span>
+<button
+type="submit"
+class="signup-btn">
 
-<a href="login.html">
+Create Account
+
+</button>
+
+</form>
+
+<p class="bottom-text">
+
+Already have an account?
+
+<a href="#" onclick="window.parent.openLogin();return false;">
 
 Login
 
 </a>
 
-</div>
-        </div>
+</p>
 
-    </div>
+</div>
+
+</div>
 
 </div>
 
 <script src="js/signup.js"></script>
-
 
 </body>
 

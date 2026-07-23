@@ -1,273 +1,66 @@
-// // // const API_URL = "http://127.0.0.1:8000";
+// ==========================================
+// AXONIX LOGIN.JS
+// ==========================================
 
-// // // const loginForm = document.getElementById("loginForm");
-
-// // // loginForm.addEventListener("submit", async function (e) {
-
-// // //     e.preventDefault();
-
-// // //     const username = document.getElementById("username").value.trim();
-
-// // //     const password = document.getElementById("password").value.trim();
-
-// // //     const message = document.getElementById("loginMessage");
-
-// // //     message.style.color = "red";
-// // //     message.innerHTML = "Logging in...";
-
-// // //     try {
-
-// // //         const formData = new URLSearchParams();
-
-// // //         formData.append("username", username);
-// // //         formData.append("password", password);
-
-// // //         const response = await fetch(
-
-// // //             `${API_URL}/auth/login`,
-
-// // //             {
-
-// // //                 method: "POST",
-
-// // //                 headers: {
-// // //                     "Content-Type": "application/x-www-form-urlencoded"
-// // //                 },
-
-// // //                 body: formData
-
-// // //             }
-
-// // //         );
-
-// // //         const data = await response.json();
-
-// // //         if (!response.ok) {
-
-// // //             message.innerHTML =
-// // //                 data.detail || "Invalid username or password";
-
-// // //             return;
-
-// // //         }
-
-// // //         // Save JWT Token
-
-// // //         localStorage.setItem(
-// // //             "token",
-// // //             data.access_token
-// // //         );
-
-// // //         message.style.color = "green";
-
-// // //         message.innerHTML =
-// // //             "Login Successful...";
-
-// // //         setTimeout(() => {
-
-// // //     // window.parent.loginSuccess();
-// // //     window.parent.location="index.html"
-
-// // // }, 1000);
-
-// // //     }
-
-// // //     catch (error) {
-
-// // //         console.log(error);
-
-// // //         message.innerHTML =
-// // //             "Unable to connect to server.";
-
-// // //     }
-
-// // // });
-// // // localStorage.setItem("token", data.access_token);
-
-// // const API_URL = "http://127.0.0.1:8000";
-
-// // const loginForm = document.getElementById("loginForm");
-
-// // loginForm.addEventListener("submit", async function (e) {
-
-// //     e.preventDefault();
-
-// //     const username = document.getElementById("username").value.trim();
-// //     const password = document.getElementById("password").value.trim();
-
-// //     const message = document.getElementById("loginMessage");
-
-// //     message.style.color = "red";
-// //     message.innerHTML = "Logging in...";
-
-// //     try {
-
-// //         const formData = new URLSearchParams();
-
-// //         formData.append("username", username);
-// //         formData.append("password", password);
-
-// //         const response = await fetch(`${API_URL}/auth/login`, {
-
-// //             method: "POST",
-
-// //             headers: {
-// //                 "Content-Type": "application/x-www-form-urlencoded"
-// //             },
-
-// //             body: formData
-
-// //         });
-
-// //         const data = await response.json();
-
-// //         if (!response.ok) {
-
-// //             message.innerHTML =
-// //                 data.detail || "Invalid username or password";
-
-// //             return;
-
-// //         }
-
-// //         // Save JWT Token
-// //         localStorage.setItem("token", data.access_token);
-
-// //         message.style.color = "green";
-// //         message.innerHTML = "Login Successful ✓";
-
-// //         setTimeout(() => {
-
-// //             // Close popup
-// //             window.parent.closePopup();
-
-// //             // Hide Login & Signup
-// //             window.parent.document
-// //                 .getElementById("loginBtn")
-// //                 .style.display = "none";
-
-// //             window.parent.document
-// //                 .getElementById("signupBtn")
-// //                 .style.display = "none";
-
-// //             // Show Hamburger Menu
-// //             window.parent.document
-// //                 .getElementById("menuBtn")
-// //                 .style.display = "inline-flex";
-
-// //             // Redirect parent page
-// //             window.parent.location.href = "index.html";
-
-// //         }, 1000);
-
-// //     }
-
-// //     catch (error) {
-
-// //         console.error(error);
-
-// //         message.innerHTML = "Unable to connect to server.";
-
-// //     }
-
-// // });
-// const API_URL = "http://127.0.0.1:8000";
-
-// const loginForm = document.getElementById("loginForm");
-
-// loginForm.addEventListener("submit", async function (e) {
-
-//     e.preventDefault();
-
-//     const username = document.getElementById("username").value.trim();
-//     const password = document.getElementById("password").value.trim();
-
-//     const message = document.getElementById("loginMessage");
-
-//     message.style.color = "red";
-//     message.innerHTML = "Logging in...";
-
-//     try {
-
-//         const formData = new URLSearchParams();
-
-//         formData.append("username", username);
-//         formData.append("password", password);
-
-//         const response = await fetch(`${API_URL}/auth/login`, {
-
-//             method: "POST",
-
-//             headers: {
-//                 "Content-Type": "application/x-www-form-urlencoded"
-//             },
-
-//             body: formData
-
-//         });
-
-//         const data = await response.json();
-
-//         if (!response.ok) {
-
-//             message.style.color = "red";
-//             message.innerHTML =
-//                 data.detail || "Invalid username or password";
-
-//             return;
-
-//         }
-
-//         // Save JWT Token
-//         localStorage.setItem("token", data.access_token);
-
-//         message.style.color = "green";
-//         message.innerHTML = "Login Successful ✓";
-
-//         // setTimeout(() => {
-
-//         //     // Close popup
-//         //     window.parent.closePopup();
-
-//         //     // Reload parent page
-//         //     window.parent.location.href = "index.html";
-
-//         // }, 1000);
-//     //     setTimeout(() => {
-
-//     // if (window.parent && typeof window.parent.closePopup === "function") {
-//     //     window.parent.closePopup();
-//     // }
-
-//     setTimeout(() => {
-//         window.parent.location.href = "index.html";
-//     }, 1000);
-
-// }
-
-//     catch (error) {
-
-//         console.error(error);
-
-//         message.style.color = "red";
-//         message.innerHTML = "Unable to connect to server.";
-
-//     }
-
-// })
 const API_URL = "https://axonix-copilot.onrender.com";
 
 const loginForm = document.getElementById("loginForm");
+
 const message = document.getElementById("loginMessage");
 
-loginForm.addEventListener("submit", async function (e) {
+
+//==========================================
+// PASSWORD SHOW / HIDE
+//==========================================
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+const passwordInput =
+    document.getElementById("password");
+
+if (togglePassword && passwordInput) {
+
+    togglePassword.onclick = () => {
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+            togglePassword.innerHTML =
+                '<i class="fa-solid fa-eye-slash"></i>';
+
+        }
+
+        else {
+
+            passwordInput.type = "password";
+
+            togglePassword.innerHTML =
+                '<i class="fa-solid fa-eye"></i>';
+
+        }
+
+    };
+
+}
+
+
+//==========================================
+// LOGIN
+//==========================================
+
+loginForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const username =
+        document.getElementById("email").value.trim();
 
-    message.style.color = "red";
+    const password =
+        document.getElementById("password").value.trim();
+
+    message.style.color = "#ef4444";
     message.innerHTML = "Logging in...";
 
     try {
@@ -277,106 +70,94 @@ loginForm.addEventListener("submit", async function (e) {
         formData.append("username", username);
         formData.append("password", password);
 
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(
 
-            method: "POST",
+            `${API_URL}/auth/login`,
 
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            {
 
-            body: formData
+                method: "POST",
 
-        });
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+
+                },
+
+                body: formData
+
+            }
+
+        );
 
         const data = await response.json();
 
         if (!response.ok) {
 
-            message.style.color = "red";
             message.innerHTML =
-                data.detail || "Invalid username or password";
+                data.detail || "Invalid Credentials";
 
             return;
 
         }
 
-        // ==========================
-        // SAVE JWT TOKEN
-        // ==========================
+        //--------------------------------
+        // SAVE TOKEN
+        //--------------------------------
 
-        localStorage.setItem("token", data.access_token);
-        console.log("Saved Token:", localStorage.getItem("token"));
-        localStorage.setItem("username", username);
+        localStorage.setItem(
+            "token",
+            data.access_token
+        );
 
-        // ==========================
-        // SUCCESS MESSAGE
-        // ==========================
+        localStorage.setItem(
+            "username",
+            username
+        );
 
-        message.style.color = "green";
-        message.innerHTML = "Login Successful ✓";
+        //--------------------------------
+        // SUCCESS
+        //--------------------------------
 
-        // ==========================
-        // CLOSE POPUP & RELOAD HOME
-        // ==========================
+        message.style.color = "#22c55e";
 
-//         setTimeout(() => {
+        message.innerHTML =
+            "Login Successful ✓";
 
-//     if (window.parent && typeof window.parent.closePopup === "function") {
+        //--------------------------------
+        // CLOSE POPUP
+        //--------------------------------
 
-//         window.parent.closePopup();
-//         console.log(window.parent);
-// console.log(typeof window.parent.closePopup);
+        setTimeout(() => {
 
-//     }
+            if (
+                window.parent &&
+                window.parent.loginSuccess
+            ) {
 
-//     setTimeout(() => {
+                window.parent.loginSuccess(username);
 
-//         window.parent.location.href = "index.html";
+            }
 
-//     }, 300);
+            setTimeout(() => {
 
-// }, 1000);
-//     }
-// setTimeout(() => {
+                window.parent.location.reload();
 
-//     // Close popup
-//     window.parent.closePopup();
+            }, 300);
 
-//     // Hide Login & Signup
-//     window.parent.document.getElementById("loginBtn").style.display = "none";
-//     window.parent.document.getElementById("signupBtn").style.display = "none";
+        }, 900);
 
-//     // Show Hamburger
-//     window.parent.document.getElementById("menuBtn").style.display = "flex";
-
-// }, 1000);
-// Login Successful
-message.style.color = "green";
-message.innerHTML = "Login Successful ✓";
-
-setTimeout(() => {
-
-    // Close popup
-    if (window.parent && typeof window.parent.closePopup === "function") {
-        window.parent.closePopup();
     }
 
-    // Reload the home page so index.js loads with the new token
-    setTimeout(() => {
+    catch (err) {
 
-        window.parent.location.href = "index.html";
+        console.error(err);
 
-    }, 300);
+        message.style.color = "#ef4444";
 
-}, 1000);
-    }
-    catch (error) {
-
-        console.error(error);
-
-        message.style.color = "red";
-        message.innerHTML = "Unable to connect to server.";
+        message.innerHTML =
+            "Unable to connect to server.";
 
     }
 

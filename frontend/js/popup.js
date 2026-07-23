@@ -1,420 +1,51 @@
-// // console.log("popup.js loaded");
+// =============================================
+// AXONIX POPUP.JS
+// Part 3A-1
+// =============================================
 
-// // document.addEventListener("DOMContentLoaded", function () {
+console.log("AXONIX popup.js loaded");
 
-// //     const overlay = document.getElementById("authOverlay");
-// //     const frame = document.getElementById("authFrame");
+// =============================================
+// CONFIG
+// =============================================
 
-// //     const loginBtn = document.getElementById("loginBtn");
-// //     const signupBtn = document.getElementById("signupBtn");
+const POPUP_SIZES = {
+    login: {
+        width: "680px",
+        height: "460px"
+    },
+    signup: {
+        width: "760px",
+        height: "560px"
+    }
+};
 
-// //     console.log(loginBtn);
-// //     console.log(signupBtn);
+// =============================================
+// DOM READY
+// =============================================
 
-// //     loginBtn.onclick = function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-// //         console.log("Login clicked");
+    initializeAuth();
 
-// //         frame.src = "login.html";
-// //         const popup = document.querySelector(".auth-popup");
+    initializeSidebar();
 
-// //     popup.style.width = "650px";
-// //     popup.style.height = "380px";
+    initializePopup();
 
+});
 
-// //         overlay.classList.add("show");
+// =============================================
+// AUTH INITIALIZATION
+// =============================================
 
-// //     };
+function initializeAuth() {
 
-// //     signupBtn.onclick = function () {
-
-// //         console.log("Signup clicked");
-
-// //         frame.src = "signup.html";
-// //         const popup = document.querySelector(".auth-popup");
-
-// //     popup.style.width = "700px";
-// //     popup.style.height = "480px";
-
-
-// //         overlay.classList.add("show");
-
-// //     };
-
-// //     window.closePopup = function () {
-
-// //         overlay.classList.remove("show");
-
-// //         frame.src = "";
-
-// //     };
-
-// //     overlay.onclick = function (e) {
-
-// //         if (e.target === overlay) {
-
-// //             closePopup();
-
-// //         }
-
-// //     };
-
-// // });
-// // function checkLogin(page){
-
-// //     const token = localStorage.getItem("token");
-
-// //     if(token){
-
-// //         window.location.href = page;
-
-// //     }
-
-// //     else{
-
-// //         alert("Please login to access this feature.");
-
-// //         openLogin();
-
-// //     }
-
-// // }
-// // const menuBtn=document.getElementById("menuBtn");
-
-// // const sideMenu=document.getElementById("sideMenu");
-
-// // menuBtn.onclick=function(){
-
-// //     sideMenu.classList.toggle("show");
-
-// // }
-// // document.addEventListener("DOMContentLoaded", () => {
-
-// //     const logoutBtn = document.getElementById("logoutBtn");
-
-// //     if (logoutBtn) {
-
-// //         logoutBtn.onclick = function () {
-
-// //             localStorage.removeItem("token");
-
-// //             document.getElementById("sideMenu").classList.remove("show");
-
-// //             document.getElementById("menuBtn").style.display = "none";
-
-// //             document.getElementById("loginBtn").style.display = "inline-block";
-
-// //             document.getElementById("signupBtn").style.display = "inline-block";
-
-// //             window.location.href = "index.html";
-
-// //         };
-
-// //     }
-
-// // });
-// console.log("popup.js loaded");
-
-// document.addEventListener("DOMContentLoaded", function () {
-
-//     // ==========================
-//     // ELEMENTS
-//     // ==========================
-
-//     const overlay = document.getElementById("authOverlay");
-//     const frame = document.getElementById("authFrame");
-
-//     const loginBtn = document.getElementById("loginBtn");
-//     const signupBtn = document.getElementById("signupBtn");
-//     const menuBtn = document.getElementById("menuBtn");
-
-//     const sideMenu = document.getElementById("sideMenu");
-//     const logoutBtn = document.getElementById("logoutBtn");
-
-//     // ==========================
-//     // CHECK LOGIN
-//     // ==========================
-
-//     const token = localStorage.getItem("token");
-
-//     if (token) {
-
-//         loginBtn.style.display = "none";
-//         signupBtn.style.display = "none";
-//         menuBtn.style.display = "flex";
-
-//     } else {
-
-//         loginBtn.style.display = "inline-block";
-//         signupBtn.style.display = "inline-block";
-//         menuBtn.style.display = "none";
-
-//     }
-
-//     // ==========================
-//     // LOGIN POPUP
-//     // ==========================
-
-//     loginBtn.onclick = function () {
-
-//         frame.src = "login.html";
-
-//         const popup = document.querySelector(".auth-popup");
-
-//         popup.style.width = "650px";
-//         popup.style.height = "380px";
-
-//         overlay.classList.add("show");
-
-//     };
-
-//     // ==========================
-//     // SIGNUP POPUP
-//     // ==========================
-
-//     signupBtn.onclick = function () {
-
-//         frame.src = "signup.html";
-
-//         const popup = document.querySelector(".auth-popup");
-
-//         popup.style.width = "700px";
-//         popup.style.height = "480px";
-
-//         overlay.classList.add("show");
-
-//     };
-
-//     // ==========================
-//     // HAMBURGER MENU
-//     // ==========================
-
-//     // if (menuBtn) {
-
-//     //     menuBtn.onclick = function () {
-
-//     //         sideMenu.classList.toggle("show");
-
-//     //     };
-
-//     // }
-//     const closeMenuBtn = document.getElementById("closeMenuBtn");
-
-// if (menuBtn) {
-
-//     menuBtn.onclick = function () {
-
-//         sideMenu.classList.add("show");
-
-//     };
-
-// }
-
-// if (closeMenuBtn) {
-
-//     closeMenuBtn.onclick = function () {
-
-//         sideMenu.classList.remove("show");
-
-//     };
-
-// }
-
-//     // ==========================
-//     // LOGOUT
-//     // ==========================
-
-//     if (logoutBtn) {
-
-//         logoutBtn.onclick = function () {
-
-//             localStorage.removeItem("token");
-
-//             sideMenu.classList.remove("show");
-
-//             loginBtn.style.display = "inline-block";
-//             signupBtn.style.display = "inline-block";
-//             menuBtn.style.display = "none";
-
-//             alert("Logged out successfully.");
-
-//             window.location.href = "index.html";
-
-//         };
-
-//     }
-
-//     // ==========================
-//     // CLOSE POPUP
-//     // ==========================
-
-//     window.closePopup = function () {
-
-//         overlay.classList.remove("show");
-
-//         frame.src = "";
-
-//     };
-
-//     // ==========================
-//     // CLICK OUTSIDE
-//     // ==========================
-
-//     overlay.onclick = function (e) {
-
-//         if (e.target === overlay) {
-
-//             closePopup();
-
-//         }
-
-//     };
-
-//     // ==========================
-//     // ESC KEY
-//     // ==========================
-
-//     document.addEventListener("keydown", function (e) {
-
-//         if (e.key === "Escape") {
-
-//             closePopup();
-
-//         }
-
-//     });
-
-// });
-
-// // ==========================
-// // OPEN LOGIN FROM ANYWHERE
-// // ==========================
-
-// function openLogin() {
-
-//     const overlay = document.getElementById("authOverlay");
-//     const frame = document.getElementById("authFrame");
-
-//     const popup = document.querySelector(".auth-popup");
-
-//     popup.style.width = "650px";
-//     popup.style.height = "380px";
-
-//     frame.src = "login.html";
-
-//     overlay.classList.add("show");
-
-// }
-
-// // ==========================
-// // OPEN SIGNUP FROM ANYWHERE
-// // ==========================
-
-// function openSignup() {
-
-//     const overlay = document.getElementById("authOverlay");
-//     const frame = document.getElementById("authFrame");
-
-//     const popup = document.querySelector(".auth-popup");
-
-//     popup.style.width = "700px";
-//     popup.style.height = "480px";
-
-//     frame.src = "signup.html";
-
-//     overlay.classList.add("show");
-
-// }
-
-// // ==========================
-// // PROTECT PAGES
-// // ==========================
-
-// function checkLogin(page) {
-
-//     const token = localStorage.getItem("token");
-
-//     if (token) {
-
-//         window.location.href = page;
-
-//     } else {
-
-//         alert("Please login to access this feature.");
-
-//         openLogin();
-
-//     }
-
-// }
-// function closePopup() {
-
-//     const overlay = document.getElementById("authOverlay");
-//     const frame = document.getElementById("authFrame");
-
-//     overlay.classList.remove("show");
-//     frame.src = "";
-
-// }
-console.log("popup.js loaded");
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // ==========================
-    // ELEMENTS
-    // ==========================
-
-    const overlay = document.getElementById("authOverlay");
-    const frame = document.getElementById("authFrame");
+    const token = localStorage.getItem("token");
 
     const loginBtn = document.getElementById("loginBtn");
     const signupBtn = document.getElementById("signupBtn");
-
     const menuBtn = document.getElementById("menuBtn");
-    const sideMenu = document.getElementById("sideMenu");
-    const closeMenuBtn = document.getElementById("closeMenuBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
 
-    // ==========================
-    // CHECK LOGIN
-    // ==========================
-
-    const token = localStorage.getItem("token");
-    const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-
-const storedUsername = localStorage.getItem("username");
-const storedEmail = localStorage.getItem("email");
-
-if (token) {
-
-    if (userName) {
-        userName.innerHTML = storedUsername || "User";
-    }
-
-    if (userEmail) {
-        userEmail.innerHTML = storedEmail || "";
-    }
-
-}
-else{
-
-    if (userName) {
-        userName.innerHTML = "Welcome";
-    }
-
-    if (userEmail) {
-        userEmail.innerHTML = "Please Login";
-    }
-
-}
-const avatar = document.getElementById("avatarLetter");
-
-if (avatar && storedUsername) {
-
-    avatar.innerHTML = storedUsername.charAt(0).toUpperCase();
-
-}
     if (token) {
 
         if (loginBtn) loginBtn.style.display = "none";
@@ -422,6 +53,8 @@ if (avatar && storedUsername) {
         if (signupBtn) signupBtn.style.display = "none";
 
         if (menuBtn) menuBtn.style.display = "flex";
+
+        loadUserInfo();
 
     }
 
@@ -435,97 +68,96 @@ if (avatar && storedUsername) {
 
     }
 
-    // ==========================
-    // LOGIN POPUP
-    // ==========================
+}
 
-    if (loginBtn) {
+// =============================================
+// LOAD USER INFO
+// =============================================
 
-        loginBtn.onclick = function (e) {
+function loadUserInfo() {
 
-            e.preventDefault();
+    const username =
+        localStorage.getItem("username") || "User";
 
-            frame.src = "login.html";
+    const email =
+        localStorage.getItem("email") || "";
 
-            const popup = document.querySelector(".auth-popup");
+    const avatar =
+        document.getElementById("avatarLetter");
 
-            popup.style.width = "650px";
-            popup.style.height = "380px";
+    const userName =
+        document.getElementById("userName");
 
-            overlay.classList.add("show");
+    const userEmail =
+        document.getElementById("userEmail");
 
-        };
+    if (avatar) {
 
-    }
-
-    // ==========================
-    // SIGNUP POPUP
-    // ==========================
-
-    if (signupBtn) {
-
-        signupBtn.onclick = function (e) {
-
-            e.preventDefault();
-
-            frame.src = "signup.html";
-
-            const popup = document.querySelector(".auth-popup");
-
-            popup.style.width = "700px";
-            popup.style.height = "480px";
-
-            overlay.classList.add("show");
-
-        };
+        avatar.innerHTML =
+            username.charAt(0).toUpperCase();
 
     }
 
-    // ==========================
-    // HAMBURGER MENU
-    // ==========================
+    if (userName) {
+
+        userName.innerHTML = username;
+
+    }
+
+    if (userEmail) {
+
+        userEmail.innerHTML = email;
+
+    }
+
+}
+
+// =============================================
+// SIDEBAR
+// =============================================
+
+function initializeSidebar() {
+
+    const menuBtn =
+        document.getElementById("menuBtn");
+
+    const sideMenu =
+        document.getElementById("sideMenu");
+
+    const closeMenuBtn =
+        document.getElementById("closeMenuBtn");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
 
     if (menuBtn && sideMenu) {
 
-        menuBtn.onclick = function () {
+        menuBtn.onclick = () => {
 
             sideMenu.classList.add("show");
-         
 
         };
 
     }
 
-    // ==========================
-    // CLOSE MENU BUTTON
-    // ==========================
+    if (closeMenuBtn && sideMenu) {
 
-    if (closeMenuBtn) {
-
-        closeMenuBtn.onclick = function () {
+        closeMenuBtn.onclick = () => {
 
             sideMenu.classList.remove("show");
-           
 
         };
 
     }
 
-    // ==========================
-    // CLICK OUTSIDE MENU
-    // ==========================
-
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", (e) => {
 
         if (
-
             sideMenu &&
             sideMenu.classList.contains("show") &&
-
             !sideMenu.contains(e.target) &&
-
+            menuBtn &&
             !menuBtn.contains(e.target)
-
         ) {
 
             sideMenu.classList.remove("show");
@@ -533,157 +165,279 @@ if (avatar && storedUsername) {
         }
 
     });
-    // ==========================
-    // LOGOUT
-    // ==========================
 
     if (logoutBtn) {
 
-        // logoutBtn.onclick = function () {
-
-        //     localStorage.removeItem("token");
-
-        //     if (sideMenu) {
-        //         sideMenu.classList.remove("show");
-        //     }
-
-        //     window.location.href = "index.html";
-
-        // };
-        logoutBtn.onclick = function () {
-
-    localStorage.removeItem("token");
-
-    sideMenu.classList.remove("show");
-
-    loginBtn.style.display = "inline-block";
-    signupBtn.style.display = "inline-block";
-    menuBtn.style.display = "none";
-
-};
+        logoutBtn.onclick = logout;
 
     }
 
-    // ==========================
-    // CLOSE POPUP
-    // ==========================
+}
 
-    // window.closePopup = function () {
+// =============================================
+// LOGOUT
+// =============================================
 
-    //     overlay.classList.remove("show");
+function logout() {
 
-    //     frame.src = "";
+    localStorage.removeItem("token");
 
-    // };
-    function closePopup() {
+    localStorage.removeItem("username");
 
-    const overlay = document.getElementById("authOverlay");
-    const frame = document.getElementById("authFrame");
+    localStorage.removeItem("email");
 
-    overlay.classList.remove("show");
-    setTimeout(() => {
-
-        frame.src = "";
-
-    },350);
+    window.location.href = "index.html";
 
 }
 
-window.closePopup = closePopup;
+// =============================================
+// POPUP INITIALIZATION
+// =============================================
 
-    // ==========================
-    // CLICK OUTSIDE POPUP
-    // ==========================
+function initializePopup() {
 
-    overlay.addEventListener("click", function (e) {
+    const overlay =
+        document.getElementById("authOverlay");
 
-        if (e.target === overlay) {
+    const loginBtn =
+        document.getElementById("loginBtn");
 
-            closePopup();
+    const signupBtn =
+        document.getElementById("signupBtn");
 
-        }
+    if (loginBtn) {
 
-    });
+        loginBtn.onclick = () => {
 
-    // ==========================
-    // ESC KEY
-    // ==========================
+            openLogin();
 
-    document.addEventListener("keydown", function (e) {
+        };
+
+    }
+
+    if (signupBtn) {
+
+        signupBtn.onclick = () => {
+
+            openSignup();
+
+        };
+
+    }
+
+    if (overlay) {
+
+        overlay.addEventListener("click", (e) => {
+
+            if (e.target === overlay) {
+
+                closePopup();
+
+            }
+
+        });
+
+    }
+
+    document.addEventListener("keydown", (e) => {
 
         if (e.key === "Escape") {
 
             closePopup();
 
-            if (sideMenu) {
-                sideMenu.classList.remove("show");
-            }
-
         }
 
     });
 
-}); // END DOMContentLoaded
-
-
-// ==========================
-// GLOBAL FUNCTIONS
-// ==========================
-
-function closePopup() {
-
-    const overlay = document.getElementById("authOverlay");
-    const frame = document.getElementById("authFrame");
-
-    overlay.classList.remove("show");
-    frame.src = "";
-
 }
+// =============================================
+// LOAD POPUP HTML
+// =============================================
 
-function openLogin() {
+async function loadPopup(page) {
 
-    const overlay = document.getElementById("authOverlay");
-    const frame = document.getElementById("authFrame");
-    const popup = document.querySelector(".auth-popup");
+    const authContent =
+        document.getElementById("authContent");
 
-    popup.style.width = "650px";
-    popup.style.height = "380px";
+    if (!authContent) return;
 
-    frame.src = "login.html";
+    authContent.innerHTML = `
 
-    overlay.classList.add("show");
+        <div class="popup-loader">
 
-}
+            <div class="loader"></div>
 
-function openSignup() {
+            <p>Loading...</p>
 
-    const overlay = document.getElementById("authOverlay");
-    const frame = document.getElementById("authFrame");
-    const popup = document.querySelector(".auth-popup");
+        </div>
 
-    popup.style.width = "700px";
-    popup.style.height = "480px";
+    `;
 
-    frame.src = "signup.html";
+    try {
 
-    overlay.classList.add("show");
+        const response = await fetch(page);
 
-}
+        const html = await response.text();
 
-function checkLogin(page) {
+        authContent.innerHTML = html;
 
-    const token = localStorage.getItem("token");
+    }
 
-    if (token) {
+    catch (err) {
 
-        window.location.href = page;
+        authContent.innerHTML = `
 
-    } else {
+            <div class="popup-error">
 
-        alert("Please login to access this feature.");
+                <h3>Unable to load page</h3>
 
-        openLogin();
+                <p>Please try again.</p>
+
+            </div>
+
+        `;
+
+        console.error(err);
 
     }
 
 }
+
+// =============================================
+// OPEN LOGIN
+// =============================================
+
+async function openLogin() {
+
+    const overlay =
+        document.getElementById("authOverlay");
+
+    const popup =
+        document.querySelector(".auth-popup");
+
+    if (!overlay || !popup) return;
+
+    popup.style.width =
+        POPUP_SIZES.login.width;
+
+    popup.style.height =
+        POPUP_SIZES.login.height;
+
+    overlay.classList.add("show");
+
+    await loadPopup("login.html");
+
+}
+
+// =============================================
+// OPEN SIGNUP
+// =============================================
+
+async function openSignup() {
+
+    const overlay =
+        document.getElementById("authOverlay");
+
+    const popup =
+        document.querySelector(".auth-popup");
+
+    if (!overlay || !popup) return;
+
+    popup.style.width =
+        POPUP_SIZES.signup.width;
+
+    popup.style.height =
+        POPUP_SIZES.signup.height;
+
+    overlay.classList.add("show");
+
+    await loadPopup("signup.html");
+
+}
+
+// =============================================
+// CLOSE POPUP
+// =============================================
+
+function closePopup() {
+
+    const overlay =
+        document.getElementById("authOverlay");
+
+    const authContent =
+        document.getElementById("authContent");
+
+    if (!overlay) return;
+
+    overlay.classList.remove("show");
+
+    setTimeout(() => {
+
+        if (authContent) {
+
+            authContent.innerHTML = "";
+
+        }
+
+    }, 250);
+
+}
+
+// =============================================
+// CHECK LOGIN
+// =============================================
+
+function checkLogin(page) {
+
+    const token =
+        localStorage.getItem("token");
+
+    if (!token) {
+
+        openLogin();
+
+        return;
+
+    }
+
+    window.location.href = page;
+
+}
+
+// =============================================
+// LOGIN SUCCESS
+// =============================================
+
+function loginSuccess(username, email = "") {
+
+    localStorage.setItem("username", username);
+
+    if (email) {
+
+        localStorage.setItem("email", email);
+
+    }
+
+    closePopup();
+
+    initializeAuth();
+
+}
+
+// =============================================
+// GLOBAL EXPORTS
+// =============================================
+
+window.openLogin = openLogin;
+
+window.openSignup = openSignup;
+
+window.closePopup = closePopup;
+
+window.checkLogin = checkLogin;
+
+window.loginSuccess = loginSuccess;
+
+// =============================================
+// END OF popup.js
+// =============================================
