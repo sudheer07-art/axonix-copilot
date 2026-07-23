@@ -555,7 +555,83 @@
 =========================== -->
 
 
+<div id="authModal" class="auth-modal">
 
+    <div class="auth-container">
+
+        <button id="closeAuth" class="close-auth">&times;</button>
+
+        <div class="auth-tabs">
+
+            <button id="loginTab" class="active">Login</button>
+
+            <button id="signupTab">Sign Up</button>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <form id="loginForm" class="auth-form active">
+
+            <input
+                id="loginEmail"
+                type="email"
+                placeholder="Email"
+                required>
+
+            <input
+                id="loginPassword"
+                type="password"
+                placeholder="Password"
+                required>
+
+            <div id="loginMessage" class="auth-message"></div>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <!-- SIGNUP -->
+
+        <form id="signupForm" class="auth-form">
+
+            <input
+                id="signupUsername"
+                type="text"
+                placeholder="Username"
+                required>
+
+            <input
+                id="signupEmail"
+                type="email"
+                placeholder="Email"
+                required>
+
+            <input
+                id="signupPassword"
+                type="password"
+                placeholder="Password"
+                required>
+
+            <input
+                id="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                required>
+
+            <div id="signupMessage" class="auth-message"></div>
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
  <div id="sideMenu" class="side-menu">
 
