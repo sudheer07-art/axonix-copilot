@@ -159,7 +159,7 @@ loginForm.addEventListener("submit", async (e) => {
         }
 
         localStorage.setItem(
-            "token",
+            "access_token",
             data.access_token
         );
 
@@ -267,7 +267,7 @@ signupForm.addEventListener("submit",async(e)=>{
 
 function updateUI(){
 
-    const token=localStorage.getItem("token");
+    const token=localStorage.getItem("acess_token");
 
     if(token){
 
@@ -293,7 +293,8 @@ updateUI();
 
 logoutBtn?.addEventListener("click",()=>{
 
-    localStorage.clear();
+    // localStorage.clear();
+    localStorage.removeItem("access_token");
 
     location.reload();
 
@@ -305,7 +306,7 @@ logoutBtn?.addEventListener("click",()=>{
 
 window.checkLogin=function(page){
 
-    const token=localStorage.getItem("token");
+    const token=localStorage.getItem("access_token");
 
     if(!token){
 
