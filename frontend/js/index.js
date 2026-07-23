@@ -206,14 +206,14 @@ function showLoggedInNavbar() {
     if (menuBtn)
         menuBtn.style.display = "flex";
 
-    const username = localStorage.getItem("username") || "User";
-    const email = localStorage.getItem("email") || "";
+   const menuUserName = document.getElementById("menuUserName");
+const menuUserEmail = document.getElementById("menuUserEmail");
 
-    if (menuUserName)
-        menuUserName.textContent = username;
+   if (menuUserName)
+    menuUserName.textContent = username;
 
-    if (menuUserEmail)
-        menuUserEmail.textContent = email;
+if (menuUserEmail)
+    menuUserEmail.textContent = email;
 
     if (avatarLetter)
         avatarLetter.textContent = username.charAt(0).toUpperCase();
