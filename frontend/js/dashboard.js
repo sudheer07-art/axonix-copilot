@@ -1,14 +1,122 @@
-/*==================================================
-                AXONIX DASHBOARD
-==================================================*/
+/* ==========================================================
+   AXONIX AI Career Dashboard
+   dashboard.js
+   Part 1A
+========================================================== */
 
-const API_URL = "https://axonix-copilot.onrender.com";
+const API_BASE = "https://axonix-copilot.onrender.com";
 
-/*==================================================
-                AUTH
-==================================================*/
+const token = localStorage.getItem("access_token");
 
-const token = localStorage.getItem("token");
+/* ==========================================================
+   DOM
+========================================================== */
+
+const menuToggle = document.getElementById("menuToggle");
+const closeSidebar = document.getElementById("closeSidebar");
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+const loadingPopup = document.getElementById("loadingPopup");
+const loadingMessage = document.getElementById("loadingMessage");
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+/* ---------- User ---------- */
+
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+const welcomeName = document.getElementById("welcomeName");
+
+const topUserName = document.getElementById("topUserName");
+
+const userAvatar = document.getElementById("userAvatar");
+const topAvatar = document.getElementById("topAvatar");
+
+/* ---------- Resume ---------- */
+
+const resumeName = document.getElementById("resumeName");
+const resumeProgress = document.getElementById("resumeProgress");
+const resumeHealth = document.getElementById("resumeHealth");
+
+/* ---------- Stats ---------- */
+
+const atsScore = document.getElementById("atsScore");
+const skillsCount = document.getElementById("skillsCount");
+const jobMatches = document.getElementById("jobMatches");
+const profileStrength = document.getElementById("profileStrength");
+
+/* ---------- Containers ---------- */
+
+const suggestionsContainer =
+    document.getElementById("suggestions");
+
+const recommendedJobs =
+    document.getElementById("recommendedJobs");
+
+/* ==========================================================
+   LOADING POPUP
+========================================================== */
+
+function showLoading(message = "Loading...") {
+
+    if (!loadingPopup) return;
+
+    loadingMessage.textContent = message;
+
+    loadingPopup.classList.add("show");
+
+}
+
+function hideLoading() {
+
+    if (!loadingPopup) return;
+
+    loadingPopup.classList.remove("show");
+
+}
+
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
+function openSidebar() {
+
+    sidebar.classList.add("active");
+
+    sidebarOverlay.classList.add("show");
+
+}
+
+function closeMenu() {
+
+    sidebar.classList.remove("active");
+
+    sidebarOverlay.classList.remove("show");
+
+}
+
+if (menuToggle) {
+
+    menuToggle.addEventListener("click", openSidebar);
+
+}
+
+if (closeSidebar) {
+
+    closeSidebar.addEventListener("click", closeMenu);
+
+}
+
+if (sidebarOverlay) {
+
+    sidebarOverlay.addEventListener("click", closeMenu);
+
+}
+
+/* ==========================================================
+   AUTH
+========================================================== */
 
 if (!token) {
 
@@ -16,222 +124,654 @@ if (!token) {
 
 }
 
-/*==================================================
-                USER
-==================================================*/
+/* ==========================================================
+   FETCH WRAPPER
+========================================================== */
 
-const username =
-    localStorage.getItem("username") || "User";
+async function api(url, options = {}) {
 
-const email =
-    localStorage.getItem("email") || "user@axonix.ai";
+    const response = await fetch(
+        `${API_BASE}${url}`,
+        {
+            ...options,
 
-/*==================================================
-                DOM
-==================================================*/
+            headers: {
+                Authorization: `Bearer ${token}`,
+                ...(options.headers || {})
+            }
+        }
+    );
 
-const sidebar =
-    document.getElementById("sidebar");
+    if (response.status === 401) {
 
-const overlay =
-    document.getElementById("sidebarOverlay");
+        localStorage.removeItem("access_token");
 
-const menuBtn =
-    document.getElementById("menuToggle");
+        window.location.href = "index.html";
 
-const closeBtn =
-    document.getElementById("closeSidebar");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-const welcomeName =
-    document.getElementById("welcomeName");
-
-const userName =
-    document.getElementById("userName");
-
-const userEmail =
-    document.getElementById("userEmail");
-
-const userAvatar =
-    document.getElementById("userAvatar");
-
-/*==================================================
-                CHARTS
-==================================================*/
-
-let atsChart = null;
-
-let skillsChart = null;
-
-/*==================================================
-            LOAD USER INSTANTLY
-==================================================*/
-
-function loadUser(){
-
-    if(welcomeName){
-
-        welcomeName.innerHTML =
-            username;
+        return;
 
     }
 
-    if(userName){
-
-        userName.innerHTML =
-            username;
-
-    }
-
-    if(userEmail){
-
-        userEmail.innerHTML =
-            email;
-
-    }
-
-    if(userAvatar){
-
-        userAvatar.src =
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=2563eb&color=fff`;
-
-    }
+    return response;
 
 }
 
-/*==================================================
-            SIDEBAR
-==================================================*/
+/* ==========================================================
+   COUNTER ANIMATION
+========================================================== */
 
-function openSidebar(){
+function animateNumber(element, endValue, suffix = "") {
 
-    if(!sidebar) return;
+    if (!element) return;
 
-    sidebar.classList.add("show");
+    let start = 0;
 
-    if(overlay){
+    const duration = 800;
 
-        overlay.classList.add("show");
+    const increment = endValue / (duration / 16);
 
-    }
+    const timer = setInterval(() => {
 
-}
+        start += increment;
 
-function closeSidebar(){
+        if (start >= endValue) {
 
-    if(!sidebar) return;
+            start = endValue;
 
-    sidebar.classList.remove("show");
-
-    if(overlay){
-
-        overlay.classList.remove("show");
-
-    }
-
-}
-
-/*==================================================
-        SIDEBAR EVENTS
-==================================================*/
-
-if(menuBtn){
-
-    menuBtn.onclick = openSidebar;
-
-}
-
-if(closeBtn){
-
-    closeBtn.onclick = closeSidebar;
-
-}
-
-if(overlay){
-
-    overlay.onclick = closeSidebar;
-
-}
-
-/*==================================================
-            LOGOUT
-==================================================*/
-
-if(logoutBtn){
-
-    logoutBtn.onclick = function(){
-
-        localStorage.clear();
-
-        window.location.href =
-            "index.html";
-
-    }
-
-}
-
-/*==================================================
-        FAST PLACEHOLDERS
-==================================================*/
-
-function showLoadingData(){
-
-    const ids = [
-
-        "atsScore",
-
-        "skillsCount",
-
-        "jobMatches",
-
-        "profileStrength"
-
-    ];
-
-    ids.forEach(id=>{
-
-        const element =
-            document.getElementById(id);
-
-        if(element){
-
-            element.innerHTML="...";
+            clearInterval(timer);
 
         }
 
+        element.textContent =
+            Math.floor(start) + suffix;
+
+    }, 16);
+
+}
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+function updateAvatar(name) {
+
+    if (!name) return;
+
+    const avatarURL =
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`;
+
+    if (userAvatar)
+        userAvatar.src = avatarURL;
+
+    if (topAvatar)
+        topAvatar.src = avatarURL;
+
+}
+
+/* ==========================================================
+   PAGE START
+========================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    showLoading("Preparing your dashboard...");
+
+});
+/* ==========================================================
+   LOAD CURRENT USER
+========================================================== */
+
+async function loadCurrentUser() {
+
+    try {
+
+        showLoading("Loading your profile...");
+
+        const response = await api("/auth/me");
+
+        if (!response) return;
+
+        const user = await response.json();
+
+        const username =
+            user.username ||
+            user.name ||
+            "User";
+
+        const email =
+            user.email ||
+            "No Email";
+
+        /* ---------- Sidebar ---------- */
+
+        if (userName)
+            userName.textContent = username;
+
+        if (userEmail)
+            userEmail.textContent = email;
+
+        /* ---------- Topbar ---------- */
+
+        if (topUserName)
+            topUserName.textContent = username;
+
+        /* ---------- Welcome ---------- */
+
+        if (welcomeName)
+            welcomeName.textContent = username;
+
+        /* ---------- Avatar ---------- */
+
+        updateAvatar(username);
+
+        console.log("✅ User Loaded");
+
+    }
+
+    catch (error) {
+
+        console.error("User Load Error:", error);
+
+    }
+
+}
+
+/* ==========================================================
+   LOGOUT
+========================================================== */
+
+function logout() {
+
+    localStorage.removeItem("access_token");
+
+    localStorage.removeItem("resume_data");
+
+    localStorage.removeItem("resume_analysis");
+
+    localStorage.removeItem("ats_score");
+
+    localStorage.removeItem("job_matches");
+
+    window.location.href = "index.html";
+
+}
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener("click", e => {
+
+        e.preventDefault();
+
+        logout();
+
     });
 
 }
 
-/*==================================================
-        DASHBOARD CACHE
-==================================================*/
+/* ==========================================================
+   LOAD LOCAL DASHBOARD DATA
+========================================================== */
 
-let dashboardLoaded = false;
+function getDashboardData() {
 
-let dashboardData = null;
+    return {
 
-/*==================================================
-        START DASHBOARD
-==================================================*/
+        ats:
+            Number(localStorage.getItem("ats_score")) || 0,
 
-async function initializeDashboard(){
+        skills:
+            JSON.parse(
+                localStorage.getItem("skills") || "[]"
+            ),
 
-    loadUser();
+        suggestions:
+            JSON.parse(
+                localStorage.getItem("suggestions") || "[]"
+            ),
 
-    showLoadingData();
-    showPopup(
-    "Please wait while AXONIX updates your dashboard..."
-);
+        jobs:
+            JSON.parse(
+                localStorage.getItem("job_matches") || "[]"
+            ),
 
+        resume:
+            JSON.parse(
+                localStorage.getItem("resume_data") || "{}"
+            )
 
-    requestAnimationFrame(()=>{
+    };
 
-        fetchDashboard();
+}
+
+/* ==========================================================
+   INITIALIZE
+========================================================== */
+
+async function initializeDashboard() {
+
+    await loadCurrentUser();
+
+    hideLoading();
+
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    initializeDashboard();
+
+});
+/* ==========================================================
+   RENDER DASHBOARD DATA
+========================================================== */
+
+function renderDashboard() {
+
+    const data = getDashboardData();
+
+    /* ---------- Resume ---------- */
+
+    if (resumeName) {
+
+        resumeName.textContent =
+            data.resume.file_name ||
+            data.resume.filename ||
+            "No Resume Uploaded";
+
+    }
+
+    /* ---------- ATS ---------- */
+
+    animateNumber(atsScore, data.ats, "%");
+
+    animateNumber(profileStrength, data.ats, "%");
+
+    /* ---------- Progress ---------- */
+
+    if (resumeProgress) {
+
+        resumeProgress.style.width =
+            `${data.ats}%`;
+
+    }
+
+    if (resumeHealth) {
+
+        resumeHealth.textContent =
+            `Resume Health ${data.ats}%`;
+
+    }
+
+    /* ---------- Skills ---------- */
+
+    animateNumber(
+        skillsCount,
+        data.skills.length
+    );
+
+    /* ---------- Jobs ---------- */
+
+    animateNumber(
+        jobMatches,
+        data.jobs.length
+    );
+
+}
+
+/* ==========================================================
+   AI SUGGESTIONS
+========================================================== */
+
+function renderSuggestions() {
+
+    const data = getDashboardData();
+
+    if (!suggestionsContainer) return;
+
+    suggestionsContainer.innerHTML = "";
+
+    if (data.suggestions.length === 0) {
+
+        suggestionsContainer.innerHTML = `
+
+        <div class="suggestion-card">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            <div>
+
+                <h4>
+
+                    No Suggestions
+
+                </h4>
+
+                <p>
+
+                    Analyze your resume to receive
+                    AI powered suggestions.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    data.suggestions.forEach(item => {
+
+        const card = document.createElement("div");
+
+        card.className = "suggestion-card";
+
+        card.innerHTML = `
+
+        <i class="fa-solid fa-check"></i>
+
+        <div>
+
+            <h4>
+
+                AI Recommendation
+
+            </h4>
+
+            <p>
+
+                ${item}
+
+            </p>
+
+        </div>
+
+        `;
+
+        suggestionsContainer.appendChild(card);
 
     });
+
+}
+
+/* ==========================================================
+   RECOMMENDED JOBS
+========================================================== */
+
+function renderJobs() {
+
+    const data = getDashboardData();
+
+    if (!recommendedJobs) return;
+
+    recommendedJobs.innerHTML = "";
+
+    if (data.jobs.length === 0) {
+
+        recommendedJobs.innerHTML = `
+
+        <div class="job-card">
+
+            <div class="job-left">
+
+                <div class="company-icon">
+
+                    <i class="fa-solid fa-briefcase"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+
+                        No Jobs Found
+
+                    </h3>
+
+                    <p>
+
+                        Analyze your resume to
+                        unlock job recommendations.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="job-right">
+
+                <span class="match-score">
+
+                    0% Match
+
+                </span>
+
+            </div>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    data.jobs.slice(0,5).forEach(job => {
+
+        const card = document.createElement("div");
+
+        card.className = "job-card";
+
+        card.innerHTML = `
+
+        <div class="job-left">
+
+            <div class="company-icon">
+
+                <i class="fa-solid fa-building"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+
+                    ${job.title || "Software Engineer"}
+
+                </h3>
+
+                <p>
+
+                    ${job.company || "Company"}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="job-right">
+
+            <span class="match-score">
+
+                ${job.score || 90}% Match
+
+            </span>
+
+        </div>
+
+        `;
+
+        recommendedJobs.appendChild(card);
+
+    });
+
+}
+/* ==========================================================
+   LOAD DASHBOARD FROM BACKEND
+========================================================== */
+
+async function loadDashboardData() {
+
+    try {
+
+        showLoading("Loading dashboard...");
+
+        const response = await api("/dashboard");
+
+        if (response && response.ok) {
+
+            const dashboard = await response.json();
+
+            if (dashboard.ats_score !== undefined) {
+
+                localStorage.setItem(
+                    "ats_score",
+                    dashboard.ats_score
+                );
+
+            }
+
+            if (dashboard.skills) {
+
+                localStorage.setItem(
+                    "skills",
+                    JSON.stringify(dashboard.skills)
+                );
+
+            }
+
+            if (dashboard.suggestions) {
+
+                localStorage.setItem(
+                    "suggestions",
+                    JSON.stringify(dashboard.suggestions)
+                );
+
+            }
+
+            if (dashboard.jobs) {
+
+                localStorage.setItem(
+                    "job_matches",
+                    JSON.stringify(dashboard.jobs)
+                );
+
+            }
+
+            if (dashboard.resume) {
+
+                localStorage.setItem(
+                    "resume_data",
+                    JSON.stringify(dashboard.resume)
+                );
+
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log("Dashboard API not available.");
+
+    }
+
+}
+
+/* ==========================================================
+   PAGE ANIMATION
+========================================================== */
+
+function animateCards() {
+
+    const cards = document.querySelectorAll(
+
+        ".card,.stat-card,.action-card,.mini-card"
+
+    );
+
+    cards.forEach((card, index) => {
+
+        card.style.opacity = "0";
+
+        card.style.transform = "translateY(25px)";
+
+        setTimeout(() => {
+
+            card.style.transition =
+
+                ".5s ease";
+
+            card.style.opacity = "1";
+
+            card.style.transform =
+
+                "translateY(0)";
+
+        }, index * 120);
+
+    });
+
+}
+
+/* ==========================================================
+   AUTO REFRESH
+========================================================== */
+
+window.addEventListener(
+
+    "focus",
+
+    () => {
+
+        renderDashboard();
+
+        renderSuggestions();
+
+        renderJobs();
+
+    }
+
+);
+
+/* ==========================================================
+   INITIALIZE
+========================================================== */
+
+async function initializeDashboard() {
+
+    try {
+
+        await loadCurrentUser();
+
+        await loadDashboardData();
+
+        renderDashboard();
+
+        renderSuggestions();
+
+        renderJobs();
+
+        animateCards();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+    finally {
+
+        hideLoading();
+
+    }
 
 }
 
@@ -242,955 +782,113 @@ document.addEventListener(
     initializeDashboard
 
 );
-/*==================================================
-            FETCH DASHBOARD
-==================================================*/
 
-async function fetchDashboard(){
+/* ==========================================================
+   ANALYZE BUTTON
+========================================================== */
 
-    if(dashboardLoaded){
+const analyzeBtn =
 
-        return;
+document.getElementById(
 
-    }
+"openAnalyzePage"
 
-    dashboardLoaded = true;
-    showPopup(
-    "Please wait while AXONIX updates your dashboard..."
 );
 
-await new Promise(resolve => setTimeout(resolve,100));
+if(analyzeBtn){
 
-    try{
+analyzeBtn.addEventListener(
 
-        const response = await fetch(
+"click",
 
-            API_URL + "/dashboard/",
+()=>{
 
-            {
+showLoading(
 
-                headers:{
+"Opening Resume Analyzer..."
 
-                    Authorization:`Bearer ${token}`
+);
 
-                }
+setTimeout(()=>{
 
-            }
+window.location.href=
 
-        );
-      
-
-        if(!response.ok){
-
-            throw new Error("Unable to load dashboard");
-
-        }
-
-        dashboardData = await response.json();
-        
-        updateDashboard();
-
-
-    }
-
-    catch(error){
-
-        console.error(error);
-        hidePopup();
-        
-
-    }
-
-}
-
-/*==================================================
-            UPDATE DASHBOARD
-==================================================*/
-
-function updateDashboard(){
-
-    if(!dashboardData){
-
-        return;
-
-    }
-
-    /*==========================
-        USER
-    ==========================*/
-
-    if(dashboardData.username){
-
-        userName.textContent =
-            dashboardData.username;
-
-        welcomeName.textContent =
-            dashboardData.username;
-
-    }
-
-    if(dashboardData.email){
-
-        userEmail.textContent =
-            dashboardData.email;
-
-    }
-
-    /*==========================
-        ATS
-    ==========================*/
-
-    const atsScore =
-        document.getElementById("atsScore");
-
-    if(atsScore){
-
-        atsScore.textContent =
-            Math.round(
-                dashboardData.ats_score || 0
-            ) + "%";
-
-    }
-
-    /*==========================
-        SKILLS
-    ==========================*/
-
-    const skillsCount =
-        document.getElementById("skillsCount");
-
-    if(skillsCount){
-
-        skillsCount.textContent =
-            dashboardData.skills
-            ? dashboardData.skills.length
-            : 0;
-
-    }
-
-    /*==========================
-        JOBS
-    ==========================*/
-
-    const jobMatches =
-        document.getElementById("jobMatches");
-
-    if(jobMatches){
-
-        jobMatches.textContent =
-            dashboardData.job_matches || 0;
-
-    }
-
-    /*==========================
-        PROFILE
-    ==========================*/
-
-    const profileStrength =
-        document.getElementById("profileStrength");
-
-    if(profileStrength){
-
-        profileStrength.textContent =
-            Math.round(
-                dashboardData.profile_strength || 0
-            ) + "%";
-
-    }
-
-    /*==========================
-        RESUME
-    ==========================*/
-
-    const resumeName =
-        document.getElementById("resumeName");
-
-    if(resumeName){
-
-        resumeName.textContent =
-            dashboardData.resume_name
-            || "Latest Resume";
-
-    }
-
-    const resumeProgress =
-        document.getElementById("resumeProgress");
-
-    if(resumeProgress){
-
-        resumeProgress.style.width =
-            (dashboardData.ats_score || 0) + "%";
-
-    }
-
-    const resumeHealth =
-        document.getElementById("resumeHealth");
-
-    if(resumeHealth){
-
-        resumeHealth.textContent =
-            "Resume Health " +
-            (dashboardData.resume_health || 0)
-            + "%";
-
-    }
-
-    /*==========================
-        LOAD REMAINING DATA
-    ==========================*/
-
-    drawATSChart();
-
-    drawSkillsChart();
-
-    loadSuggestions();
-
-    loadJobs();
-
-    loadRecentActivity();
-
-    loadAchievements();
-
-    loadInsights();
-
-    loadGoals();
-   setTimeout(() => {
-
-    hidePopup();
+"analyze.html";
 
 },500);
 
 }
 
-/*==================================================
-                ATS CHART
-==================================================*/
-
-function drawATSChart(){
-
-    const canvas =
-        document.getElementById("atsChart");
-
-    if(!canvas) return;
-
-    const score =
-        dashboardData.ats_score || 0;
-
-    if(!atsChart){
-
-        atsChart = new Chart(canvas,{
-
-            type:"doughnut",
-
-            data:{
-
-                labels:[
-
-                    "ATS Score",
-
-                    "Remaining"
-
-                ],
-
-                datasets:[{
-
-                    data:[
-
-                        score,
-
-                        100-score
-
-                    ],
-
-                    backgroundColor:[
-
-                        "#2563eb",
-
-                        "#1e293b"
-
-                    ],
-
-                    borderWidth:0
-
-                }]
-
-            },
-
-            options:{
-
-                responsive:true,
-
-                maintainAspectRatio:false,
-
-                cutout:"75%",
-
-                animation:{
-                    duration:900
-                },
-
-                plugins:{
-                    legend:{
-                        display:false
-                    }
-                }
-
-            }
-
-        });
-
-    }
-
-    else{
-
-        atsChart.data.datasets[0].data=[
-
-            score,
-
-            100-score
-
-        ];
-
-        atsChart.update();
-
-    }
+);
 
 }
 
-/*==================================================
-                SKILLS CHART
-==================================================*/
+/* ==========================================================
+   LIVE JOB BUTTONS
+========================================================== */
 
-function drawSkillsChart(){
+document
 
-    const canvas =
-        document.getElementById("skillsChart");
+.querySelectorAll(
 
-    if(!canvas) return;
+'.secondary-btn'
 
-    const skills =
-        dashboardData.skills || [];
+)
 
-    if(!skillsChart){
+.forEach(btn=>{
 
-        skillsChart = new Chart(canvas,{
+btn.addEventListener(
 
-            type:"bar",
+'click',
 
-            data:{
+()=>{
 
-                labels:skills,
+showLoading(
 
-                datasets:[{
+'Loading Jobs...'
 
-                    label:"Skills",
-
-                    data:skills.map(()=>100),
-
-                    backgroundColor:"#3b82f6",
-
-                    borderRadius:8,
-
-                    borderSkipped:false
-
-                }]
-
-            },
-
-            options:{
-
-                responsive:true,
-
-                maintainAspectRatio:false,
-
-                animation:{
-                    duration:900
-                },
-
-                plugins:{
-                    legend:{
-                        display:false
-                    }
-                },
-
-                scales:{
-
-                    y:{
-
-                        display:false,
-
-                        max:100
-
-                    },
-
-                    x:{
-
-                        grid:{
-                            display:false
-                        },
-
-                        ticks:{
-                            color:"#ffffff"
-                        }
-
-                    }
-
-                }
-
-            }
-
-        });
-
-    }
-
-    else{
-
-        skillsChart.data.labels =
-            skills;
-
-        skillsChart.data.datasets[0].data =
-            skills.map(()=>100);
-
-        skillsChart.update();
-
-    }
-
-}
-
-/*==================================================
-            CHART REFRESH
-==================================================*/
-
-function refreshCharts(){
-
-    if(atsChart){
-
-        atsChart.update("none");
-
-    }
-
-    if(skillsChart){
-
-        skillsChart.update("none");
-
-    }
-
-}
-/*==================================================
-            AI SUGGESTIONS
-==================================================*/
-
-function loadSuggestions(){
-
-    const container =
-        document.getElementById("suggestions");
-
-    if(!container) return;
-
-    const suggestions =
-        dashboardData.suggestions || [];
-
-    if(suggestions.length===0){
-
-        container.innerHTML=`
-        <div class="suggestion-card">
-
-            <i class="fa-solid fa-circle-info"></i>
-
-            <span>No AI Suggestions Available.</span>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    suggestions.forEach(item=>{
-
-        html+=`
-
-        <div class="suggestion-card">
-
-            <i class="fa-solid fa-circle-check"></i>
-
-            <span>${item}</span>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-            RECOMMENDED JOBS
-==================================================*/
-
-function loadJobs(){
-
-    const container =
-        document.getElementById("recommendedJobs");
-
-    if(!container) return;
-
-    const jobs =
-        dashboardData.jobs || [];
-
-    if(jobs.length===0){
-
-        container.innerHTML=`
-        <div class="job-card">
-
-            <div class="job-left">
-
-                <h3>No Jobs Found</h3>
-
-                <p>
-
-                    Upload a resume to receive
-                    AI Job Recommendations.
-
-                </p>
-
-            </div>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    jobs.forEach(job=>{
-
-        html+=`
-
-        <div class="job-card">
-
-            <div class="job-left">
-
-                <h3>${job.title}</h3>
-
-                <p>${job.company}</p>
-
-                <small>${job.location}</small>
-
-            </div>
-
-            <div class="job-right">
-
-                <span class="match-score">
-
-                    ${job.match_score}% Match
-
-                </span>
-
-                <a href="${job.apply_link}"
-                   target="_blank">
-
-                    <button class="apply-btn">
-
-                        Apply
-
-                    </button>
-
-                </a>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-            RECENT ACTIVITY
-==================================================*/
-
-function loadRecentActivity(){
-
-    const container =
-        document.getElementById("recentActivity");
-
-    if(!container) return;
-
-    const activity =
-        dashboardData.activity || [];
-
-    if(activity.length===0){
-
-        container.innerHTML=`
-        <div class="activity-item">
-
-            <i class="fa-solid fa-clock"></i>
-
-            <div>
-
-                <h4>No Activity</h4>
-
-                <p>
-
-                    Your latest dashboard
-                    activity appears here.
-
-                </p>
-
-            </div>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    activity.forEach(item=>{
-
-        html+=`
-
-        <div class="activity-item">
-
-            <i class="fa-solid fa-check-circle"></i>
-
-            <div>
-
-                <h4>${item.title}</h4>
-
-                <p>${item.time}</p>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-        PROFILE COMPLETION
-==================================================*/
-
-function loadProfileCompletion(){
-
-    const progress =
-        document.getElementById("profileCompletion");
-
-    const text =
-        document.getElementById("profileCompletionText");
-
-    if(progress){
-
-        progress.style.width =
-            (dashboardData.profile_strength||0)
-            + "%";
-
-    }
-
-    if(text){
-
-        text.textContent =
-            (dashboardData.profile_strength||0)
-            + "% Completed";
-
-    }
-
-}
-/*==================================================
-        ACHIEVEMENTS
-==================================================*/
-
-function loadAchievements(){
-
-    const container =
-        document.getElementById("achievements");
-
-    if(!container) return;
-
-    const achievements =
-        dashboardData.achievements || [];
-
-    if(achievements.length===0){
-
-        container.innerHTML=`
-        <div class="achievement-card">
-
-            <i class="fa-solid fa-medal"></i>
-
-            <h3>Start Your Journey</h3>
-
-            <p>
-
-                Upload your resume to unlock
-                achievements.
-
-            </p>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    achievements.forEach(item=>{
-
-        html+=`
-
-        <div class="achievement-card">
-
-            <i class="fa-solid fa-trophy"></i>
-
-            <h3>${item}</h3>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-        CAREER INSIGHTS
-==================================================*/
-
-function loadInsights(){
-
-    const container =
-        document.getElementById("careerInsights");
-
-    if(!container) return;
-
-    const insights =
-        dashboardData.insights || [];
-
-    if(insights.length===0){
-
-        container.innerHTML=`
-        <div class="insight-card">
-
-            <i class="fa-solid fa-lightbulb"></i>
-
-            <p>
-
-                Analyze your resume to receive
-                AI Career Insights.
-
-            </p>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    insights.forEach(item=>{
-
-        html+=`
-
-        <div class="insight-card">
-
-            <i class="fa-solid fa-lightbulb"></i>
-
-            <p>${item}</p>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-        WEEKLY GOALS
-==================================================*/
-
-function loadGoals(){
-
-    const container =
-        document.getElementById("weeklyGoals");
-
-    if(!container) return;
-
-    const goals =
-        dashboardData.goals || [];
-
-    if(goals.length===0){
-
-        container.innerHTML=`
-        <div class="goal-item">
-
-            <input type="checkbox">
-
-            <span>
-
-                No Goals Available
-
-            </span>
-
-        </div>`;
-
-        return;
-
-    }
-
-    let html="";
-
-    goals.forEach(goal=>{
-
-        html+=`
-
-        <div class="goal-item">
-
-            <input type="checkbox">
-
-            <span>${goal}</span>
-
-        </div>
-
-        `;
-
-    });
-
-    container.innerHTML=html;
-
-}
-
-/*==================================================
-        REFRESH DASHBOARD
-==================================================*/
-
-async function refreshDashboard(){
-
-    dashboardLoaded = false;
-
-    await fetchDashboard();
-
-}
-
-/*==================================================
-        AUTO REFRESH
-==================================================*/
-
-// Refresh every 5 minutes
-
-setInterval(refreshDashboard,300000);
-
-/*==================================================
-        BUTTONS
-==================================================*/
-
-const analyzeBtn =
-document.getElementById("openAnalyzePage");
-
-if(analyzeBtn){
-
-    analyzeBtn.onclick=()=>{
-
-        window.location.href="analyze.html";
-
-    }
-
-}
-
-/*==================================================
-        PAGE ANIMATION
-==================================================*/
-
-window.addEventListener("load",()=>{
-
-    document.body.classList.add("fade-in");
+);
 
 });
 
-/*==================================================
-        KEYBOARD SHORTCUTS
-==================================================*/
+});
 
-document.addEventListener("keydown",e=>{
+/* ==========================================================
+   FLOATING AI BUTTON
+========================================================== */
 
-    if(e.key==="Escape"){
+const aiButton =
 
-        closeSidebar();
+document.querySelector(
 
-    }
+'.floating-ai'
+
+);
+
+if(aiButton){
+
+aiButton.addEventListener(
+
+'click',
+
+()=>{
+
+alert(
+
+"🤖 AXONIX AI Assistant\n\nComing Soon!"
+
+);
 
 });
 
-/*==================================================
-        START DASHBOARD
-==================================================*/
-
-// document.addEventListener(
-
-//     "DOMContentLoaded",
-
-//     ()=>{
-
-//         initializeDashboard();
-
-//     }
-
-// );
-
-console.log("AXONIX Dashboard Ready 🚀");
-function showPopup(message){
-
-    const popup = document.getElementById("loadingPopup");
-
-    if(!popup) return;
-
-    document.getElementById("loadingMessage").textContent = message;
-
-    popup.style.display = "block";
-
-    popup.style.opacity = "1";
-
-    popup.style.transform = "translateY(0)";
-
 }
 
-function hidePopup(){
+/* ==========================================================
+   END
+========================================================== */
 
-    const popup = document.getElementById("loadingPopup");
+console.log(
 
-    if(!popup) return;
+"🚀 AXONIX Dashboard Loaded Successfully"
 
-    popup.style.opacity = "0";
-
-    popup.style.transform = "translateY(-15px)";
-
-    setTimeout(()=>{
-
-        popup.style.display = "none";
-
-        popup.style.opacity = "1";
-
-        popup.style.transform = "translateY(0)";
-
-    },300);
-
-}
+);
