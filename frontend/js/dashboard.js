@@ -184,228 +184,228 @@ const recommendedJobs = document.getElementById("recommendedJobs");
    LOCAL DATA
 ========================================================== */
 
-function getData(){
+// function getData(){
 
-    return{
+//     return{
 
-        ats:Number(
-            localStorage.getItem("ats_score")
-        ) || 0,
+//         ats:Number(
+//             localStorage.getItem("ats_score")
+//         ) || 0,
 
-        skills:JSON.parse(
-            localStorage.getItem("skills") || "[]"
-        ),
+//         skills:JSON.parse(
+//             localStorage.getItem("skills") || "[]"
+//         ),
 
-        jobs:JSON.parse(
-            localStorage.getItem("job_matches") || "[]"
-        ),
+//         jobs:JSON.parse(
+//             localStorage.getItem("job_matches") || "[]"
+//         ),
 
-        suggestions:JSON.parse(
-            localStorage.getItem("suggestions") || "[]"
-        ),
+//         suggestions:JSON.parse(
+//             localStorage.getItem("suggestions") || "[]"
+//         ),
 
-        resume:JSON.parse(
-            localStorage.getItem("resume_data") || "{}"
-        )
+//         resume:JSON.parse(
+//             localStorage.getItem("resume_data") || "{}"
+//         )
 
-    };
+//     };
 
-}
+// }
 
-/* ==========================================================
-   RESUME CARD
-========================================================== */
+// /* ==========================================================
+//    RESUME CARD
+// ========================================================== */
 
-function renderResume(){
+// function renderResume(){
 
-    const data = getData();
+//     const data = getData();
 
-    resumeName.textContent =
-        data.resume.file_name ||
-        data.resume.filename ||
-        "No Resume Uploaded";
+//     resumeName.textContent =
+//         data.resume.file_name ||
+//         data.resume.filename ||
+//         "No Resume Uploaded";
 
-    atsScore.textContent =
-        data.ats + "%";
+//     atsScore.textContent =
+//         data.ats + "%";
 
-    skillsCount.textContent =
-        data.skills.length;
+//     skillsCount.textContent =
+//         data.skills.length;
 
-    jobMatches.textContent =
-        data.jobs.length;
+//     jobMatches.textContent =
+//         data.jobs.length;
 
-    resumeProgress.style.width =
-        data.ats + "%";
+//     resumeProgress.style.width =
+//         data.ats + "%";
 
-}
+// }
 
-/* ==========================================================
-   AI SUGGESTIONS
-========================================================== */
+// /* ==========================================================
+//    AI SUGGESTIONS
+// ========================================================== */
 
-function renderSuggestions(){
+// function renderSuggestions(){
 
-    const data = getData();
+//     const data = getData();
 
-    suggestions.innerHTML = "";
+//     suggestions.innerHTML = "";
 
-    if(data.suggestions.length===0){
+//     if(data.suggestions.length===0){
 
-        suggestions.innerHTML = `
+//         suggestions.innerHTML = `
 
-        <div class="suggestion-card">
+//         <div class="suggestion-card">
 
-            <i class="fa-solid fa-circle-info"></i>
+//             <i class="fa-solid fa-circle-info"></i>
 
-            <div>
+//             <div>
 
-                <h3>No Suggestions</h3>
+//                 <h3>No Suggestions</h3>
 
-                <p>
+//                 <p>
 
-                    Analyze your resume to
-                    receive AI suggestions.
+//                     Analyze your resume to
+//                     receive AI suggestions.
 
-                </p>
+//                 </p>
 
-            </div>
+//             </div>
 
-        </div>
+//         </div>
 
-        `;
+//         `;
 
-        return;
+//         return;
 
-    }
+//     }
 
-    data.suggestions.forEach(item=>{
+//     data.suggestions.forEach(item=>{
 
-        suggestions.innerHTML += `
+//         suggestions.innerHTML += `
 
-        <div class="suggestion-card">
+//         <div class="suggestion-card">
 
-            <i class="fa-solid fa-check"></i>
+//             <i class="fa-solid fa-check"></i>
 
-            <div>
+//             <div>
 
-                <h3>Suggestion</h3>
+//                 <h3>Suggestion</h3>
 
-                <p>${item}</p>
+//                 <p>${item}</p>
 
-            </div>
+//             </div>
 
-        </div>
+//         </div>
 
-        `;
+//         `;
 
-    });
+//     });
 
-}
+// }
 
-/* ==========================================================
-   JOBS
-========================================================== */
+// /* ==========================================================
+//    JOBS
+// ========================================================== */
 
-function renderJobs(){
+// function renderJobs(){
 
-    const data = getData();
+//     const data = getData();
 
-    recommendedJobs.innerHTML = "";
+//     recommendedJobs.innerHTML = "";
 
-    if(data.jobs.length===0){
+//     if(data.jobs.length===0){
 
-        recommendedJobs.innerHTML = `
+//         recommendedJobs.innerHTML = `
 
-        <div class="job-card">
+//         <div class="job-card">
 
-            <div class="job-info">
+//             <div class="job-info">
 
-                <div class="company-icon">
+//                 <div class="company-icon">
 
-                    <i class="fa-solid fa-building"></i>
+//                     <i class="fa-solid fa-building"></i>
 
-                </div>
+//                 </div>
 
-                <div>
+//                 <div>
 
-                    <h3>No Jobs Found</h3>
+//                     <h3>No Jobs Found</h3>
 
-                    <p>
+//                     <p>
 
-                        Analyze your resume
-                        to get job recommendations.
+//                         Analyze your resume
+//                         to get job recommendations.
 
-                    </p>
+//                     </p>
 
-                </div>
+//                 </div>
 
-            </div>
+//             </div>
 
-        </div>
+//         </div>
 
-        `;
+//         `;
 
-        return;
+//         return;
 
-    }
+//     }
 
-    data.jobs.forEach(job=>{
+//     data.jobs.forEach(job=>{
 
-        recommendedJobs.innerHTML += `
+//         recommendedJobs.innerHTML += `
 
-        <div class="job-card">
+//         <div class="job-card">
 
-            <div class="job-info">
+//             <div class="job-info">
 
-                <div class="company-icon">
+//                 <div class="company-icon">
 
-                    <i class="fa-solid fa-building"></i>
+//                     <i class="fa-solid fa-building"></i>
 
-                </div>
+//                 </div>
 
-                <div>
+//                 <div>
 
-                    <h3>
+//                     <h3>
 
-                        ${job.title || "Software Engineer"}
+//                         ${job.title || "Software Engineer"}
 
-                    </h3>
+//                     </h3>
 
-                    <p>
+//                     <p>
 
-                        ${job.company || "Company"}
+//                         ${job.company || "Company"}
 
-                    </p>
+//                     </p>
 
-                </div>
+//                 </div>
 
-            </div>
+//             </div>
 
-            <div class="job-action">
+//             <div class="job-action">
 
-                <span class="match">
+//                 <span class="match">
 
-                    ${job.score || 90}% Match
+//                     ${job.score || 90}% Match
 
-                </span>
+//                 </span>
 
-                <button
-                    class="apply-btn"
-                    onclick="window.open('${job.url || "#"}','_blank')">
+//                 <button
+//                     class="apply-btn"
+//                     onclick="window.open('${job.url || "#"}','_blank')">
 
-                    Apply
+//                     Apply
 
-                </button>
+//                 </button>
 
-            </div>
+//             </div>
 
-        </div>
+//         </div>
 
-        `;
+//         `;
 
-    });
+//     });
 
-}
+// }
 
 /* ==========================================================
    BUTTONS
@@ -423,22 +423,130 @@ document
    START
 ========================================================== */
 
-async function init(){
+async function init() {
 
-    showLoading("");
+    showLoading("Loading Dashboard...");
 
     await loadUser();
 
-    renderResume();
+    const res = await api("/dashboard/");
 
-    renderSuggestions();
+    if (!res) {
+        hideLoading();
+        return;
+    }
 
-    renderJobs();
+    const data = await res.json();
+
+    console.log("Dashboard Data:", data);
+
+    // Resume
+    resumeName.textContent = data.resume_name || "No Resume Uploaded";
+
+    // ATS
+    atsScore.textContent = `${data.ats_score}%`;
+    resumeProgress.style.width = `${data.ats_score}%`;
+
+    // Skills
+    skillsCount.textContent = data.skills_count;
+
+    // Job Matches
+    jobMatches.textContent = data.job_matches;
+
+    // -------------------------
+    // AI Suggestions
+    // -------------------------
+
+    suggestions.innerHTML = "";
+
+    if (data.suggestions.length) {
+
+        data.suggestions.forEach(item => {
+
+            suggestions.innerHTML += `
+            <div class="suggestion-card">
+                <i class="fa-solid fa-check"></i>
+                <div>
+                    <h3>Suggestion</h3>
+                    <p>${item}</p>
+                </div>
+            </div>`;
+        });
+
+    } else {
+
+        suggestions.innerHTML = `
+        <div class="suggestion-card">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                <h3>No Suggestions</h3>
+                <p>No suggestions available.</p>
+            </div>
+        </div>`;
+    }
+
+    // -------------------------
+    // Recommended Jobs
+    // -------------------------
+
+    recommendedJobs.innerHTML = "";
+
+    if (data.jobs.length) {
+
+        data.jobs.forEach(job => {
+
+            recommendedJobs.innerHTML += `
+            <div class="job-card">
+
+                <div class="job-info">
+
+                    <div class="company-icon">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>${job.title}</h3>
+
+                        <p>${job.company}</p>
+
+                        <small>${job.location}</small>
+
+                    </div>
+
+                </div>
+
+                <div class="job-action">
+
+                    <span class="match">
+                        ${job.match_score}% Match
+                    </span>
+
+                    <button
+                        class="apply-btn"
+                        onclick="window.open('${job.apply_link}','_blank')">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+            </div>`;
+        });
+
+    } else {
+
+        recommendedJobs.innerHTML = `
+        <div class="job-card">
+
+            <h3>No Jobs Found</h3>
+
+        </div>`;
+    }
 
     hideLoading();
-
 }
-
 document.addEventListener(
 
     "DOMContentLoaded",
