@@ -141,8 +141,8 @@ const menuBtn = document.getElementById("menuBtn");
 const sideMenu = document.getElementById("sideMenu");
 const closeMenuBtn = document.getElementById("closeMenuBtn");
 
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
+const menuUserName = document.getElementById("menuUserName");
+const menuUserEmail = document.getElementById("menuUserEmail");
 const avatarLetter = document.getElementById("avatarLetter");
 
 // Loading Popup
@@ -195,17 +195,28 @@ function initializeNavbar() {
 // LOGGED OUT NAVBAR
 // ======================================================
 
-function showLoggedOutNavbar() {
+function showLoggedInNavbar() {
 
     if (loginBtn)
-        loginBtn.style.display = "inline-flex";
+        loginBtn.style.display = "none";
 
     if (signupBtn)
-        signupBtn.style.display = "inline-flex";
+        signupBtn.style.display = "none";
 
     if (menuBtn)
-        menuBtn.style.display = "none";
+        menuBtn.style.display = "flex";
 
+    const username = localStorage.getItem("username") || "User";
+    const email = localStorage.getItem("email") || "";
+
+    if (menuUserName)
+        menuUserName.textContent = username;
+
+    if (menuUserEmail)
+        menuUserEmail.textContent = email;
+
+    if (avatarLetter)
+        avatarLetter.textContent = username.charAt(0).toUpperCase();
 }
 
 // ======================================================

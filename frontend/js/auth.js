@@ -158,19 +158,29 @@ loginForm.addEventListener("submit", async (e) => {
             return;
         }
 
-        localStorage.setItem(
-            "access_token",
-            data.access_token
-        );
+        localStorage.setItem("access_token", data.access_token);
 
-        loginMessage.classList.add("success");
-        loginMessage.textContent = "Login Successful";
+// Fetch logged-in user
+const userRes = await fetch(`${API}/auth/me`, {
+    headers: {
+        Authorization: `Bearer ${data.access_token}`
+    }
+});
 
-        setTimeout(() => {
+if (userRes.ok) {
 
-            location.href = "index.html";
+    const user = await userRes.json();
 
-        }, 800);
+    localStorage.setItem("username", user.username);
+    localStorage.setItem("email", user.email);
+}
+
+loginMessage.classList.add("success");
+loginMessage.textContent = "Login Successful";
+
+setTimeout(() => {
+    location.href = "index.html";
+}, 800);
 
     }
 
