@@ -1,65 +1,11 @@
-// const API = "https://axonix-copilot.onrender.com";
-
-// async function login(){
-
-//     const username =
-//         document.getElementById("username").value;
-
-//     const password =
-//         document.getElementById("password").value;
-
-//     const formData = new URLSearchParams();
-
-//     formData.append("username", username);
-//     formData.append("password", password);
-
-//     try{
-
-//         const response = await fetch(
-//             API + "/auth/login",
-//             {
-//                 method:"POST",
-//                 headers:{
-//                     "Content-Type":"application/x-www-form-urlencoded"
-//                 },
-//                 body:formData
-//             }
-//         );
-
-//         const data = await response.json();
-
-//         if(!response.ok){
-
-//             document.getElementById("error").innerHTML =
-//                 data.detail;
-
-//             return;
-//         }
-
-//         localStorage.setItem(
-//             "token",
-//             data.access_token
-//         );
-
-//         window.location.href =
-//             "dashboard.html";
-
-//     }
-
-//     catch(error){
-
-//         document.getElementById("error").innerHTML =
-//             "Unable to connect to server.";
-
-//     }
-
-// }
 // ==========================================================
 // AXONIX AUTH.JS
 // PART 1
 // ==========================================================
 
-// const API = "https://axonix-copilot.onrender.com";
+(() => {
+
+const API = "https://axonix-copilot.onrender.com";
 
 let pendingRedirect = null;
 
@@ -80,13 +26,7 @@ const signupTab = document.getElementById("signupTab");
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 
-const menuBtn = document.getElementById("menuBtn");
-const sideMenu = document.getElementById("sideMenu");
-const closeMenuBtn = document.getElementById("closeMenuBtn");
-
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const avatarLetter = document.getElementById("avatarLetter");
+const logoutBtn = document.getElementById("logoutBtn");
 
 // ==========================================================
 // INITIALIZE
@@ -94,9 +34,7 @@ const avatarLetter = document.getElementById("avatarLetter");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    initializeAuth();
-
-    initializeEvents();
+    bindEvents();
 
 });
 
@@ -104,19 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
 // EVENTS
 // ==========================================================
 
-function initializeEvents(){
+function bindEvents(){
 
-    loginBtn?.addEventListener("click", () => {
+    loginBtn?.addEventListener("click", openLogin);
 
-        openLogin();
-
-    });
-
-    signupBtn?.addEventListener("click", () => {
-
-        openSignup();
-
-    });
+    signupBtn?.addEventListener("click", openSignup);
 
     closeAuth?.addEventListener("click", closeModal);
 
@@ -124,7 +54,7 @@ function initializeEvents(){
 
     signupTab?.addEventListener("click", showSignup);
 
-    authModal?.addEventListener("click",(e)=>{
+    authModal?.addEventListener("click", (e)=>{
 
         if(e.target===authModal){
 
@@ -144,22 +74,16 @@ function initializeEvents(){
 
     });
 
-    menuBtn?.addEventListener("click",()=>{
+    logoutBtn?.addEventListener("click", logout);
 
-        sideMenu.classList.add("show");
+    loginForm?.addEventListener("submit", login);
 
-    });
-
-    closeMenuBtn?.addEventListener("click",()=>{
-
-        sideMenu.classList.remove("show");
-
-    });
+    signupForm?.addEventListener("submit", signup);
 
 }
 
 // ==========================================================
-// OPEN LOGIN
+// MODAL
 // ==========================================================
 
 function openLogin(){
@@ -170,10 +94,6 @@ function openLogin(){
 
 }
 
-// ==========================================================
-// OPEN SIGNUP
-// ==========================================================
-
 function openSignup(){
 
     authModal.classList.add("show");
@@ -182,10 +102,6 @@ function openSignup(){
 
 }
 
-// ==========================================================
-// CLOSE
-// ==========================================================
-
 function closeModal(){
 
     authModal.classList.remove("show");
@@ -193,7 +109,7 @@ function closeModal(){
 }
 
 // ==========================================================
-// LOGIN TAB
+// TABS
 // ==========================================================
 
 function showLogin(){
@@ -206,10 +122,6 @@ function showLogin(){
 
 }
 
-// ==========================================================
-// SIGNUP TAB
-// ==========================================================
-
 function showSignup(){
 
     signupTab.classList.add("active");
@@ -221,62 +133,38 @@ function showSignup(){
 }
 
 // ==========================================================
-// LOGIN STATE
+// HELPERS
 // ==========================================================
 
-function initializeAuth(){
+function getLoginButton(){
 
-    const token = localStorage.getItem("token");
-
-    if(token){
-
-        showLoggedInUI();
-
-    }else{
-
-        showLoggedOutUI();
-
-    }
+    return loginForm.querySelector("button");
 
 }
 
-// ==========================================================
-// LOGGED OUT
-// ==========================================================
+function getSignupButton(){
 
-function showLoggedOutUI(){
-
-    loginBtn.style.display="inline-flex";
-    signupBtn.style.display="inline-flex";
-
-    menuBtn.style.display="none";
-
-    userName.textContent="Welcome";
-    userEmail.textContent="Please Login";
-    avatarLetter.textContent="U";
+    return signupForm.querySelector("button");
 
 }
 
-// ==========================================================
-// LOGGED IN
-// ==========================================================
+function showMessage(id,text,color="#ef4444"){
 
-function showLoggedInUI(){
+    const el=document.getElementById(id);
 
-    loginBtn.style.display="none";
-    signupBtn.style.display="none";
+    if(!el) return;
 
-    menuBtn.style.display="flex";
+    el.style.color=color;
 
-    const username=localStorage.getItem("username") || "User";
+    el.innerHTML=text;
 
-    const email=localStorage.getItem("email") || "";
+}
 
-    userName.textContent=username;
+function clearMessages(){
 
-    userEmail.textContent=email;
+    showMessage("loginMessage","");
 
-    avatarLetter.textContent=username.charAt(0).toUpperCase();
+    showMessage("signupMessage","");
 
 }
 
@@ -284,9 +172,11 @@ function showLoggedInUI(){
 // PROTECTED ROUTES
 // ==========================================================
 
-function checkLogin(page){
+window.checkLogin=function(page){
 
-    if(localStorage.getItem("token")){
+    const token=localStorage.getItem("token");
+
+    if(token){
 
         window.location.href=page;
 
@@ -298,27 +188,20 @@ function checkLogin(page){
 
     openLogin();
 
-}
+};
 
-// ==========================================================
-// EXPORTS
-// ==========================================================
-
-window.checkLogin=checkLogin;
 window.openLogin=openLogin;
+
 window.openSignup=openSignup;
 // ==========================================================
-// PART 2
-// LOGIN + SIGNUP + LOGOUT
+// LOGIN
 // ==========================================================
-
-// ---------- LOGIN ----------
-
-loginForm?.addEventListener("submit", login);
 
 async function login(e){
 
     e.preventDefault();
+
+    clearMessages();
 
     const email =
         document.getElementById("loginEmail").value.trim();
@@ -326,44 +209,40 @@ async function login(e){
     const password =
         document.getElementById("loginPassword").value;
 
-    const message =
-        document.getElementById("loginMessage");
+    const button = getLoginButton();
 
-    const button =
-        loginForm.querySelector("button");
+    button.disabled = true;
+    button.innerHTML = "Signing In...";
 
-    message.innerHTML="";
+    const formData = new URLSearchParams();
 
-    button.disabled=true;
-    button.innerHTML="Signing In...";
-
-    const formData=new URLSearchParams();
-
-    // FastAPI OAuth2 expects username field
-    formData.append("username",email);
-    formData.append("password",password);
+    formData.append("username", email);
+    formData.append("password", password);
 
     try{
 
-        const response=await fetch(
-            API+"/auth/login",
+        const response = await fetch(
+            API + "/auth/login",
             {
-                method:"POST",
+                method: "POST",
                 headers:{
                     "Content-Type":"application/x-www-form-urlencoded"
                 },
-                body:formData
+                body: formData
             }
         );
 
-        const data=await response.json();
+        const data = await response.json();
 
         if(!response.ok){
 
-            message.innerHTML=data.detail || "Login Failed";
+            showMessage(
+                "loginMessage",
+                data.detail || "Login Failed"
+            );
 
-            button.disabled=false;
-            button.innerHTML="Login";
+            button.disabled = false;
+            button.innerHTML = "Login";
 
             return;
 
@@ -379,22 +258,19 @@ async function login(e){
             email
         );
 
-        // Use email until profile endpoint is added
         localStorage.setItem(
             "username",
             email.split("@")[0]
         );
 
-        showLoggedInUI();
-
         closeModal();
 
-        button.disabled=false;
-        button.innerHTML="Login";
+        button.disabled = false;
+        button.innerHTML = "Login";
 
         if(pendingRedirect){
 
-            window.location.href=pendingRedirect;
+            window.location.href = pendingRedirect;
 
         }else{
 
@@ -406,96 +282,115 @@ async function login(e){
 
     catch(err){
 
-        message.innerHTML=
-            "Unable to connect to server.";
+        showMessage(
+            "loginMessage",
+            "Unable to connect to server."
+        );
 
-        button.disabled=false;
-        button.innerHTML="Login";
+        button.disabled = false;
+        button.innerHTML = "Login";
 
     }
 
 }
 
-// ---------- SIGNUP ----------
-
-signupForm?.addEventListener("submit",signup);
+// ==========================================================
+// SIGNUP
+// ==========================================================
 
 async function signup(e){
 
     e.preventDefault();
 
-    const username=
+    clearMessages();
+
+    const username =
         document.getElementById("signupUsername").value.trim();
 
-    const email=
+    const email =
         document.getElementById("signupEmail").value.trim();
 
-    const password=
+    const password =
         document.getElementById("signupPassword").value;
 
-    const confirm=
+    const confirm =
         document.getElementById("confirmPassword").value;
 
-    const message=
-        document.getElementById("signupMessage");
+    if(password !== confirm){
 
-    const button=
-        signupForm.querySelector("button");
-
-    message.innerHTML="";
-
-    if(password!==confirm){
-
-        message.innerHTML="Passwords do not match.";
+        showMessage(
+            "signupMessage",
+            "Passwords do not match."
+        );
 
         return;
 
     }
 
-    button.disabled=true;
-    button.innerHTML="Creating Account...";
+    const button = getSignupButton();
+
+    button.disabled = true;
+    button.innerHTML = "Creating Account...";
 
     try{
 
-        const response=await fetch(
-            API+"/auth/register",
+        const response = await fetch(
+
+            API + "/auth/register",
+
             {
+
                 method:"POST",
+
                 headers:{
                     "Content-Type":"application/json"
                 },
+
                 body:JSON.stringify({
 
-                    username:username,
-                    email:email,
-                    password:password
+                    username,
+                    email,
+                    password
 
                 })
+
             }
+
         );
 
-        const data=await response.json();
+        const data = await response.json();
 
         if(!response.ok){
 
-            message.innerHTML=data.detail || "Registration Failed";
+            showMessage(
 
-            button.disabled=false;
-            button.innerHTML="Create Account";
+                "signupMessage",
+
+                data.detail || "Registration Failed"
+
+            );
+
+            button.disabled = false;
+            button.innerHTML = "Create Account";
 
             return;
 
         }
 
-        message.style.color="#22c55e";
+        showMessage(
 
-        message.innerHTML=
-            "Account created successfully. Please login.";
+            "signupMessage",
+
+            "Account created successfully. Please login.",
+
+            "#22c55e"
+
+        );
 
         signupForm.reset();
 
-        button.disabled=false;
-        button.innerHTML="Create Account";
+        button.disabled = false;
+        button.innerHTML = "Create Account";
 
         showLogin();
 
@@ -503,21 +398,24 @@ async function signup(e){
 
     catch(err){
 
-        message.innerHTML=
-            "Unable to connect to server.";
+        showMessage(
 
-        button.disabled=false;
-        button.innerHTML="Create Account";
+            "signupMessage",
+
+            "Unable to connect to server."
+
+        );
+
+        button.disabled = false;
+        button.innerHTML = "Create Account";
 
     }
 
 }
 
-// ---------- LOGOUT ----------
-
-const logoutBtn=document.getElementById("logoutBtn");
-
-logoutBtn?.addEventListener("click",logout);
+// ==========================================================
+// LOGOUT
+// ==========================================================
 
 function logout(){
 
@@ -525,48 +423,12 @@ function logout(){
     localStorage.removeItem("username");
     localStorage.removeItem("email");
 
-    sideMenu.classList.remove("show");
-
-    showLoggedOutUI();
-
-    location.href="index.html";
-
-}
-
-// ---------- AUTO CLOSE MENU ----------
-
-document.addEventListener("click",(e)=>{
-
-    if(
-        !sideMenu.contains(e.target)
-        &&
-        !menuBtn.contains(e.target)
-    ){
-
-        sideMenu.classList.remove("show");
-
-    }
-
-});
-
-// ---------- OPTIONAL LOADING HELPERS ----------
-
-function showLoading(button,text){
-
-    button.disabled=true;
-
-    button.innerHTML=text;
-
-}
-
-function hideLoading(button,text){
-
-    button.disabled=false;
-
-    button.innerHTML=text;
+    location.href = "index.html";
 
 }
 
 // ==========================================================
-// END OF AUTH.JS
+// END
 // ==========================================================
+
+})();
