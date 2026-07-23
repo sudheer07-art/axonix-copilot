@@ -11,7 +11,7 @@ from app.auth.schemas import UserLogin
 from app.auth.utils import verify_password
 from app.auth.jwt_handler import create_access_token
 from app.auth.dependencies import get_current_user
-
+from fastapi import HTTPException
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
@@ -130,25 +130,24 @@ def signup(user: UserSignup, db: Session = Depends(get_db)):
 #         "access_token": token,
 #         "token_type": "bearer"
     # }
+
+
 @router.post("/login")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-
     try:
         db_user = db.query(User).filter(
             User.username == form_data.username
         ).first()
 
-        # User not found
         if db_user is None:
             raise HTTPException(
                 status_code=401,
                 detail="Invalid username or password"
             )
 
-        # Wrong password
         if not verify_password(
             form_data.password,
             db_user.password
@@ -168,10 +167,13 @@ def login(
             "message": "Login successful"
         }
 
+    except HTTPException:
+        raise
+
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Login failed: {str(e)}"
+            detail=str(e)
         )
 @router.get("/me")
 def get_me(current_user=Depends(get_current_user)):

@@ -1,6 +1,6 @@
 const API_URL = "https://axonix-copilot.onrender.com";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("access_token");
 
 if (!token) {
 

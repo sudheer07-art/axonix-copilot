@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeAuth() {
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access_token");
 
     const loginBtn = document.getElementById("loginBtn");
     const signupBtn = document.getElementById("signupBtn");
@@ -225,7 +225,7 @@ function loginSuccess(username,email){
 
 function checkLogin(page){
 
-    if(localStorage.getItem("token")){
+    if(localStorage.getItem("access_token")){
 
         window.location.href=page;
 
