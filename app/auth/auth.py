@@ -15,17 +15,55 @@ from app.auth.dependencies import get_current_user
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
+# @router.post("/signup")
+# def signup(user: UserSignup, db: Session = Depends(get_db)):
+
+#     existing = db.query(User).filter(
+#         User.username == user.username
+#     ).first()
+
+#     if existing:
+#         raise HTTPException(
+#             status_code=400,
+#             detail="Username already exists"
+#         )
+
+#     new_user = User(
+#         username=user.username,
+#         email=user.email,
+#         password=hash_password(user.password)
+#     )
+
+#     db.add(new_user)
+#     db.commit()
+#     db.refresh(new_user)
+
+#     return {
+#         "message": "User created successfully"
+#     }
+from sqlalchemy.exc import IntegrityError
+
 @router.post("/signup")
 def signup(user: UserSignup, db: Session = Depends(get_db)):
 
-    existing = db.query(User).filter(
+    existing_username = db.query(User).filter(
         User.username == user.username
     ).first()
 
-    if existing:
+    if existing_username:
         raise HTTPException(
             status_code=400,
             detail="Username already exists"
+        )
+
+    existing_email = db.query(User).filter(
+        User.email == user.email
+    ).first()
+
+    if existing_email:
+        raise HTTPException(
+            status_code=400,
+            detail="Email already exists"
         )
 
     new_user = User(
@@ -34,56 +72,107 @@ def signup(user: UserSignup, db: Session = Depends(get_db)):
         password=hash_password(user.password)
     )
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Email already exists"
+        )
 
     return {
         "message": "User created successfully"
     }
+# @router.post("/login")
+# def login(
+#     form_data: OAuth2PasswordRequestForm = Depends(),
+#     db: Session = Depends(get_db)
+# ):
+
+#     db_user = db.query(User).filter(
+#     User.username == form_data.username
+# ).first()
+
+#     print("========== LOGIN DEBUG ==========")
+#     print("Entered Username:", form_data.username)
+#     print("Database User:", db_user)
+
+#     if db_user:
+#         print("Stored Password:", db_user.password)
+#     print(
+#         "Password Match:",
+#         verify_password(form_data.password, db_user.password)
+#     )
+#     print("=================================")
+#     if db_user is None:
+#         raise HTTPException(
+#         status_code=401,
+#         detail="Invalid username or password"
+#     )
+#     if not verify_password(
+#         form_data.password,
+#         db_user.password
+#     ):
+#         raise HTTPException(
+#             status_code=401,
+#             detail="Invalid username or password"
+#         )
+
+#     token = create_access_token(
+#         {"sub": db_user.username}
+#     )
+
+#     return {
+#         "access_token": token,
+#         "token_type": "bearer"
+    # }
 @router.post("/login")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
 
-    db_user = db.query(User).filter(
-    User.username == form_data.username
-).first()
+    try:
+        db_user = db.query(User).filter(
+            User.username == form_data.username
+        ).first()
 
-    print("========== LOGIN DEBUG ==========")
-    print("Entered Username:", form_data.username)
-    print("Database User:", db_user)
+        # User not found
+        if db_user is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid username or password"
+            )
 
-    if db_user:
-        print("Stored Password:", db_user.password)
-    print(
-        "Password Match:",
-        verify_password(form_data.password, db_user.password)
-    )
-    print("=================================")
-    if db_user is None:
-        raise HTTPException(
-        status_code=401,
-        detail="Invalid username or password"
-    )
-    if not verify_password(
-        form_data.password,
-        db_user.password
-    ):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid username or password"
+        # Wrong password
+        if not verify_password(
+            form_data.password,
+            db_user.password
+        ):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid username or password"
+            )
+
+        token = create_access_token(
+            {"sub": db_user.username}
         )
 
-    token = create_access_token(
-        {"sub": db_user.username}
-    )
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "message": "Login successful"
+        }
 
-    return {
-        "access_token": token,
-        "token_type": "bearer"
-    }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Login failed: {str(e)}"
+        )
 @router.get("/me")
 def get_me(current_user=Depends(get_current_user)):
 
