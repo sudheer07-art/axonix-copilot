@@ -110,7 +110,9 @@ def process_resume(file, current_user, db: Session):
         jobs,
         len(resume_text),
     )
-
+    print("Jobs found:", len(jobs))
+    print("Matches found:", len(matches))
+    print(matches)
     # ------------------------------------
     # Save Resume
     # ------------------------------------
@@ -229,7 +231,7 @@ def process_resume(file, current_user, db: Session):
 
     )
 
-        db.add_all(match_objects)
+    db.add_all(match_objects)
 
     # ------------------------------------
     # Dashboard
