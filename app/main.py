@@ -6,9 +6,9 @@ from fastapi import (
     Form,
     Depends
 )
-
+from app.services.resume_pipeline import process_resume
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.services.file_service import extract_resume
 from sqlalchemy.orm import Session
 
 import os
@@ -251,57 +251,11 @@ async def upload_resume(
         # Validate File
         # ----------------------------------
 
-        if not file.filename.lower().endswith(".pdf"):
-
-            return {
-
-                "success": False,
-
-                "message": "Only PDF resumes are supported."
-
-            }
-
         # ----------------------------------
-        # Save PDF
-        # ----------------------------------
+# Validate → Save → Extract
+# ----------------------------------
 
-        file_path = os.path.join(
-
-            UPLOAD_DIR,
-
-            file.filename
-
-        )
-
-        with open(file_path, "wb") as buffer:
-
-            shutil.copyfileobj(
-
-                file.file,
-
-                buffer
-
-            )
-
-        # ----------------------------------
-        # Extract Resume Text
-        # ----------------------------------
-
-        resume_text = extract_text_from_pdf(
-
-            file_path
-
-        )
-
-        if not resume_text.strip():
-
-            return {
-
-                "success": False,
-
-                "message": "Unable to extract text from the uploaded PDF."
-
-            }
+        file_path, resume_text = extract_resume(file)
 
         # ----------------------------------
         # Save Resume
@@ -360,387 +314,23 @@ async def upload_resume(
 
 @app.post("/analyze-resume")
 async def analyze_resume_endpoint(
-
     file: UploadFile = File(...),
-
     db: Session = Depends(get_db),
-
-    current_user: User = Depends(get_current_user)
-
+    current_user: User = Depends(get_current_user),
 ):
-
     try:
-
-        # ----------------------------------
-        # Validate PDF
-        # ----------------------------------
-
-        if not file.filename.lower().endswith(".pdf"):
-
-            return {
-
-                "success": False,
-
-                "message": "Only PDF resumes are supported."
-
-            }
-
-        # ----------------------------------
-        # Save Resume
-        # ----------------------------------
-
-        file_path = os.path.join(
-
-            UPLOAD_DIR,
-
-            file.filename
-
+        return process_resume(
+            file=file,
+            current_user=current_user,
+            db=db,
         )
-
-        with open(file_path, "wb") as buffer:
-
-            shutil.copyfileobj(
-
-                file.file,
-
-                buffer
-
-            )
-
-        # ----------------------------------
-        # Extract Resume Text
-        # ----------------------------------
-
-        resume_text = extract_text_from_pdf(
-
-            file_path
-
-        )
-
-        if not resume_text.strip():
-
-            return {
-
-                "success": False,
-
-                "message": "Could not read resume."
-
-            }
-
-        # ----------------------------------
-        # Resume Analysis
-        # ----------------------------------
-
-        analysis = analyze_resume(
-
-            resume_text
-
-        )
-
-        # ----------------------------------
-        # ATS Score
-        # ----------------------------------
-
-        ats = calculate_ats_score(
-
-            analysis
-
-        )
-
-        # ----------------------------------
-        # Resume Suggestions
-        # ----------------------------------
-
-        suggestions = generate_resume_suggestions(
-
-            analysis
-
-        )
-
-        # ----------------------------------
-        # AI Job Keywords
-        # ----------------------------------
-
-        ai_result = generate_job_keywords(
-
-            analysis
-
-        )
-
-        job_titles = ai_result.get(
-
-            "job_titles",
-
-            []
-
-        )
-
-        search_keywords = ai_result.get(
-
-            "keywords",
-
-            []
-
-        )
-
-        # ----------------------------------
-        # Live Jobs
-        # ----------------------------------
-
-        jobs = search_jobs(
-
-            search_keywords
-
-        )
-
-        # ----------------------------------
-        # Match Jobs
-        # ----------------------------------
-
-        matches = match_jobs(
-
-            analysis=analysis,
-
-            jobs=jobs,
-
-            resume_length=len(
-
-                resume_text
-
-            )
-
-        )
-                # ----------------------------------
-        # Save Resume
-        # ----------------------------------
-
-        resume = Resume(
-
-            filename=file.filename,
-
-            filepath=file_path,
-
-            resume_text=resume_text,
-
-            user_id=current_user.id
-
-        )
-
-        db.add(resume)
-
-        db.commit()
-
-        db.refresh(resume)
-
-        # ----------------------------------
-        # Save Analysis
-        # ----------------------------------
-
-        analysis_record = ResumeAnalysis(
-
-            user_id=current_user.id,
-
-            resume_id=resume.id,
-
-            analysis_json=json.dumps(
-
-                {
-
-                    "analysis": analysis,
-
-                    "ats": ats,
-
-                    "suggestions": suggestions
-
-                }
-
-            ),
-
-            ats_score=ats["ats_score"]
-
-        )
-
-        db.add(
-
-            analysis_record
-
-        )
-
-        db.commit()
-
-        db.refresh(
-
-            analysis_record
-
-        )
-
-        # ----------------------------------
-        # Save Jobs
-        # ----------------------------------
-
-        saved_jobs = []
-
-        for job in jobs:
-
-            db_job = Job(
-
-                title=job.get("title"),
-
-                company=job.get("company"),
-
-                location=job.get("location"),
-
-                description=job.get("description"),
-
-                url=job.get("url"),
-
-                salary=job.get("salary")
-
-            )
-
-            db.add(
-
-                db_job
-
-            )
-
-            db.commit()
-
-            db.refresh(
-
-                db_job
-
-            )
-
-            saved_jobs.append(
-
-                db_job
-
-            )
-
-        # ----------------------------------
-        # Save Job Matches
-        # ----------------------------------
-
-        for match in matches:
-
-            job_match = JobMatch(
-
-                user_id=current_user.id,
-
-                resume_id=resume.id,
-
-                job_title=match.get("title"),
-
-                company=match.get("company"),
-
-                match_score=match.get("match_score"),
-
-                matched_skills=json.dumps(
-
-                    match.get(
-
-                        "matched_skills",
-
-                        []
-
-                    )
-
-                ),
-
-                missing_skills=json.dumps(
-
-                    match.get(
-
-                        "missing_skills",
-
-                        []
-
-                    )
-
-                )
-
-            )
-
-            db.add(
-
-                job_match
-
-            )
-
-        db.commit()
-                # ----------------------------------
-        # Dashboard Statistics
-        # ----------------------------------
-
-        dashboard = Dashboard(
-
-            user_id=current_user.id,
-
-            resumes_uploaded=1,
-
-            jobs_found=len(jobs),
-
-            jobs_matched=len(matches),
-
-            ats_score=ats["ats_score"]
-
-        )
-
-        db.add(dashboard)
-
-        db.commit()
-
-        db.refresh(dashboard)
-
-        # ----------------------------------
-        # Success Response
-        # ----------------------------------
-
-        return {
-
-            "success": True,
-
-            "resume_id": resume.id,
-
-            "analysis": analysis,
-
-            "ats": ats,
-
-            "suggestions": suggestions,
-
-            "job_titles": job_titles,
-
-            "search_keywords": search_keywords,
-
-            "recommended_jobs": jobs,
-
-            "job_matches": matches,
-
-            "dashboard": {
-
-                "resumes_uploaded": dashboard.resumes_uploaded,
-
-                "jobs_found": dashboard.jobs_found,
-
-                "jobs_matched": dashboard.jobs_matched,
-
-                "ats_score": dashboard.ats_score
-
-            }
-
-        }
 
     except Exception as e:
-
         db.rollback()
 
         return {
-
             "success": False,
-
-            "message": str(e)
-
+            "message": str(e),
         }
 # ==========================================
 # JOB MATCHES
@@ -885,21 +475,8 @@ async def optimize_resume_keywords(
 
         )
 
-        with open(file_path, "wb") as buffer:
-
-            shutil.copyfileobj(
-
-                file.file,
-
-                buffer
-
-            )
-
-        resume_text = extract_text_from_pdf(
-
-            file_path
-
-        )
+        file_path, resume_text = extract_resume(file)
+        
 
         optimized = optimize_keywords(
 
@@ -949,22 +526,7 @@ async def jd_match(
 
         )
 
-        with open(file_path, "wb") as buffer:
-
-            shutil.copyfileobj(
-
-                file.file,
-
-                buffer
-
-            )
-
-        resume_text = extract_text_from_pdf(
-
-            file_path
-
-        )
-
+        file_path, resume_text = extract_resume(file)
         result = match_resume_with_jd(
 
             resume_text,

@@ -1,436 +1,208 @@
-import os
-import json
-import time
 import re
 
-from dotenv import load_dotenv
-import google.generativeai as genai
 
 # ==========================================
-# Load Environment Variables
+# Utility
 # ==========================================
 
-load_dotenv()
+COMMON_SKILLS = {
+    "python",
+    "java",
+    "javascript",
+    "typescript",
+    "c",
+    "c++",
+    "c#",
+    "sql",
+    "mysql",
+    "postgresql",
+    "mongodb",
+    "html",
+    "css",
+    "react",
+    "angular",
+    "vue",
+    "node",
+    "nodejs",
+    "express",
+    "fastapi",
+    "django",
+    "flask",
+    "spring",
+    "spring boot",
+    "git",
+    "github",
+    "docker",
+    "kubernetes",
+    "aws",
+    "azure",
+    "gcp",
+    "linux",
+    "redis",
+    "rest",
+    "rest api",
+    "api",
+    "pandas",
+    "numpy",
+    "tensorflow",
+    "pytorch",
+    "power bi",
+    "excel",
+    "machine learning",
+    "data analysis",
+    "oop",
+}
 
-API_KEY = os.getenv("GEMINI_JOB_API_KEY")
 
-if not API_KEY:
-    raise ValueError(
-        "GEMINI_JOB_API_KEY not found in .env"
-    )
-
-genai.configure(api_key=API_KEY)
-
-model = genai.GenerativeModel(
-    "gemini-2.5-flash"
-)
-
-# ==========================================
-# Utility Functions
-# ==========================================
-
-def safe_int(value):
-
-    try:
-
-        if isinstance(value, str):
-
-            value = (
-                value
-                .replace("%", "")
-                .replace("/100", "")
-                .strip()
-            )
-
-        return int(float(value))
-
-    except Exception:
-
-        return 0
+def normalize(text):
+    return text.lower().strip()
 
 
-def clean_response(text):
+def extract_job_skills(text):
+    """
+    Extract known skills from a job description.
+    """
 
     if not text:
-        return ""
+        return []
 
-    text = text.replace("```json", "")
-    text = text.replace("```", "")
+    text = normalize(text)
 
-    return text.strip()
+    found = []
+
+    for skill in COMMON_SKILLS:
+        pattern = r"\b" + re.escape(skill) + r"\b"
+
+        if re.search(pattern, text):
+            found.append(skill)
+
+    return sorted(set(found))
 
 
-def extract_json(text):
-
-    try:
-
-        return json.loads(text)
-
-    except Exception:
-
-        match = re.search(
-            r"\{.*\}",
-            text,
-            re.DOTALL
-        )
-
-        if match:
-
-            try:
-
-                return json.loads(
-                    match.group()
-                )
-
-            except Exception:
-
-                return None
-
-    return None
+def safe_score(value):
+    return max(0, min(100, int(value)))
 
 
 # ==========================================
-# Default Match Result
+# Match One Job
 # ==========================================
 
-def default_match(job):
+def score_job(analysis, job):
 
-    return {
-
-        "title": job.get(
-            "title",
-            ""
-        ),
-
-        "company": job.get(
-            "company",
-            ""
-        ),
-
-        "location": job.get(
-            "location",
-            ""
-        ),
-
-        "salary": (
-            f"{job.get('salary_min', 'N/A')} - "
-            f"{job.get('salary_max', 'N/A')}"
-        ),
-
-        "match_score": 0,
-
-        "ats_score": 0,
-
-        "matched_skills": [],
-
-        "missing_skills": [],
-
-        "why_match": "Unable to analyze this job.",
-
-        "recommendations": [],
-
-        "apply_link": job.get(
-            "apply_link",
-            ""
-        )
-
+    resume_skills = {
+        normalize(skill)
+        for skill in analysis.get("skills", [])
     }
-# ==========================================
-# Build Gemini Prompt
-# ==========================================
 
-def build_prompt(
-    analysis,
-    job
-):
-
-    return f"""
-You are an expert Technical Recruiter, ATS Expert and Career Coach.
-
-Your task is to compare ONE resume with ONE live job.
-
-Return ONLY valid JSON.
-
-Do NOT return markdown.
-
---------------------------------------------------
-
-RESUME
-
-Skills:
-{analysis.get("skills", [])}
-
-Projects:
-{analysis.get("projects", [])}
-
-Experience:
-{analysis.get("experience_level", "")}
-
-Education:
-{analysis.get("education", "")}
-
-Career Domains:
-{analysis.get("career_domains", [])}
-
-Summary:
-{analysis.get("summary", "")}
-
---------------------------------------------------
-
-JOB
-
-Title:
-{job.get("title", "")}
-
-Company:
-{job.get("company", "")}
-
-Location:
-{job.get("location", "")}
-
-Description:
-{job.get("description", "")}
-
---------------------------------------------------
-
-Evaluate the candidate.
-
-Consider:
-
-1. Skills
-
-2. Projects
-
-3. Experience
-
-4. Education
-
-5. ATS Compatibility
-
-6. Job Relevance
-
---------------------------------------------------
-
-Return ONLY this JSON:
-
-{{
-    "match_score":92,
-    "ats_score":87,
-    "matched_skills":[
-        "Python",
-        "SQL"
-    ],
-    "missing_skills":[
-        "Docker",
-        "AWS"
-    ],
-    "why_match":"Candidate has strong backend skills and relevant projects.",
-    "recommendations":[
-        "Learn Docker",
-        "Build one AWS project",
-        "Improve ATS keywords"
-    ]
-}}
-
-No explanation.
-
-No markdown.
-
-Only JSON.
-"""
-
-
-# ==========================================
-# Gemini Job Analysis
-# ==========================================
-
-def analyze_job(
-    analysis,
-    job,
-    retries=1
-):
-
-    prompt = build_prompt(
-        analysis,
-        job
+    job_skills = set(
+        extract_job_skills(
+            job.get("description", "")
+        )
     )
 
-    for attempt in range(retries):
+    matched = sorted(
+        resume_skills & job_skills
+    )
 
-        try:
+    missing = sorted(
+        job_skills - resume_skills
+    )
 
-            print(
-                f"AI Matching -> {job.get('title')}"
-            )
+    if len(job_skills) == 0:
+        match_score = 50
+    else:
+        match_score = int(
+            (len(matched) / len(job_skills)) * 100
+        )
 
-            response = model.generate_content(
-                prompt
-            )
+    # ATS score is slightly more generous
+    ats_score = min(
+        100,
+        match_score + 10
+    )
 
-            text = clean_response(
-                getattr(
-                    response,
-                    "text",
-                    ""
-                )
-            )
+    recommendations = []
 
-            result = extract_json(
-                text
-            )
+    if missing:
+        recommendations.append(
+            "Learn: " + ", ".join(missing[:5])
+        )
 
-            if result:
+    if ats_score < 80:
+        recommendations.append(
+            "Add missing keywords to improve ATS score."
+        )
 
-                return result
+    if not recommendations:
+        recommendations.append(
+            "Excellent match. Apply immediately."
+        )
 
-            print(
-                "Invalid JSON received."
-            )
+    salary = (
+        job.get("salary")
+        or (
+            f"{job.get('salary_min','N/A')} - "
+            f"{job.get('salary_max','N/A')}"
+        )
+    )
 
-        except Exception as e:
+    return {
+        "title": job.get("title", ""),
+        "company": job.get("company", ""),
+        "location": job.get("location", ""),
+        "salary": salary,
+        "match_score": safe_score(match_score),
+        "ats_score": safe_score(ats_score),
+        "matched_skills": matched,
+        "missing_skills": missing,
+        "why_match": (
+            f"Matched {len(matched)} "
+            f"of {len(job_skills)} required skills."
+        ),
+        "recommendations": recommendations,
+        "apply_link": (
+            job.get("url")
+            or job.get("redirect_url")
+            or job.get("apply_link")
+            or ""
+        ),
+    }
 
-            print("=" * 60)
-            print("Gemini Error")
-            print(job.get("title"))
-            print(e)
-            print("=" * 60)
 
-        
-
-    return None
 # ==========================================
-# AI Job Matching
+# Match All Jobs
 # ==========================================
 
 def match_jobs(
     analysis,
     jobs,
-    resume_length
+    resume_length=None,
 ):
+    """
+    Match resume against all jobs.
 
-    print("=" * 60)
-    print("STARTING AI JOB MATCHING")
-    print("Jobs Found:", len(jobs))
-    print("=" * 60)
+    Returns jobs sorted by match score.
+    """
+
+    if not jobs:
+        return []
 
     matches = []
 
-    if not jobs:
-        print("No jobs received from Adzuna.")
-        return matches
-
-    for index, job in enumerate(jobs, start=1):
-
-        print(
-            f"\n[{index}/{len(jobs)}] {job.get('title')}"
-        )
-
-        ai = analyze_job(
-            analysis,
-            job
-        )
-
-        if ai is None:
-
-            print("AI failed. Using default result.")
-
-            matches.append(
-                default_match(job)
+    for job in jobs:
+        matches.append(
+            score_job(
+                analysis,
+                job,
             )
-
-            continue
-
-        match = {
-
-            "title": job.get(
-                "title",
-                ""
-            ),
-
-            "company": job.get(
-                "company",
-                ""
-            ),
-
-            "location": job.get(
-                "location",
-                "Not Specified"
-            ),
-
-            "salary": (
-                f"{job.get('salary_min', 'N/A')} - "
-                f"{job.get('salary_max', 'N/A')}"
-            ),
-
-            "match_score": safe_int(
-                ai.get(
-                    "match_score",
-                    0
-                )
-            ),
-
-            "ats_score": safe_int(
-                ai.get(
-                    "ats_score",
-                    0
-                )
-            ),
-
-            "matched_skills": ai.get(
-                "matched_skills",
-                []
-            ),
-
-            "missing_skills": ai.get(
-                "missing_skills",
-                []
-            ),
-
-            "why_match": ai.get(
-                "why_match",
-                ""
-            ),
-
-            "recommendations": ai.get(
-                "recommendations",
-                []
-            ),
-
-            "apply_link": (
-                job.get("redirect_url")
-                or job.get("apply_link")
-                or job.get("url")
-                or ""
-            )
-
-        }
-
-        matches.append(match)
-
-        print(
-            f"✓ Match Score: {match['match_score']}%"
         )
-
-        # Helps avoid Gemini rate limits
-        time.sleep(1)
 
     matches.sort(
-
         key=lambda x: (
-
             x["match_score"],
-
-            x["ats_score"]
-
+            x["ats_score"],
         ),
-
-        reverse=True
-
+        reverse=True,
     )
-
-    print("=" * 60)
-    print("AI MATCHING COMPLETED")
-    print("Total Matches:", len(matches))
-    print("=" * 60)
 
     return matches

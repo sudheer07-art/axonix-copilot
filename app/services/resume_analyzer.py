@@ -1,258 +1,144 @@
-# import os
-# import json
-# from dotenv import load_dotenv
-# import google.generativeai as genai
-
-# load_dotenv()
-
-# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# model = genai.GenerativeModel("gemini-2.5-flash")
-
-
-# def analyze_resume(text):
-
-#     prompt = f"""
-# You are an expert ATS Resume Analyzer and AI Career Advisor.
-
-# Analyze the resume thoroughly.
-
-# Return ONLY valid JSON.
-
-# Required JSON format:
-
-# {{
-#     "ats_score": 0,
-
-#     "profile_strength": 0,
-
-#     "resume_health": 0,
-
-#     "experience_level": "",
-
-#     "education": "",
-
-#     "career_domains": [],
-
-#     "skills": [],
-
-#     "projects": [],
-
-#     "job_search_queries": [],
-#     "priority_job_roles": [],
-
-#     "strengths": [],
-
-#     "weaknesses": [],
-
-#     "suggestions": [],
-
-#     "summary": ""
-# }}
-
-# Rules:
-
-# 1. ATS Score should be between 0 and 100.
-# 2. Profile Strength should be between 0 and 100.
-# 3. Resume Health should be between 0 and 100.
-# 4. Extract ALL technical skills.
-# 5. Extract ALL project names.
-# 6. Detect experience level (Fresher, Junior, Mid, Senior).
-# 7. Extract highest education.
-# 8. Detect career domains.
-# 9. Generate 5–8 realistic job search queries.
-# 10. List resume strengths.
-# 11. List resume weaknesses.
-# 12. Give exactly 5 personalized suggestions.
-# 13. Summary should be 3–4 professional sentences.
-# 14. Return ONLY JSON.
-# 15. Do NOT use markdown.
-# 16. Do NOT use ```json.
-# 17. Return only the 5 BEST job roles.
-# 18. Rank them from most suitable to least suitable.
-# 19. Avoid duplicate or similar job roles.
-# 20. Use common job titles found on LinkedIn, Indeed and Adzuna.
-
-# Example job_search_queries:
-
-# [
-# "Python Developer",
-# "Backend Developer",
-# "Software Engineer",
-# "FastAPI Developer",
-# "Full Stack Developer"
-# ]
-
-# Resume:
-
-# {text}
-# """
-
-#     try:
-
-#         response = model.generate_content(prompt)
-
-#         answer = response.text.strip()
-
-#         if answer.startswith("```json"):
-#             answer = answer.replace("```json", "").replace("```", "").strip()
-
-#         elif answer.startswith("```"):
-#             answer = answer.replace("```", "").strip()
-
-#         data = json.loads(answer)
-#         print(json.dumps(data, indent=4))
-
-#         return {
-
-#     "ats_score": data.get("ats_score", 0),
-
-#     "profile_strength": data.get("profile_strength", 0),
-
-#     "resume_health": data.get("resume_health", 0),
-
-#     "experience_level": data.get("experience_level", "Fresher"),
-
-#     "education": data.get("education", ""),
-
-#     "career_domains": data.get("career_domains", []),
-
-#     "skills": data.get("skills", []),
-
-#     "projects": data.get("projects", []),
-
-#     "job_search_queries": data.get("job_search_queries", []),
-
-#     "strengths": data.get("strengths", []),
-
-#     "weaknesses": data.get("weaknesses", []),
-
-#     "suggestions": data.get("suggestions", []),
-
-#     "summary": data.get("summary", "")
-# }
-
-#     except Exception as e:
-
-#         print("Gemini Error:", e)
-
-#         return {
-
-#     "ats_score": 75,
-
-#     "profile_strength": 70,
-
-#     "resume_health": 72,
-
-#     "experience_level": "Fresher",
-
-#     "education": "Bachelor of Technology",
-
-#     "career_domains": [
-
-#         "Backend Development"
-
-#     ],
-
-#     "skills": [
-
-#         "Python",
-
-#         "FastAPI",
-
-#         "SQL"
-
-#     ],
-
-#     "projects": [],
-
-#     "job_search_queries": [
-
-#         "Python Developer",
-
-#         "Backend Developer",
-
-#         "Software Engineer",
-
-#         "FastAPI Developer"
-
-#     ],
-
-#     "strengths": [
-
-#         "Good Python Knowledge"
-
-#     ],
-
-#     "weaknesses": [
-
-#         "Cloud Technologies Missing"
-
-#     ],
-
-#     "suggestions": [
-
-#         "Add measurable achievements.",
-
-#         "Improve ATS keywords.",
-
-#         "Add GitHub profile.",
-
-#         "Include deployed projects.",
-
-#         "Mention cloud technologies."
-
-#     ],
-
-#     "summary": "AI analysis is temporarily unavailable because the Gemini API could not process the request."
-
-# }
 import re
 from app.services.skill_extractor import extract_skills
 
 
-def analyze_resume(text: str):
+# ==========================================
+# Helper Functions
+# ==========================================
 
-    skills = extract_skills(text)
+def detect_experience(text):
+    text = text.lower()
 
-    text_lower = text.lower()
+    if re.search(r"\b([3-9]|10)\+?\s+years?\b", text):
+        return "Experienced"
 
-    # -------- Experience Level --------
-    if re.search(r"\b(3|4|5|6|7|8|9|10)\+?\s+years?\b", text_lower):
-        experience = "Experienced"
-    elif "intern" in text_lower:
-        experience = "Junior"
-    else:
-        experience = "Fresher"
+    if "intern" in text or "internship" in text:
+        return "Junior"
 
-    # -------- Education --------
-    education = ""
+    return "Fresher"
 
-    if "b.tech" in text_lower or "btech" in text_lower:
-        education = "Bachelor of Technology"
 
-    elif "m.tech" in text_lower:
-        education = "Master of Technology"
+def detect_education(text):
+    text = text.lower()
 
-    elif "b.e" in text_lower:
-        education = "Bachelor of Engineering"
+    if "m.tech" in text or "mtech" in text:
+        return "Master of Technology"
 
-    # -------- Projects --------
+    if "b.tech" in text or "btech" in text:
+        return "Bachelor of Technology"
+
+    if "b.e" in text:
+        return "Bachelor of Engineering"
+
+    if "bca" in text:
+        return "Bachelor of Computer Applications"
+
+    if "mca" in text:
+        return "Master of Computer Applications"
+
+    return ""
+
+
+def extract_projects(text):
+
     projects = []
 
     for line in text.splitlines():
 
         line = line.strip()
 
-        if len(line) > 5 and "project" in line.lower():
+        if (
+            len(line) > 5
+            and "project" in line.lower()
+        ):
             projects.append(line)
 
-    projects = list(dict.fromkeys(projects))
+    return list(dict.fromkeys(projects))
+
+
+def detect_domains(skills):
+
+    skills = [s.lower() for s in skills]
+
+    domains = []
+
+    if any(s in skills for s in ["python", "fastapi", "django", "flask"]):
+        domains.append("Backend Development")
+
+    if any(s in skills for s in ["react", "html", "css", "javascript"]):
+        domains.append("Frontend Development")
+
+    if any(s in skills for s in ["mysql", "postgresql", "sql"]):
+        domains.append("Database")
+
+    if any(s in skills for s in ["power bi", "excel"]):
+        domains.append("Data Analytics")
+
+    if any(s in skills for s in ["tensorflow", "pytorch", "machine learning"]):
+        domains.append("Artificial Intelligence")
+
+    return domains
+
+
+def extract_name(text):
+
+    lines = [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip()
+    ]
+
+    if not lines:
+        return ""
+
+    if len(lines[0].split()) <= 4:
+        return lines[0]
+
+    return ""
+
+
+# ==========================================
+# Resume Analysis
+# ==========================================
+
+def analyze_resume(text: str):
+
+    skills = extract_skills(text)
+
+    experience = detect_experience(text)
+
+    education = detect_education(text)
+
+    projects = extract_projects(text)
+
+    domains = detect_domains(skills)
+
+    summary = (
+        f"{experience} candidate with "
+        f"{len(skills)} identified technical skills "
+        f"and {len(projects)} project(s)."
+    )
 
     return {
-        "text":text,
+
+        "text": text,
+
+        "candidate_name": extract_name(text),
+
         "experience_level": experience,
+
         "education": education,
+
+        "career_domains": domains,
+
         "skills": skills,
+
         "projects": projects,
+
+        "summary": summary,
+
+        "resume_length": len(text),
+
+        "word_count": len(text.split())
+
     }
