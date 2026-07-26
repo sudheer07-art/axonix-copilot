@@ -83,26 +83,30 @@ def process_resume(file, current_user, db: Session):
     # AI Keywords
     # ------------------------------------
 
+# ------------------------------------
+# AI Keywords
+# ------------------------------------
+
     ai = generate_job_keywords(analysis)
+
+    job_titles = ai.get("job_titles", [])
+    keywords = ai.get("keywords", [])
+
+# Fallback if Gemini fails
+    if not keywords:
+        print("⚠ Gemini returned no keywords. Using resume skills.")
+    keywords = analysis.get("skills", [])[:5]
+
+    if not job_titles:
+        job_titles = [
+        "Software Engineer",
+        "Python Developer",
+        "Backend Developer",
+    ]
+
     print("AI Response:", ai)
     print("Keywords:", keywords)
     print("Job Titles:", job_titles)
-
-    job_titles = ai.get(
-        "job_titles",
-        [],
-    )
-
-    keywords = ai.get(
-        "keywords",
-        [],
-    )
-    if not keywords:
-        keywords = analysis.get("skills", [])[:3]
-
-    if not job_titles:
-        job_titles = ["Software Engineer"]
-
     # ------------------------------------
     # Search Jobs
     # ------------------------------------
