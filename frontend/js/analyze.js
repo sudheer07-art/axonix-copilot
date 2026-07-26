@@ -79,7 +79,11 @@ async function analyzeResume(){
 
         const data = await response.json();
 
+
         console.log("Analyze Resume Response:", data);
+        if (!data.success) {
+    throw new Error(data.message || "Resume analysis failed.");
+}
 
         if(!response.ok){
 
@@ -94,13 +98,18 @@ async function analyzeResume(){
         }
 
         const analysis = data.analysis;
+        const ats = data.ats;
+        const suggestions = data.suggestions || [];
         console.log("STEP 1");
-        const analysisId = data.analysis_id;
-console.log("Analysis ID:", analysisId);
+        console.log("Resume ID:", data.resume_id);
 
-console.log("Jobs Found:", data.jobs_found);
-console.log("Matched Jobs:", data.matched_jobs);
-console.log("Jobs:", data.jobs);
+console.log("Jobs Found:", data.dashboard.jobs_found);
+
+console.log("Matched Jobs:", data.dashboard.jobs_matched);
+
+console.log("Recommended Jobs:", data.recommended_jobs);
+
+console.log("Job Matches:", data.job_matches);
 
 console.log("Job matching completed.");
 
@@ -120,7 +129,7 @@ console.log("Job matching completed.");
 
             <div class="ats-number">
 
-                ${analysis.ats_score}%
+                ${ats.ats_score}%
 
             </div>
 

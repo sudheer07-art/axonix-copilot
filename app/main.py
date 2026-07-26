@@ -6,6 +6,7 @@ from fastapi import (
     Form,
     Depends
 )
+import traceback
 from app.services.resume_pipeline import process_resume
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.file_service import extract_resume
@@ -327,7 +328,7 @@ async def analyze_resume_endpoint(
 
     except Exception as e:
         db.rollback()
-
+        traceback.print_exc()
         return {
             "success": False,
             "message": str(e),
@@ -544,14 +545,14 @@ async def jd_match(
         }
 
     except Exception as e:
+        
+
+        traceback.print_exc()
 
         return {
-
-            "success": False,
-
-            "message": str(e)
-
-        }
+        "success": False,
+        "message": str(e),
+    }
 
 
 # ==========================================
@@ -612,24 +613,14 @@ def analysis_history(
 ):
 
     history = (
-
-        db.query(ResumeAnalysis)
-
-        .filter(
-
-            ResumeAnalysis.user_id == current_user.id
-
-        )
-
-        .order_by(
-
-            ResumeAnalysis.id.desc()
-
-        )
-
-        .all()
-
+    db.query(ResumeAnalysis)
+    .join(Resume)
+    .filter(
+        Resume.user_id == current_user.id
     )
+    .order_by(ResumeAnalysis.id.desc())
+    .all()
+)
 
     return {
 
