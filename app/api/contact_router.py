@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.orm import Session
-
+from fastapi import BackgroundTasks
 from app.database.database import get_db
 
 from app.schemas.contact_schema import ContactCreate
@@ -21,7 +21,8 @@ router = APIRouter(
 )
 def contact(
     contact: ContactCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
 
-    return save_contact(contact, db)
+    return save_contact(contact, db,background_tasks,)

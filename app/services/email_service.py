@@ -1,49 +1,46 @@
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
+import resend
 from dotenv import load_dotenv
 
 load_dotenv()
 
-SMTP_SERVER = os.getenv("SMTP_SERVER")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-
-EMAIL_USER = os.getenv("EMAIL_USER")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL")
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 def send_contact_email(name, email, subject, message):
+    
+    print("=" * 50)
+    print("Background email task started")
+    print(name)
+    print(email)
+    print(subject)
+    print(message)
+    print("=" * 50)
 
-    msg = MIMEMultipart()
+    resend.Emails.send({
 
-    msg["From"] = EMAIL_USER
-    msg["To"] = SUPPORT_EMAIL
-    msg["Subject"] = f"📩 New Contact Form: {subject}"
+        "from": "onboarding@resend.dev",
 
-    body = f"""
-New Contact Message
+        "to": os.getenv("SUPPORT_EMAIL"),
 
-Name: {name}
+        "subject": f"📩 New Contact Form - {subject}",
 
-Email: {email}
+        "html": f"""
 
-Subject: {subject}
+        <h2>New Contact Message</h2>
 
-Message:
-{message}
-"""
+        <hr>
 
-    msg.attach(MIMEText(body, "plain"))
+        <p><strong>Name:</strong> {name}</p>
 
-    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-    server.starttls()
-    server.login(EMAIL_USER, EMAIL_PASSWORD)
-    server.sendmail(
-        EMAIL_USER,
-        SUPPORT_EMAIL,
-        msg.as_string(),
-    )
-    server.quit()
+        <p><strong>Email:</strong> {email}</p>
+
+        <p><strong>Subject:</strong> {subject}</p>
+
+        <br>
+
+        <p>{message}</p>
+
+        """
+
+    })

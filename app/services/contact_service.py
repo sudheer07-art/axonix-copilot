@@ -1,11 +1,16 @@
 from sqlalchemy.orm import Session
 
 from app.models.contact_model import Contact
-
+from fastapi import BackgroundTasks
+from app.services.email_service import send_contact_email
 from app.schemas.contact_schema import ContactCreate
 from app.services.email_service import send_contact_email
 
-def save_contact(data: ContactCreate, db: Session):
+def save_contact(
+    data: ContactCreate,
+    db: Session,
+    background_tasks: BackgroundTasks,
+):
 
     contact = Contact(
 
@@ -24,12 +29,20 @@ def save_contact(data: ContactCreate, db: Session):
     db.commit()
 
     db.refresh(contact)
-    send_contact_email(
-    contact.name,
-    contact.email,
-    contact.subject,
-    contact.message,
-)
+
+    background_tasks.add_task(
+
+        send_contact_email,
+
+        contact.name,
+
+        contact.email,
+
+        contact.subject,
+
+        contact.message,
+
+    )
 
     return {
 
