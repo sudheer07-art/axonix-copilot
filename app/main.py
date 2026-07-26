@@ -12,6 +12,7 @@ import os
 import json
 import traceback
 
+from app.models.contact_model import Contact
 # ==========================================
 # DATABASE
 # ==========================================
