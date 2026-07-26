@@ -46,60 +46,69 @@ const form=document.getElementById("contactForm");
 
 const toast=document.getElementById("toast");
 
-form.addEventListener("submit",function(e){
+const API_BASE = "https://axonix-copilot.onrender.com";
+
+form.addEventListener("submit", async function (e) {
 
     e.preventDefault();
 
-    const name=
-    document.getElementById("name").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const subject = document.getElementById("subject").value.trim();
+    const message = document.getElementById("message").value.trim();
 
-    const email=
-    document.getElementById("email").value.trim();
-
-    const subject=
-    document.getElementById("subject").value.trim();
-
-    const message=
-    document.getElementById("message").value.trim();
-
-    if(
-
-        name==="" ||
-
-        email==="" ||
-
-        subject==="" ||
-
-        message===""
-
-    ){
-
+    if (!name || !email || !subject || !message) {
         alert("Please fill all fields.");
-
         return;
-
     }
 
-    if(
-
-        !email.includes("@") ||
-
-        !email.includes(".")
-
-    ){
-
+    if (!email.includes("@") || !email.includes(".")) {
         alert("Enter a valid email address.");
-
         return;
-
     }
 
-    showToast();
+    try {
 
-    form.reset();
+        const response = await fetch(`${API_BASE}/contact/`, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                name,
+                email,
+                subject,
+                message
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            showToast();
+
+            form.reset();
+
+        } else {
+
+            alert(data.message);
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to send message.");
+
+    }
 
 });
-
 // ======================================
 // SUCCESS TOAST
 // ======================================
