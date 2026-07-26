@@ -84,6 +84,9 @@ def process_resume(file, current_user, db: Session):
     # ------------------------------------
 
     ai = generate_job_keywords(analysis)
+    print("AI Response:", ai)
+    print("Keywords:", keywords)
+    print("Job Titles:", job_titles)
 
     job_titles = ai.get(
         "job_titles",
@@ -94,6 +97,11 @@ def process_resume(file, current_user, db: Session):
         "keywords",
         [],
     )
+    if not keywords:
+        keywords = analysis.get("skills", [])[:3]
+
+    if not job_titles:
+        job_titles = ["Software Engineer"]
 
     # ------------------------------------
     # Search Jobs

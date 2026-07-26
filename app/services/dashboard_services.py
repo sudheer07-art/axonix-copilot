@@ -323,7 +323,8 @@ def get_dashboard_data(db: Session, user_id: int):
     # --------------------------------------
     # JOB MATCHES
     # --------------------------------------
-
+    print("Latest Resume ID:", latest_resume.id if latest_resume else None)
+    print("Latest Analysis ID:", latest_analysis.id if latest_analysis else None)
     job_matches = []
 
     if latest_analysis:
@@ -335,7 +336,7 @@ def get_dashboard_data(db: Session, user_id: int):
             )
             .all()
         )
-
+        print("Job Matches Found:", len(job_matches))
     # --------------------------------------
     # JOBS
     # --------------------------------------
