@@ -236,12 +236,22 @@ def process_resume(file, current_user, db: Session):
     # ------------------------------------
 
     dashboard = Dashboard(
-        user_id=current_user.id,
-        resumes_uploaded=1,
-        jobs_found=len(jobs),
-        jobs_matched=len(matches),
-        ats_score=ats["ats_score"],
-    )
+
+    user_id=current_user.id,
+
+    resume_name=file.filename,
+
+    ats_score=ats.get("ats_score", 0),
+
+    profile_strength=ats.get("profile_strength", 0),
+
+    skills_count=len(analysis.get("skills", [])),
+
+    job_matches=len(matches),
+
+    resume_health=ats.get("resume_health", 0),
+
+)
 
     db.add(dashboard)
 
@@ -270,9 +280,11 @@ def process_resume(file, current_user, db: Session):
         "recommended_jobs": jobs,
         "job_matches": matches,
         "dashboard": {
-            "resumes_uploaded": dashboard.resumes_uploaded,
-            "jobs_found": dashboard.jobs_found,
-            "jobs_matched": dashboard.jobs_matched,
-            "ats_score": dashboard.ats_score,
-        },
+    "resume_name": dashboard.resume_name,
+    "ats_score": dashboard.ats_score,
+    "profile_strength": dashboard.profile_strength,
+    "skills_count": dashboard.skills_count,
+    "job_matches": dashboard.job_matches,
+    "resume_health": dashboard.resume_health,
+},
     }
