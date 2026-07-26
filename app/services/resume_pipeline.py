@@ -161,6 +161,7 @@ def process_resume(file, current_user, db: Session):
 )
 
     db.add(analysis_record)
+    db.flush()
 
     # ------------------------------------
     # Save Jobs
@@ -173,17 +174,21 @@ def process_resume(file, current_user, db: Session):
         job_objects.append(
 
             Job(
-                title=job.get("title"),
-                company=job.get("company"),
-                location=job.get("location"),
-                description=job.get("description"),
-                url=job.get("url"),
-                salary=job.get("salary"),
-            )
+    title=job.get("title"),
+    company=job.get("company"),
+    location=job.get("location"),
+    description=job.get("description"),
+    salary=job.get("salary"),
+    skills=json.dumps(
+        job.get("skills", [])
+    ),
+    apply_link=job.get("url", ""),
+)
 
         )
 
     db.add_all(job_objects)
+    db.flush()
 
     # ------------------------------------
     # Save Job Matches
@@ -191,27 +196,40 @@ def process_resume(file, current_user, db: Session):
 
     match_objects = []
 
-    for match in matches:
+    for index, match in enumerate(matches):
+
+        if index >= len(job_objects):
+            break
 
         match_objects.append(
 
-            JobMatch(
-                user_id=current_user.id,
-                resume_id=resume.id,
-                job_title=match.get("title"),
-                company=match.get("company"),
-                match_score=match.get("match_score"),
-                matched_skills=json.dumps(
-                    match.get("matched_skills", [])
-                ),
-                missing_skills=json.dumps(
-                    match.get("missing_skills", [])
-                ),
+        JobMatch(
+
+            resume_analysis_id=analysis_record.id,
+
+            job_id=job_objects[index].id,
+
+            match_score=match.get("match_score", 0),
+
+            ats_score=ats.get("ats_score", 0),
+
+            matched_skills=json.dumps(
+                match.get("matched_skills", [])
+            ),
+
+            missing_skills=json.dumps(
+                match.get("missing_skills", [])
+            ),
+
+            recommendations=json.dumps(
+                match.get("recommendations", [])
             )
 
         )
 
-    db.add_all(match_objects)
+    )
+
+        db.add_all(match_objects)
 
     # ------------------------------------
     # Dashboard
