@@ -1,27 +1,4 @@
-# def calculate_ats_score(
-#     matched_skills,
-#     total_job_skills,
-#     resume_length
-# ):
 
-#     skill_score = (
-#         len(matched_skills)
-#         / total_job_skills
-#     ) * 80
-
-#     if resume_length < 1000:
-#         length_score = 5
-#     elif resume_length < 2000:
-#         length_score = 10
-#     elif resume_length < 3000:
-#         length_score = 15
-#     else:
-#         length_score = 20
-
-#     return round(
-#         skill_score + length_score,
-#         2
-#     )
 import re
 
 
@@ -112,13 +89,18 @@ def calculate_ats_score(resume_data: dict):
 
     # -------------------------------
     # Phone (2 Points)
-    # -------------------------------
+    # -----------------------------x--
     if re.search(r"\d{10}", text):
         score += 2
 
     score = min(score, 100)
 
+    profile_strength = round(score * 0.9, 2)
+    resume_health = round(score * 0.95, 2)
+
     return {
-        "ats_score": score,
-        "suggestions": suggestions
-    }
+    "ats_score": score,
+    "profile_strength": profile_strength,
+    "resume_health": resume_health,
+    "suggestions": suggestions
+}

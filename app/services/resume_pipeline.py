@@ -73,9 +73,11 @@ def process_resume(file, current_user, db: Session):
 
     ats = calculate_ats_score(analysis)
 
-    suggestions = generate_resume_suggestions(
-        analysis
-    )
+    rule_suggestions = generate_resume_suggestions(
+    analysis
+)
+
+    suggestions = rule_suggestions + ats.get("suggestions", [])
 
     # ------------------------------------
     # AI Keywords
@@ -128,17 +130,35 @@ def process_resume(file, current_user, db: Session):
     # ------------------------------------
 
     analysis_record = ResumeAnalysis(
-        user_id=current_user.id,
-        resume_id=resume.id,
-        analysis_json=json.dumps(
-            {
-                "analysis": analysis,
-                "ats": ats,
-                "suggestions": suggestions,
-            }
-        ),
-        ats_score=ats["ats_score"],
-    )
+    resume_id=resume.id,
+
+    ats_score=ats.get("ats_score", 0),
+
+    profile_strength=ats.get("profile_strength", 0),
+
+    resume_health=ats.get("resume_health", 0),
+
+    skills=json.dumps(
+        analysis.get("skills", [])
+    ),
+
+    suggestions=json.dumps(
+        suggestions
+    ),
+
+    summary=analysis.get(
+        "summary",
+        ""
+    ),
+
+    analysis_json=json.dumps(
+        {
+            "analysis": analysis,
+            "ats": ats,
+            "suggestions": suggestions,
+        }
+    ),
+)
 
     db.add(analysis_record)
 

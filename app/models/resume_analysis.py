@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Float, Text, ForeignKey
 from sqlalchemy.orm import relationship
-
+from sqlalchemy import DateTime
+from datetime import datetime
 from app.database.database import Base
 
 
@@ -26,6 +27,9 @@ class ResumeAnalysis(Base):
     # NEW COLUMN
     analysis_json = Column(Text)
 
-    created_at = Column(Text)
+    created_at = Column(
+                    DateTime,
+                    default=datetime.utcnow
+)
 
     resume = relationship("Resume")
