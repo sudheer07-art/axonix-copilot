@@ -189,6 +189,17 @@ async function matchJD() {
         });
 
         const data = await response.json();
+        if(!data.success){
+
+    hideLoading();
+
+    alert(data.message);
+
+    return;
+
+}
+
+        const result = data.result;
 
         // ✅ Hide loading
         hideLoading();
@@ -196,41 +207,41 @@ async function matchJD() {
         document.getElementById("result").innerHTML = `
         <div class="result">
 
-        <h2>🎯 Match Score: ${data.match_score}%</h2>
+        <h2>🎯 Match Score: ${result.match_score}%</h2>
 
         <br>
 
         <h3>✅ Matched Skills</h3>
         <ul>
-        ${data.matched_skills.map(skill => `<li>${skill}</li>`).join("")}
+        ${result.matched_skills.map(skill => `<li>${skill}</li>`).join("")}
         </ul>
 
         <br>
 
         <h3>❌ Missing Skills</h3>
         <ul>
-        ${data.missing_skills.map(skill => `<li>${skill}</li>`).join("")}
+        ${result.missing_skills.map(skill => `<li>${skill}</li>`).join("")}
         </ul>
 
         <br>
 
         <h3>💪 Strengths</h3>
         <ul>
-        ${data.strengths.map(item => `<li>${item}</li>`).join("")}
+        ${result.strengths.map(item => `<li>${item}</li>`).join("")}
         </ul>
 
         <br>
 
         <h3>💡 AI Suggestions</h3>
         <ul>
-        ${data.suggestions.map(item => `<li>${item}</li>`).join("")}
+        ${result.suggestions.map(item => `<li>${item}</li>`).join("")}
         </ul>
 
         <br>
 
         <h3>📄 Summary</h3>
 
-        <p>${data.summary}</p>
+        <p>${result.summary}</p>
 
         </div>
         `;

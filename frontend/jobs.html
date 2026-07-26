@@ -1436,26 +1436,35 @@ async function findJobs(){
     if(!file){
 
         alert("Please upload your resume.");
-
         return;
 
     }
 
     showLoading();
 
+    jobsContainer.innerHTML="";
+
+    const token = localStorage.getItem("access_token");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
     try{
 
-        const formData = new FormData();
+        // STEP 1
+        // Analyze resume + search jobs + save to DB
 
-        formData.append("file",file);
+        const analyzeResponse = await fetch(
 
-        const response = await fetch(
-
-            `${API_URL}/live-jobs`,
+            `${API_URL}/analyze-resume`,
 
             {
 
                 method:"POST",
+
+                headers:{
+                    Authorization:`Bearer ${token}`
+                },
 
                 body:formData
 
@@ -1463,24 +1472,49 @@ async function findJobs(){
 
         );
 
-        const data = await response.json();
+        const analyzeData = await analyzeResponse.json();
+
+        if(!analyzeResponse.ok){
+
+            hideLoading();
+
+            alert(analyzeData.message || "Resume analysis failed.");
+
+            return;
+
+        }
+
+        // STEP 2
+        // Load jobs from database
+
+        const jobsResponse = await fetch(
+
+            `${API_URL}/live-jobs`,
+
+            {
+
+                method:"GET",
+
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+
+            }
+
+        );
+
+        const data = await jobsResponse.json();
 
         hideLoading();
 
-        if(!response.ok){
+        if(!jobsResponse.ok){
 
             jobsContainer.innerHTML=`
-
                 <div class="job">
-
                     <h2>❌ Error</h2>
-
-                    <p>${data.detail || "Unable to fetch jobs."}</p>
-
+                    <p>${data.detail || "Unable to load jobs."}</p>
                 </div>
-
             `;
-
             return;
 
         }
@@ -1488,22 +1522,11 @@ async function findJobs(){
         if(!data.jobs || data.jobs.length===0){
 
             jobsContainer.innerHTML=`
-
                 <div class="job">
-
                     <h2>😔 No Jobs Found</h2>
-
-                    <p>
-
-                        Try uploading another resume
-                        or adding more skills.
-
-                    </p>
-
+                    <p>Try another resume.</p>
                 </div>
-
             `;
-
             return;
 
         }
@@ -1512,47 +1535,33 @@ async function findJobs(){
 
         data.jobs.forEach((job,index)=>{
 
-            html+=`
-
+            html += `
             <div
                 class="job"
                 style="
                     opacity:0;
                     transform:translateY(30px);
                     animation:fadeUp .6s ease forwards;
-                    animation-delay:${index*0.12}s;
+                    animation-delay:${index*0.1}s;
                 ">
 
-                <h2>
-
-                    💼 ${job.title}
-
-                </h2>
+                <h2>💼 ${job.title}</h2>
 
                 <p>
-
                     🏢 <strong>${job.company}</strong>
-
                 </p>
 
                 <p>
-
                     📍 ${job.location}
-
                 </p>
 
                 <p>
-
-                    ${job.description || "No description available."}
-
+                    ${job.description || ""}
                 </p>
 
                 <a
-
                     class="apply"
-
                     href="${job.apply_link}"
-
                     target="_blank">
 
                     🚀 Apply Now
@@ -1560,7 +1569,6 @@ async function findJobs(){
                 </a>
 
             </div>
-
             `;
 
         });
@@ -1577,32 +1585,22 @@ async function findJobs(){
 
     }
 
-    catch(error){
-
-        console.error(error);
+    catch(err){
 
         hideLoading();
 
+        console.error(err);
+
         jobsContainer.innerHTML=`
-
             <div class="job">
-
                 <h2>⚠ Server Error</h2>
-
-                <p>
-
-                    Unable to connect to backend.
-
-                </p>
-
+                <p>${err.message}</p>
             </div>
-
         `;
 
     }
 
 }
-
 // =============================
 // SUCCESS TOAST
 // =============================

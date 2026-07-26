@@ -1,20 +1,16 @@
-
 from fastapi import (
     FastAPI,
     UploadFile,
     File,
     Form,
-    Depends
+    Depends,
 )
-import traceback
-from app.services.resume_pipeline import process_resume
 from fastapi.middleware.cors import CORSMiddleware
-from app.services.file_service import extract_resume
 from sqlalchemy.orm import Session
 
 import os
-import shutil
 import json
+import traceback
 
 # ==========================================
 # DATABASE
@@ -23,91 +19,42 @@ import json
 from app.database.database import (
     Base,
     engine,
-    get_db
+    get_db,
 )
 
 from app.database.models import (
     User,
     Resume,
     Job,
-    JobMatch
+    JobMatch,
 )
+
+from app.models.resume_analysis import ResumeAnalysis
+from app.models.dashboard_model import Dashboard
 
 # ==========================================
-# MODELS
+# AUTH
 # ==========================================
 
-from app.models.resume_analysis import (
-    ResumeAnalysis
-)
-
-from app.models.dashboard_model import (
-    Dashboard
-)
-
-# ==========================================
-# AUTHENTICATION
-# ==========================================
-
-from app.auth.auth import (
-    router as auth_router
-)
-
-from app.auth.dependencies import (
-    get_current_user
-)
+from app.auth.auth import router as auth_router
+from app.auth.dependencies import get_current_user
 
 # ==========================================
 # ROUTERS
 # ==========================================
 
 from app.routers.dashboard_routers import (
-    router as dashboard_router
+    router as dashboard_router,
 )
 
 # ==========================================
 # SERVICES
 # ==========================================
 
-from app.services.resume_parser import (
-    extract_text_from_pdf
-)
-
-from app.services.resume_analyzer import (
-    analyze_resume
-)
-
-from app.services.skill_extractor import (
-    extract_skills
-)
-
-from app.services.ats_scorer import (
-    calculate_ats_score
-)
-
-from app.services.resume_rules import (
-    generate_resume_suggestions
-)
-
-from app.services.job_keyword_ai import (
-    generate_job_keywords
-)
-
-from app.services.job_search import (
-    search_jobs
-)
-
-from app.services.job_matcher import (
-    match_jobs
-)
-
-from app.services.keyword_optimizer import (
-    optimize_keywords
-)
-
-from app.services.jd_matcher import (
-    match_resume_with_jd
-)
+from app.services.resume_pipeline import process_resume
+from app.services.file_service import extract_resume
+from app.services.keyword_optimizer import optimize_keywords
+from app.services.jd_matcher import match_resume_with_jd
 
 # ==========================================
 # FASTAPI
@@ -117,29 +64,27 @@ app = FastAPI(
 
     title="AXONIX AI Job Search Copilot",
 
-    version="2.0.0"
+    version="2.0.0",
+
+    docs_url="/docs",
+
+    redoc_url="/redoc",
 
 )
 
 # ==========================================
-# DATABASE INITIALIZATION
+# DATABASE
 # ==========================================
 
-Base.metadata.create_all(
-    bind=engine
-)
+Base.metadata.create_all(bind=engine)
 
 # ==========================================
 # ROUTERS
 # ==========================================
 
-app.include_router(
-    auth_router
-)
+app.include_router(auth_router)
+app.include_router(dashboard_router)
 
-app.include_router(
-    dashboard_router
-)
 # ==========================================
 # CORS
 # ==========================================
@@ -162,12 +107,12 @@ app.add_middleware(
 
     allow_methods=["*"],
 
-    allow_headers=["*"]
+    allow_headers=["*"],
 
 )
 
 # ==========================================
-# UPLOAD DIRECTORY
+# CONSTANTS
 # ==========================================
 
 UPLOAD_DIR = "uploads"
@@ -176,13 +121,9 @@ os.makedirs(
 
     UPLOAD_DIR,
 
-    exist_ok=True
+    exist_ok=True,
 
 )
-
-# ==========================================
-# APPLICATION INFORMATION
-# ==========================================
 
 PROJECT_INFO = {
 
@@ -190,9 +131,9 @@ PROJECT_INFO = {
 
     "version": "2.0.0",
 
-    "ai_usage": "AI used only for Job Search",
+    "status": "Running",
 
-    "status": "Running"
+    "ai_usage": "AI used only for Resume Analysis and Job Search",
 
 }
 
@@ -211,12 +152,12 @@ def home():
 
         "version": PROJECT_INFO["version"],
 
-        "status": PROJECT_INFO["status"]
+        "status": PROJECT_INFO["status"],
 
     }
 
 # ==========================================
-# HEALTH CHECK
+# HEALTH
 # ==========================================
 
 @app.get("/health")
@@ -224,13 +165,14 @@ def health():
 
     return {
 
+        "success": True,
+
         "status": "healthy",
 
         "database": "connected",
 
-        "service": "running"
-
     }
+
 # ==========================================
 # UPLOAD RESUME
 # ==========================================
@@ -242,25 +184,13 @@ async def upload_resume(
 
     db: Session = Depends(get_db),
 
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 
 ):
 
     try:
 
-        # ----------------------------------
-        # Validate File
-        # ----------------------------------
-
-        # ----------------------------------
-# Validate → Save → Extract
-# ----------------------------------
-
         file_path, resume_text = extract_resume(file)
-
-        # ----------------------------------
-        # Save Resume
-        # ----------------------------------
 
         resume = Resume(
 
@@ -270,7 +200,7 @@ async def upload_resume(
 
             resume_text=resume_text,
 
-            user_id=current_user.id
+            user_id=current_user.id,
 
         )
 
@@ -279,10 +209,6 @@ async def upload_resume(
         db.commit()
 
         db.refresh(resume)
-
-        # ----------------------------------
-        # Response
-        # ----------------------------------
 
         return {
 
@@ -294,7 +220,7 @@ async def upload_resume(
 
             "filename": resume.filename,
 
-            "characters": len(resume_text)
+            "characters": len(resume_text),
 
         }
 
@@ -302,36 +228,57 @@ async def upload_resume(
 
         db.rollback()
 
+        traceback.print_exc()
+
         return {
 
             "success": False,
 
-            "message": str(e)
+            "message": str(e),
 
         }
+
 # ==========================================
 # ANALYZE RESUME
 # ==========================================
 
 @app.post("/analyze-resume")
 async def analyze_resume_endpoint(
+
     file: UploadFile = File(...),
+
     db: Session = Depends(get_db),
+
     current_user: User = Depends(get_current_user),
+
 ):
+
     try:
-        return process_resume(
+
+        result = process_resume(
+
             file=file,
-            current_user=current_user,
+
             db=db,
+
+            current_user=current_user,
+
         )
 
+        return result
+
     except Exception as e:
+
         db.rollback()
+
         traceback.print_exc()
+
         return {
+
             "success": False,
+
             "message": str(e),
+
         }
 # ==========================================
 # JOB MATCHES
@@ -342,77 +289,107 @@ def get_job_matches(
 
     db: Session = Depends(get_db),
 
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 
 ):
 
-    matches = (
+    try:
 
-        db.query(JobMatch)
+        matches = (
 
-        .filter(
+            db.query(JobMatch)
 
-            JobMatch.user_id == current_user.id
+            .join(
+                ResumeAnalysis,
+                JobMatch.resume_analysis_id == ResumeAnalysis.id
+            )
+
+            .join(
+                Resume,
+                ResumeAnalysis.resume_id == Resume.id
+            )
+
+            .filter(
+                Resume.user_id == current_user.id
+            )
+
+            .order_by(
+                JobMatch.match_score.desc()
+            )
+
+            .all()
 
         )
 
-        .order_by(
+        results = []
 
-            JobMatch.match_score.desc()
+        for match in matches:
 
-        )
+            job = db.query(Job).filter(
 
-        .all()
+                Job.id == match.job_id
 
-    )
+            ).first()
 
-    results = []
+            results.append({
 
-    for match in matches:
+                "job_id": match.job_id,
 
-        results.append(
+                "title": job.title if job else "",
 
-            {
+                "company": job.company if job else "",
 
-                "job_title": match.job_title,
+                "location": job.location if job else "",
 
-                "company": match.company,
+                "salary": job.salary if job else "",
+
+                "apply_link": job.apply_link if job else "",
 
                 "match_score": match.match_score,
+
+                "ats_score": match.ats_score,
 
                 "matched_skills": json.loads(
 
                     match.matched_skills
 
-                )
-
-                if match.matched_skills
-
-                else [],
+                ) if match.matched_skills else [],
 
                 "missing_skills": json.loads(
 
                     match.missing_skills
 
-                )
+                ) if match.missing_skills else [],
 
-                if match.missing_skills
+                "recommendations": json.loads(
 
-                else []
+                    match.recommendations
 
-            }
+                ) if match.recommendations else [],
 
-        )
+            })
 
-    return {
+        return {
 
-        "success": True,
+            "success": True,
 
-        "count": len(results),
+            "count": len(results),
 
-        "matches": results
+            "matches": results,
 
-    }
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return {
+
+            "success": False,
+
+            "message": str(e),
+
+        }
 
 
 # ==========================================
@@ -420,31 +397,77 @@ def get_job_matches(
 # ==========================================
 
 @app.get("/live-jobs")
-def live_jobs(
+def get_live_jobs(
 
     db: Session = Depends(get_db),
 
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 
 ):
 
-    jobs = (
+    try:
 
-        db.query(Job)
+        jobs = (
 
-        .all()
+            db.query(Job)
 
-    )
+            .order_by(
 
-    return {
+                Job.id.desc()
 
-        "success": True,
+            )
 
-        "count": len(jobs),
+            .all()
 
-        "jobs": jobs
+        )
 
-    }
+        return {
+
+            "success": True,
+
+            "count": len(jobs),
+
+            "jobs": [
+
+                {
+
+                    "id": job.id,
+
+                    "title": job.title,
+
+                    "company": job.company,
+
+                    "location": job.location,
+
+                    "description": job.description,
+
+                    "salary": job.salary,
+
+                    "skills": job.skills,
+
+                    "apply_link": job.apply_link,
+
+                }
+
+                for job in jobs
+
+            ]
+
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return {
+
+            "success": False,
+
+            "message": str(e),
+
+        }
+
+
 # ==========================================
 # OPTIMIZE RESUME KEYWORDS
 # ==========================================
@@ -452,7 +475,7 @@ def live_jobs(
 @app.post("/optimize-keywords")
 async def optimize_resume_keywords(
 
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
 
 ):
 
@@ -468,18 +491,9 @@ async def optimize_resume_keywords(
 
             }
 
-        file_path = os.path.join(
-
-            UPLOAD_DIR,
-
-            file.filename
-
-        )
-
         file_path, resume_text = extract_resume(file)
-        
 
-        optimized = optimize_keywords(
+        optimized_keywords = optimize_keywords(
 
             resume_text
 
@@ -489,17 +503,19 @@ async def optimize_resume_keywords(
 
             "success": True,
 
-            "optimized_keywords": optimized
+            "optimized_keywords": optimized_keywords,
 
         }
 
     except Exception as e:
 
+        traceback.print_exc()
+
         return {
 
             "success": False,
 
-            "message": str(e)
+            "message": str(e),
 
         }
 
@@ -513,26 +529,19 @@ async def jd_match(
 
     file: UploadFile = File(...),
 
-    job_description: str = Form(...)
+    job_description: str = Form(...),
 
 ):
 
     try:
 
-        file_path = os.path.join(
-
-            UPLOAD_DIR,
-
-            file.filename
-
-        )
-
         file_path, resume_text = extract_resume(file)
+
         result = match_resume_with_jd(
 
             resume_text,
 
-            job_description
+            job_description,
 
         )
 
@@ -540,21 +549,21 @@ async def jd_match(
 
             "success": True,
 
-            "result": result
+            "result": result,
 
         }
 
     except Exception as e:
-        
 
         traceback.print_exc()
 
         return {
-        "success": False,
-        "message": str(e),
-    }
 
+            "success": False,
 
+            "message": str(e),
+
+        }
 # ==========================================
 # MY RESUMES
 # ==========================================
@@ -564,39 +573,73 @@ def my_resumes(
 
     db: Session = Depends(get_db),
 
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 
 ):
 
-    resumes = (
+    try:
 
-        db.query(Resume)
+        resumes = (
 
-        .filter(
+            db.query(Resume)
 
-            Resume.user_id == current_user.id
+            .filter(
+
+                Resume.user_id == current_user.id
+
+            )
+
+            .order_by(
+
+                Resume.id.desc()
+
+            )
+
+            .all()
 
         )
 
-        .order_by(
+        data = []
 
-            Resume.id.desc()
+        for resume in resumes:
 
-        )
+            data.append({
 
-        .all()
+                "id": resume.id,
 
-    )
+                "filename": resume.filename,
 
-    return {
+                "filepath": resume.filepath,
 
-        "success": True,
+                "uploaded_at": str(resume.created_at)
 
-        "count": len(resumes),
+                if hasattr(resume, "created_at")
 
-        "resumes": resumes
+                else None,
 
-    }
+            })
+
+        return {
+
+            "success": True,
+
+            "count": len(data),
+
+            "resumes": data,
+
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return {
+
+            "success": False,
+
+            "message": str(e),
+
+        }
 
 
 # ==========================================
@@ -608,27 +651,124 @@ def analysis_history(
 
     db: Session = Depends(get_db),
 
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 
 ):
 
-    history = (
-    db.query(ResumeAnalysis)
-    .join(Resume)
-    .filter(
-        Resume.user_id == current_user.id
-    )
-    .order_by(ResumeAnalysis.id.desc())
-    .all()
-)
+    try:
+
+        history = (
+
+            db.query(ResumeAnalysis)
+
+            .join(
+
+                Resume,
+
+                Resume.id == ResumeAnalysis.resume_id,
+
+            )
+
+            .filter(
+
+                Resume.user_id == current_user.id
+
+            )
+
+            .order_by(
+
+                ResumeAnalysis.id.desc()
+
+            )
+
+            .all()
+
+        )
+
+        result = []
+
+        for item in history:
+
+            result.append({
+
+                "id": item.id,
+
+                "resume_id": item.resume_id,
+
+                "ats_score": item.ats_score,
+
+                "profile_strength": item.profile_strength,
+
+                "resume_health": item.resume_health,
+
+                "skills": json.loads(item.skills)
+
+                if item.skills
+
+                else [],
+
+                "suggestions": json.loads(item.suggestions)
+
+                if item.suggestions
+
+                else [],
+
+                "summary": item.summary,
+
+                "created_at": str(item.created_at),
+
+            })
+
+        return {
+
+            "success": True,
+
+            "count": len(result),
+
+            "history": result,
+
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return {
+
+            "success": False,
+
+            "message": str(e),
+
+        }
+
+
+# ==========================================
+# APPLICATION INFO
+# ==========================================
+
+@app.get("/info")
+def app_info():
 
     return {
 
         "success": True,
 
-        "count": len(history),
-
-        "history": history
+        "application": PROJECT_INFO,
 
     }
-    
+
+
+# ==========================================
+# VERSION
+# ==========================================
+
+@app.get("/version")
+def version():
+
+    return {
+
+        "success": True,
+
+        "version": PROJECT_INFO["version"],
+
+    }
