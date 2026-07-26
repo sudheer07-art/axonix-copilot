@@ -37,6 +37,7 @@ from app.models.dashboard_model import Dashboard
 # ==========================================
 
 from app.auth.auth import router as auth_router
+from app.api.contact_router import router as contact_router
 from app.auth.dependencies import get_current_user
 
 # ==========================================
@@ -84,6 +85,7 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_router)
 app.include_router(dashboard_router)
+app.include_router(contact_router)
 
 # ==========================================
 # CORS
