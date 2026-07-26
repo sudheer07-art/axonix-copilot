@@ -119,34 +119,37 @@ const userAvatar = document.getElementById("userAvatar");
 
 const topAvatar = document.getElementById("topAvatar");
 
-async function loadUser(){
+async function loadUser() {
 
     const res = await api("/auth/me");
 
-    if(!res) return;
+    if (!res) return;
 
     const user = await res.json();
 
     const name = user.username || user.name || "User";
-
     const email = user.email || "";
 
-    userName.textContent = name;
-
-    userEmail.textContent = email;
-
-    topUserName.textContent = name;
-
-    welcomeName.textContent = name;
-
     const avatar =
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`;
 
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2563eb&color=fff`;
+    if (userName)
+        userName.textContent = name;
 
-    userAvatar.src = avatar;
+    if (userEmail)
+        userEmail.textContent = email;
 
-    topAvatar.src = avatar;
+    if (topUserName)
+        topUserName.textContent = name;
 
+    if (welcomeName)
+        welcomeName.textContent = name;
+
+    if (userAvatar)
+        userAvatar.src = avatar;
+
+    if (topAvatar)
+        topAvatar.src = avatar;
 }
 
 /* ==========================================================
