@@ -1,4 +1,5 @@
 import os
+import traceback
 import resend
 from dotenv import load_dotenv
 
@@ -8,39 +9,49 @@ resend.api_key = os.getenv("RESEND_API_KEY")
 
 
 def send_contact_email(name, email, subject, message):
-    
-    print("=" * 50)
-    print("Background email task started")
-    print(name)
-    print(email)
-    print(subject)
-    print(message)
-    print("=" * 50)
 
-    resend.Emails.send({
+    try:
 
-        "from": "onboarding@resend.dev",
+        print("=" * 50)
+        print("Background email task started")
+        print(name)
+        print(email)
+        print(subject)
+        print(message)
+        print("=" * 50)
 
-        "to": os.getenv("SUPPORT_EMAIL"),
+        response = resend.Emails.send({
 
-        "subject": f"📩 New Contact Form - {subject}",
+            "from": "onboarding@resend.dev",
 
-        "html": f"""
+            "to": os.getenv("SUPPORT_EMAIL"),
 
-        <h2>New Contact Message</h2>
+            "subject": f"📩 New Contact Form - {subject}",
 
-        <hr>
+            "html": f"""
+            <h2>New Contact Message</h2>
 
-        <p><strong>Name:</strong> {name}</p>
+            <hr>
 
-        <p><strong>Email:</strong> {email}</p>
+            <p><strong>Name:</strong> {name}</p>
 
-        <p><strong>Subject:</strong> {subject}</p>
+            <p><strong>Email:</strong> {email}</p>
 
-        <br>
+            <p><strong>Subject:</strong> {subject}</p>
 
-        <p>{message}</p>
+            <br>
 
-        """
+            <p>{message}</p>
+            """
 
-    })
+        })
+
+        print("Resend Response:", response)
+
+    except Exception as e:
+
+        print("Email sending failed")
+
+        print(str(e))
+
+        traceback.print_exc()
