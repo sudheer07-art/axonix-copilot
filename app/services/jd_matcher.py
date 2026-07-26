@@ -233,3 +233,32 @@ def match_jobs(
     )
 
     return results
+def match_resume_with_jd(resume_text: str, job_description: str):
+
+    resume_skills = set(normalize(s) for s in extract_job_skills(resume_text))
+    jd_skills = set(normalize(s) for s in extract_job_skills(job_description))
+
+    matched = sorted(resume_skills & jd_skills)
+    missing = sorted(jd_skills - resume_skills)
+
+    if jd_skills:
+        match_score = int((len(matched) / len(jd_skills)) * 100)
+    else:
+        match_score = 0
+
+    return {
+        "match_score": match_score,
+        "matched_skills": matched,
+        "missing_skills": missing,
+        "strengths": matched,
+        "suggestions": [
+            f"Learn: {', '.join(missing[:5])}"
+        ] if missing else ["Your resume matches the job description well."],
+        "summary": (
+            "Excellent match."
+            if match_score >= 80
+            else "Good match."
+            if match_score >= 60
+            else "Needs improvement."
+        ),
+    }
